@@ -51,7 +51,7 @@ public class OrderHelper {
             pres.setInt(1, member_id);
             pres.setInt(2, movie_id);
             pres.setInt(3, room_id);
-            pres.setDate(4, date);
+            pres.setDate(4, new java.sql.Date(order_date.getTime()));
             pres.setInt(5, total_price);
             pres.setInt(6, time_of_day);
 			pres.setTimestamp(7, datetime);
