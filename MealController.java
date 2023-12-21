@@ -1,4 +1,4 @@
-//package ncu.im3069.demo.controller;
+package ncu.im3069.demo.controller;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -6,8 +6,10 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.json.*;
 
+import ncu.im3069.demo.app.Meal;
+import ncu.im3069.demo.app.MealHelper;
 //import ncu.im3069.demo.app.ProductHelper;
-//import ncu.im3069.tools.JsonReader;
+import ncu.im3069.tools.JsonReader;
 
 @WebServlet("/api/meal.do")
 public class MealController extends HttpServlet {
@@ -61,7 +63,7 @@ public class MealController extends HttpServlet {
         Meal m = new Meal(meal_name, meal_price, meal_description, meal_image);
         
         /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
-        if(meal_name.isEmpty() || meal_price.isEmpty() || meal_description.isEmpty() || meal_image.isEmpty()) {
+        if(meal_name.isEmpty() || meal_price == 0 || meal_description.isEmpty() || meal_image.isEmpty()) {
             /** 以字串組出JSON格式之資料 */
             String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
             /** 透過JsonReader物件回傳到前端（以字串方式） */
@@ -133,7 +135,7 @@ public class MealController extends HttpServlet {
 		String meal_image = jso.getString("meal_image");
 
         /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */
-        Meal m = new Meal(meal_id, meal_price, meal_description, meal_image);
+        Meal m = new Meal(meal_id, meal_name, meal_price, meal_description, meal_image);
         
         /** 透過Member物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
         //JSONObject data = m.updateMeal();

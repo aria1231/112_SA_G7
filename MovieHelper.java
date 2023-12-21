@@ -1,8 +1,11 @@
-//package ncu.im3069.demo.app;
+package ncu.im3069.demo.app;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 import org.json.*;
+
+import ncu.im3069.demo.util.DBMgr;
 
 //import ncu.im3069.demo.util.DBMgr;
 //import ncu.im3069.demo.app.Product;
@@ -18,7 +21,7 @@ public class MovieHelper {
     
     public static MovieHelper getHelper() {
         /** Singleton檢查是否已經有ProductHelper物件，若無則new一個，若有則直接回傳 */
-        if(movh == null) movh = new MoiveHelper();
+        if(movh == null) movh = new MovieHelper();
         
         return movh;
     }
@@ -184,7 +187,7 @@ public class MovieHelper {
     
     public Movie getById(String id) {
         /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
-        Moive m = null;
+        Movie m = null;
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
@@ -235,7 +238,7 @@ public class MovieHelper {
         return m;
     }
 	
-	public JSONObject getByType(int type){
+	public JSONObject getByType(String type){
 		/** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
 		  Movie m = null;
 		  /** 用於儲存所有檢索回之商品，以JSONArray方式儲存 */
@@ -252,10 +255,10 @@ public class MovieHelper {
 		  try {
 			  /** 取得資料庫之連線 */
 			  conn = DBMgr.getConnection();
-			  String[] in_para = DBMgr.stringToArray(data, ",");
+			  String[] in_para = DBMgr.stringToArray(type, ",");
 			  /** SQL指令 */
 			  
-			  String sql = "SELECT * FROM `final_pj`.`movie` WHERE `movie`.`movie_type` = ? LIMIT 1"";
+			  String sql = "SELECT * FROM `final_pj`.`movie` WHERE `movie`.`movie_type` = ? LIMIT 1";
 			  
 			  /*for (int i=0 ; i < in_para.length ; i++) {
 				  sql += (i == 0) ? "in (?" : ", ?";
@@ -268,7 +271,7 @@ public class MovieHelper {
 				pres.setString(i+1, in_para[i]);
 			  }
 			  /** 執行查詢之SQL指令並記錄其回傳之資料 */
-			  pres.setInt(1, type);
+			  pres.setInt(1, Integer.parseInt(type));
 			  rs = pres.executeQuery();
 
 			  /** 紀錄真實執行的SQL指令，並印出 **/
@@ -456,7 +459,7 @@ public class MovieHelper {
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
             pres.setString(1, movie_name);
-            pres.setInt(2, movie_price);
+            pres.setInt(2, movie_time);
             pres.setString(3, movie_description);
             pres.setString(4, movie_image);
             pres.setInt(5, movie_type);
@@ -494,7 +497,7 @@ public class MovieHelper {
         return response;
 	}
 	
-	public void deleteByID(int id){
+	public JSONObject deleteByID(int id){
 		/** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */

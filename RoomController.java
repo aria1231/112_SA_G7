@@ -1,4 +1,4 @@
-//package ncu.im3069.demo.controller;
+package ncu.im3069.demo.controller;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -6,12 +6,16 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.json.*;
 import org.json.JSONObject;
+
+import ncu.im3069.demo.app.Room;
+import ncu.im3069.demo.app.RoomHelper;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 //import ncu.im3069.demo.app.ProductHelper;
-//import ncu.im3069.tools.JsonReader;
+import ncu.im3069.tools.JsonReader;
 
 @WebServlet("/api/room.do")
 public class RoomController extends HttpServlet {
@@ -30,14 +34,14 @@ public class RoomController extends HttpServlet {
         JsonReader jsr = new JsonReader(request);
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
         String id_list = jsr.getParameter("id_list");
-		int ppl_limit = jsr.getParameter("order_ppl");
-		int time_of_day = jsr.getInt("order_time_of_day");
+		String ppl_limit = jsr.getParameter("order_ppl");
+		String time_of_day = jsr.getParameter("order_time_of_day");
 		// 從JSONObject中取得日期字符串
-        String dateString = jsonObject.getString("order_date");
+        String dateString = jsr.getParameter("order_date");
         
         JSONObject resp = new JSONObject();
         /** 判斷該字串是否存在，若存在代表要取回購物車內產品之資料，否則代表要取回全部資料庫內產品之資料 */
-        if(!order_ppl.isEmpty() && !dataString.isEmpty()) {
+        if(!ppl_limit.isEmpty() && !dateString.isEmpty()) {
 			
 			// 使用SimpleDateFormat解析日期字符串為Date對象
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -47,7 +51,7 @@ public class RoomController extends HttpServlet {
 				e.printStackTrace();
 			}
 			
-            JSONObject query = rooh.getAvalibleRoom(ppl_limit, order_date, order_time_of_day);
+            JSONObject query = rooh.getAvalibileRoom(Integer.parseInt(ppl_limit), dateString, Integer.parseInt(time_of_day));
             resp.put("status", "200");
             resp.put("message", "所有購物車之商品資料取得成功");
             resp.put("response", query);
@@ -85,7 +89,7 @@ public class RoomController extends HttpServlet {
         Room r = new Room(room_name, room_price, room_description, room_image);
         
         /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
-        if(room_name.isEmpty() || room_price.isEmpty() || room_description.isEmpty() || room_image.isEmpty()) {
+        if(room_name.isEmpty() || room_price == 0 || room_description.isEmpty() || room_image.isEmpty()) {
             /** 以字串組出JSON格式之資料 */
             String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
             /** 透過JsonReader物件回傳到前端（以字串方式） */
@@ -157,7 +161,7 @@ public class RoomController extends HttpServlet {
 		String room_image = jso.getString("room_image");
 
         /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */
-        Room r = new Room(room_id, room_price, room_description, room_image);
+        Room r = new Room(room_id, room_name, room_price, room_description, room_image);
         
         /** 透過Member物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
         JSONObject data = rooh.updateRoom(r);

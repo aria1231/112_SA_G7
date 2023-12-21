@@ -1,8 +1,16 @@
-//package ncu.im3069.demo.app;
+package ncu.im3069.demo.app;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 
+import org.apache.jasper.compiler.NewlineReductionServletWriter;
+import org.apache.naming.java.javaURLContextFactory;
 import org.json.*;
+
+import ncu.im3069.demo.util.DBMgr;
 
 //import ncu.im3069.demo.util.DBMgr;
 //import ncu.im3069.demo.app.Product;
@@ -180,7 +188,7 @@ public class RoomHelper {
       return response;
   }
   
-    public JSONObject getAvalibileRoom(int ppl_limit, Date order_date, int order_time_of_day){
+    public JSONObject getAvalibileRoom(int ppl_limit, String order_date, int order_time_of_day){
 	  /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
       Room r = null;
       /** 用於儲存所有檢索回之商品，以JSONArray方式儲存 */
@@ -200,11 +208,20 @@ public class RoomHelper {
           /** SQL指令 */
 		  
           String sql = "SELECT * FROM `final_pj`.`room` WHERE `room_size` > ?  AND `order_date` != ?  AND `order_time_of_day` != ?";
+          Date watchdate = null;
           
+       // 使用SimpleDateFormat解析日期字符串為Date對象
+       	  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          try {
+       			watchdate = dateFormat.parse(order_date);
+     	  } catch (ParseException e) {
+       			e.printStackTrace();
+       	  }
+       			
           /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
           pres = conn.prepareStatement(sql);
           pres.setInt(1, ppl_limit);
-		  pres.setDate(2, new java.sql.Date(order_date.getTime()));
+		  pres.setDate(2,new java.sql.Date(watchdate.getTime()));
           pres.setInt(3, order_time_of_day);
           /** 執行查詢之SQL指令並記錄其回傳之資料 */
           rs = pres.executeQuery();
@@ -411,7 +428,7 @@ public class RoomHelper {
 			
 			/** 取得所需之參數 */
 			int room_id = r.getRoomID();
-            String room_name = r.getRoomName();
+            String room_name = r.getRoomNAME();
             int room_price = r.getRoomPRICE();
             String room_description = r.getRoomDESCRIPTION();
 			String room_image = r.getRoomIMAGE();
@@ -520,7 +537,7 @@ public class RoomHelper {
         return response;
 	}
 	
-	public void deleteByID(int id){
+	public JSONObject deleteByID(int id){
 		/** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */

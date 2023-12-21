@@ -1,6 +1,8 @@
-//package ncu.im3069.demo.app;
+package ncu.im3069.demo.app;
 
 import org.json.*;
+
+import java.security.Timestamp;
 import java.util.Calendar;
 
 public class Movie {
@@ -23,7 +25,7 @@ public class Movie {
 	private Timestamp movie_update_time;
 	
 	// 1代表愛情 2代表劇情 3代表動作 4代表驚悚
-	private int movie_type
+	private int movie_type;
 	
 	/** mh，MemberHelper之物件與Member相關之資料庫方法（Sigleton） */
     private MovieHelper movh =  MovieHelper.getHelper();
@@ -36,7 +38,7 @@ public class Movie {
      */
 	public Movie(String movie_name, int movie_time, String movie_description, String movie_image, int movie_type) {
 		this.movie_name = movie_name;
-		this.room_time = movie_time;
+		this.movie_time = movie_time;
 		this.movie_description= movie_description;
 		this.movie_image = movie_image;
 		this.movie_type = movie_type;
@@ -133,7 +135,7 @@ public class Movie {
 		return this.movie_update_time;
 	}
 	
-	public imt getMovieTYPE(){
+	public int getMovieTYPE(){
 		return this.movie_type;
 	}
 
@@ -150,7 +152,7 @@ public class Movie {
         jso.put("movie_time", getMovieTYPE());
         jso.put("movie_image", getMovieIMAGE());
         jso.put("movie_description", getMovieDESCRIPTION());
-		jos.put("movie_type", getMovieTYPR());
+		jso.put("movie_type", getMovieTYPE());
 
         return jso;
     }

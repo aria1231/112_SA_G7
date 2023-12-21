@@ -1,8 +1,11 @@
-//package ncu.im3069.demo.app;
+package ncu.im3069.demo.app;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 
 import org.json.*;
+
+import ncu.im3069.demo.util.DBMgr;
 
 //import ncu.im3069.demo.util.DBMgr;
 //import ncu.im3069.demo.app.Product;
@@ -12,7 +15,7 @@ public class MealHelper {
         
     }
     
-    private static MealHelper rooh;
+    private static MealHelper meah;
     private Connection conn = null;
     private PreparedStatement pres = null;
     
@@ -334,7 +337,7 @@ public class MealHelper {
 			
 			/** 取得所需之參數 */
 			int meal_id = m.getMealID();
-            String meal_name = m.getMealName();
+            String meal_name = m.getMealNAME();
             int meal_price = m.getMealPRICE();
             String meal_description = m.getMealDESCRIPTION();
 			String meal_image = m.getMealIMAGE();
@@ -408,7 +411,7 @@ public class MealHelper {
             pres.setString(1, meal_name);
             pres.setInt(2, meal_price);
             pres.setString(3, meal_description);
-            pres.setTimestamp(4, meal_image);
+            pres.setString(4, meal_image);
             pres.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
             
             /** 執行新增之SQL指令並記錄影響之行數 */
@@ -443,7 +446,7 @@ public class MealHelper {
         return response;
 	}
 	
-	public void deleteByID(int id){
+	public JSONObject deleteByID(int id){
 		/** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */
