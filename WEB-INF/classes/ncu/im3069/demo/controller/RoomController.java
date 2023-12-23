@@ -30,18 +30,18 @@ public class RoomController extends HttpServlet {
         String id_list = jsr.getParameter("id_list");
 
         JSONObject resp = new JSONObject();
-        /** 判斷該字串是否存在，若存在代表要取回購物車內產品之資料，否則代表要取回全部資料庫內產品之資料 */
+        /** 判斷該字串是否存在，若存在代表要取回查詢之資料，否則代表要取回全部資料庫內包廂之資料 */
         if (!id_list.isEmpty()) {
           JSONObject query = rooh.getByIdList(id_list);
           resp.put("status", "200");
-          resp.put("message", "所有購物車之商品資料取得成功");
+          resp.put("message", "資料取得成功");
           resp.put("response", query);
         }
         else {
           JSONObject query = rooh.getAll();
 
           resp.put("status", "200");
-          resp.put("message", "所有商品資料取得成功");
+          resp.put("message", "所有包廂資料取得成功");
           resp.put("response", query);
         }
 
@@ -59,7 +59,7 @@ public class RoomController extends HttpServlet {
         String room_description = jso.getString("room_description");
 		String room_image = jso.getString("room_image");
         
-        /** 建立一個新的會員物件 */
+        /** 建立一個新的包廂物件 */
         Room r = new Room(room_name, room_price, room_description, room_image);
         
         /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
@@ -69,15 +69,14 @@ public class RoomController extends HttpServlet {
             /** 透過JsonReader物件回傳到前端（以字串方式） */
             jsr.response(resp, response);
         }
-        /** 透過MemberHelper物件的checkDuplicate()檢查該會員電子郵件信箱是否有重複 */
         else {
-            /** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
+            /** 透過RoomHelper物件的createRoom()方法新建一個包廂至資料庫 */
             JSONObject data = rooh.createRoom(r);
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
             resp.put("status", "200");
-            resp.put("message", "成功! 註冊會員資料...");
+            resp.put("message", "成功! 新增包廂資料...");
             resp.put("response", data);
             
             /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
@@ -101,13 +100,13 @@ public class RoomController extends HttpServlet {
         /** 取出經解析到JSONObject之Request參數 */
         int id = jso.getInt("room_id");
         
-        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
+        /** 透過RoomHelper物件的deleteByID()方法至資料庫刪除該包廂，回傳之資料為JSONObject物件 */
         JSONObject query = rooh.deleteByID(id);
         
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
         resp.put("status", "200");
-        resp.put("message", "會員移除成功！");
+        resp.put("message", "包廂移除成功！");
         resp.put("response", query);
 
         /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
@@ -134,16 +133,16 @@ public class RoomController extends HttpServlet {
         String room_description = jso.getString("room_description");
 		String room_image = jso.getString("room_image");
 
-        /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */
+        /** 透過傳入之參數，新建一個以這些參數之包廂Room物件 */
         Room r = new Room(room_id, room_name, room_price, room_description, room_image);
         
-        /** 透過Member物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
-        JSONObject data = r.updateRoom();
+        /** 透過RoomHelper物件的updateRoom()方法至資料庫更新該包廂資料，回傳之資料為JSONObject物件 */
+        JSONObject data = rooh.updateRoom(r);
         
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
         resp.put("status", "200");
-        resp.put("message", "成功! 更新會員資料...");
+        resp.put("message", "成功! 更新包廂資料...");
         resp.put("response", data);
         
         /** 透過JsonReader物件回傳到前端（以JSONObject方式） */

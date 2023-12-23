@@ -31,24 +31,24 @@ public class MovieController extends HttpServlet {
 		String type = jsr.getParameter("movie_type");
 
         JSONObject resp = new JSONObject();
-        /** 判斷該字串是否存在，若存在代表要取回購物車內產品之資料，否則代表要取回全部資料庫內產品之資料 */
+        /** 判斷該字串是否存在，若存在代表要取回電影之資料，否則代表要取回全部資料庫內電影之資料 */
         if (!type.isEmpty()){
           JSONObject query = movh.getByType(type);
           resp.put("status", "200");
-          resp.put("message", "所有購物車之商品資料取得成功");
+          resp.put("message", "查詢類型之電影資料取得成功");
           resp.put("response", query);
 		}
 		else if(!id_list.isEmpty()) {
           JSONObject query = movh.getByIdList(id_list);
           resp.put("status", "200");
-          resp.put("message", "所有購物車之商品資料取得成功");
+          resp.put("message", "電影資料取得成功");
           resp.put("response", query);
         }
         else {
           JSONObject query = movh.getAll();
 
           resp.put("status", "200");
-          resp.put("message", "所有商品資料取得成功");
+          resp.put("message", "所有電影資料取得成功");
           resp.put("response", query);
         }
 
@@ -67,7 +67,7 @@ public class MovieController extends HttpServlet {
 		String movie_image = jso.getString("movie_image");
 		int movie_type = jso.getInt("movie_type");
         
-        /** 建立一個新的會員物件 */
+        /** 建立一個新的電影物件 */
         Movie m = new Movie(movie_name, movie_type, movie_description, movie_image, movie_type);
         
         /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
@@ -77,9 +77,8 @@ public class MovieController extends HttpServlet {
             /** 透過JsonReader物件回傳到前端（以字串方式） */
             jsr.response(resp, response);
         }
-        /** 透過MemberHelper物件的checkDuplicate()檢查該會員電子郵件信箱是否有重複 */
         else {
-            /** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
+            /** 透過MovieHelper物件的createMovie()方法新建一個電影至資料庫 */
             JSONObject data = movh.createMovie(m);
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
@@ -109,7 +108,7 @@ public class MovieController extends HttpServlet {
         /** 取出經解析到JSONObject之Request參數 */
         int id = jso.getInt("movie_id");
         
-        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
+        /** 透過MovieHelper物件的deleteByID()方法至資料庫刪除該電影，回傳之資料為JSONObject物件 */
         JSONObject query = movh.deleteByID(id);
         
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
@@ -143,10 +142,10 @@ public class MovieController extends HttpServlet {
 		String movie_image = jso.getString("movie_image");
         int movie_type = jso.getInt("movie_type");
 
-        /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */
+        /** 透過傳入之參數，新建一個以這些參數之電影Movie物件 */
         Movie m = new Movie(movie_id, movie_name, movie_time, movie_description, movie_image, movie_type);
         
-        /** 透過Member物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
+        /** 透過MovieHelper物件的updateMovie()方法至資料庫更新該電影資料，回傳之資料為JSONObject物件 */
         //JSONObject data = m.updateMovie();
         JSONObject data = movh.updateMovie(m);
 		

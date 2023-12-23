@@ -30,18 +30,18 @@ public class MealController extends HttpServlet {
         String id_list = jsr.getParameter("id_list");
 
         JSONObject resp = new JSONObject();
-        /** 判斷該字串是否存在，若存在代表要取回購物車內產品之資料，否則代表要取回全部資料庫內產品之資料 */
+        /** 判斷該字串是否存在，若存在代表要取回餐點之資料，否則代表要取回全部資料庫內餐點之資料 */
         if (!id_list.isEmpty()) {
           JSONObject query = meah.getByIdList(id_list);
           resp.put("status", "200");
-          resp.put("message", "所有購物車之商品資料取得成功");
+          resp.put("message", "餐點資料取得成功");
           resp.put("response", query);
         }
         else {
           JSONObject query = meah.getAll();
 
           resp.put("status", "200");
-          resp.put("message", "所有商品資料取得成功");
+          resp.put("message", "所有餐點資料取得成功");
           resp.put("response", query);
         }
 
@@ -59,7 +59,7 @@ public class MealController extends HttpServlet {
         String meal_description = jso.getString("meal_description");
 		String meal_image = jso.getString("meal_image");
         
-        /** 建立一個新的會員物件 */
+        /** 建立一個新的餐點物件 */
         Meal m = new Meal(meal_name, meal_price, meal_description, meal_image);
         
         /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
@@ -69,9 +69,8 @@ public class MealController extends HttpServlet {
             /** 透過JsonReader物件回傳到前端（以字串方式） */
             jsr.response(resp, response);
         }
-        /** 透過MemberHelper物件的checkDuplicate()檢查該會員電子郵件信箱是否有重複 */
         else {
-            /** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
+            /** 透過MealHelper物件的createMeal()方法新建一個餐點至資料庫 */
             JSONObject data = meah.createMeal(m);
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
@@ -101,7 +100,7 @@ public class MealController extends HttpServlet {
         /** 取出經解析到JSONObject之Request參數 */
         int id = jso.getInt("meal_id");
         
-        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名會員，回傳之資料為JSONObject物件 */
+        /** 透過MemberHelper物件的deleteByID()方法至資料庫刪除該名餐點，回傳之資料為JSONObject物件 */
         JSONObject query = meah.deleteByID(id);
         
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
@@ -134,10 +133,10 @@ public class MealController extends HttpServlet {
         String meal_description = jso.getString("meal_description");
 		String meal_image = jso.getString("meal_image");
 
-        /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */
+        /** 透過傳入之參數，新建一個以這些參數之餐點Meal物件 */
         Meal m = new Meal(meal_id, meal_name, meal_price, meal_description, meal_image);
         
-        /** 透過Member物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
+        /** 透過MealHelper物件的updateMeal()方法至資料庫更新該餐點資料，回傳之資料為JSONObject物件 */
         //JSONObject data = m.updateMeal();
         JSONObject data = meah.updateMeal(m);
         

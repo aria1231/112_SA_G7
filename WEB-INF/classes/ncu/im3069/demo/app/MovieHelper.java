@@ -7,9 +7,6 @@ import org.json.*;
 
 import ncu.im3069.demo.util.DBMgr;
 
-//import ncu.im3069.demo.util.DBMgr;
-//import ncu.im3069.demo.app.Product;
-
 public class MovieHelper {
     private MovieHelper() {
         
@@ -20,16 +17,16 @@ public class MovieHelper {
     private PreparedStatement pres = null;
     
     public static MovieHelper getHelper() {
-        /** Singleton檢查是否已經有ProductHelper物件，若無則new一個，若有則直接回傳 */
+        /** Singleton檢查是否已經有MovieHelper物件，若無則new一個，若有則直接回傳 */
         if(movh == null) movh = new MovieHelper();
         
         return movh;
     }
     
     public JSONObject getAll() {
-        /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
+        /** 新建一個 Movie 物件之 m 變數，用於紀錄每一位查詢回之電影資料 */
     	Movie m = null;
-        /** 用於儲存所有檢索回之商品，以JSONArray方式儲存 */
+        /** 用於儲存所有檢索回之電影，以JSONArray方式儲存 */
         JSONArray jsa = new JSONArray();
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
@@ -69,9 +66,9 @@ public class MovieHelper {
               String movie_description = rs.getString("movie_description");
               int movie_type = rs.getInt("movie_type");
                 
-                /** 將每一筆商品資料產生一名新Product物件 */
+                /** 將每一筆電影資料產生一名新Movie物件 */
 				m = new Movie(movie_id, movie_name, movie_time, movie_image, movie_description, movie_type);
-                /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
+                /** 取出該項電影之資料並封裝至 JSONsonArray 內 */
                 jsa.put(m.getMovieData());
             }
 
@@ -91,7 +88,7 @@ public class MovieHelper {
         /** 紀錄程式執行時間 */
         long duration = (end_time - start_time);
         
-        /** 將SQL指令、花費時間、影響行數與所有會員資料之JSONArray，封裝成JSONObject回傳 */
+        /** 將SQL指令、花費時間、影響行數與所有電影資料之JSONArray，封裝成JSONObject回傳 */
         JSONObject response = new JSONObject();
         response.put("sql", exexcute_sql);
         response.put("row", row);
@@ -102,9 +99,9 @@ public class MovieHelper {
     }
     
     public JSONObject getByIdList(String data) {
-      /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
+      /** 新建一個 Movie 物件之 m 變數，用於紀錄每一位查詢回之電影資料 */
       Movie m = null;
-      /** 用於儲存所有檢索回之商品，以JSONArray方式儲存 */
+      /** 用於儲存所有檢索回之電影，以JSONArray方式儲存 */
       JSONArray jsa = new JSONArray();
       /** 記錄實際執行之SQL指令 */
       String exexcute_sql = "";
@@ -153,9 +150,9 @@ public class MovieHelper {
               String movie_description = rs.getString("movie_description");
               int movie_type = rs.getInt("movie_type");
               
-              /** 將每一筆商品資料產生一名新Product物件 */
+              /** 將每一筆電影資料產生一名新Movie物件 */
               m = new Movie(movie_id, movie_name, movie_time, movie_image, movie_description, movie_type);
-              /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
+              /** 取出該項電影之資料並封裝至 JSONsonArray 內 */
               jsa.put(m.getMovieData());
           }
 
@@ -175,7 +172,7 @@ public class MovieHelper {
       /** 紀錄程式執行時間 */
       long duration = (end_time - start_time);
       
-      /** 將SQL指令、花費時間、影響行數與所有會員資料之JSONArray，封裝成JSONObject回傳 */
+      /** 將SQL指令、花費時間、影響行數與所有電影資料之JSONArray，封裝成JSONObject回傳 */
       JSONObject response = new JSONObject();
       response.put("sql", exexcute_sql);
       response.put("row", row);
@@ -186,7 +183,7 @@ public class MovieHelper {
   }
     
     public Movie getById(String id) {
-        /** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
+        /** 新建一個 Movie 物件之 m 變數，用於紀錄每一位查詢回之電影資料 */
         Movie m = null;
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
@@ -220,7 +217,7 @@ public class MovieHelper {
 				String movie_description = rs.getString("movie_description");
 				int movie_type = rs.getInt("movie_type");
                 
-                /** 將每一筆商品資料產生一名新Product物件 */
+                /** 將每一筆電影資料產生一名新Product物件 */
                 m = new Movie(movie_id, movie_name, movie_time, movie_image, movie_description, movie_type);
             }
 
@@ -239,9 +236,9 @@ public class MovieHelper {
     }
 	
 	public JSONObject getByType(String type){
-		/** 新建一個 Product 物件之 m 變數，用於紀錄每一位查詢回之商品資料 */
+		/** 新建一個 Movie 物件之 m 變數，用於紀錄每一位查詢回之電影資料 */
 		  Movie m = null;
-		  /** 用於儲存所有檢索回之商品，以JSONArray方式儲存 */
+		  /** 用於儲存所有檢索回之電影，以JSONArray方式儲存 */
 		  JSONArray jsa = new JSONArray();
 		  /** 記錄實際執行之SQL指令 */
 		  String exexcute_sql = "";
@@ -255,22 +252,11 @@ public class MovieHelper {
 		  try {
 			  /** 取得資料庫之連線 */
 			  conn = DBMgr.getConnection();
-			  String[] in_para = DBMgr.stringToArray(type, ",");
 			  /** SQL指令 */
 			  
 			  String sql = "SELECT * FROM `final_pj`.`movie` WHERE `movie`.`movie_type` = ? LIMIT 1";
 			  
-			  /*for (int i=0 ; i < in_para.length ; i++) {
-				  sql += (i == 0) ? "in (?" : ", ?";
-				  sql += (i == in_para.length-1) ? ")" : "";
-			  }
-			  
-			  /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
 			  pres = conn.prepareStatement(sql);
-			  /*for (int i=0 ; i < in_para.length ; i++) {
-				pres.setString(i+1, in_para[i]);
-			  }
-			  /** 執行查詢之SQL指令並記錄其回傳之資料 */
 			  pres.setInt(1, Integer.parseInt(type));
 			  rs = pres.executeQuery();
 
@@ -291,9 +277,9 @@ public class MovieHelper {
 				  String movie_description = rs.getString("movie_description");
 				  int movie_type = rs.getInt("movie_type");
 				  
-				  /** 將每一筆商品資料產生一名新Product物件 */
+				  /** 將每一筆電影資料產生一名新Movie物件 */
 				  m = new Movie(movie_id, movie_name, movie_time, movie_image, movie_description, movie_type);
-				  /** 取出該項商品之資料並封裝至 JSONsonArray 內 */
+				  /** 取出該項電影之資料並封裝至 JSONsonArray 內 */
 				  jsa.put(m.getMovieData());
 			  }
 
@@ -313,7 +299,7 @@ public class MovieHelper {
 		  /** 紀錄程式執行時間 */
 		  long duration = (end_time - start_time);
 		  
-		  /** 將SQL指令、花費時間、影響行數與所有會員資料之JSONArray，封裝成JSONObject回傳 */
+		  /** 將SQL指令、花費時間、影響行數與所有電影資料之JSONArray，封裝成JSONObject回傳 */
 		  JSONObject response = new JSONObject();
 		  response.put("sql", exexcute_sql);
 		  response.put("row", row);
@@ -322,48 +308,6 @@ public class MovieHelper {
 
 		  return response;
 	}
-	
-	/*public void updateRoomUPDATETIME(Room r){
-		/** 更新時間之分鐘數 */
-        //Timestamp new_times = r.getRoomUPDATETIME();
-        
-        /** 記錄實際執行之SQL指令 */
-        /*String exexcute_sql = "";
-        
-        try {
-            /** 取得資料庫之連線 */
-        /*    conn = DBMgr.getConnection();
-            /** SQL指令 */
-			
-			/*改
-            String sql = "Update `missa`.`movie` SET `movie_update_times` = ? WHERE `room_id` = ?";
-            */
-			
-			/** 取得會員編號 */
-        /*    int id = r.getRoomID();
-            
-            /** 將參數回填至SQL指令當中 */
-        /*    pres = conn.prepareStatement(sql);
-            pres.setInt(1, new_times);
-            pres.setInt(2, id);
-            /** 執行更新之SQL指令 */
-        /*    pres.executeUpdate();
-
-            /** 紀錄真實執行的SQL指令，並印出 **/
-        /*    exexcute_sql = pres.toString();
-            System.out.println(exexcute_sql);
-
-        } catch (SQLException e) {
-            /** 印出JDBC SQL指令錯誤 **/
-        /*    System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
-        } catch (Exception e) {
-            /** 若錯誤則印出錯誤訊息 */
-        /*    e.printStackTrace();
-        } finally {
-            /** 關閉連線並釋放所有資料庫相關之資源 **/
-        /*    DBMgr.close(pres, conn);
-        }
-	}*/
 	
 	public JSONObject updateMovie(Movie m){
 		/** 紀錄回傳之資料 */
