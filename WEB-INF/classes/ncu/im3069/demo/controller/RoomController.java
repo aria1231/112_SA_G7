@@ -1,4 +1,4 @@
-//package ncu.im3069.demo.controller;
+package ncu.im3069.demo.controller;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -6,8 +6,10 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.json.*;
 
+import ncu.im3069.demo.app.Room;
+import ncu.im3069.demo.app.RoomHelper;
 //import ncu.im3069.demo.app.ProductHelper;
-//import ncu.im3069.tools.JsonReader;
+import ncu.im3069.tools.JsonReader;
 
 @WebServlet("/api/room.do")
 public class RoomController extends HttpServlet {
@@ -61,7 +63,7 @@ public class RoomController extends HttpServlet {
         Room r = new Room(room_name, room_price, room_description, room_image);
         
         /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
-        if(room_name.isEmpty() || room_price.isEmpty() || room_description.isEmpty() || room_image.isEmpty()) {
+        if(room_name.isEmpty() || room_price == 0 || room_description.isEmpty() || room_image.isEmpty()) {
             /** 以字串組出JSON格式之資料 */
             String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
             /** 透過JsonReader物件回傳到前端（以字串方式） */
@@ -126,14 +128,14 @@ public class RoomController extends HttpServlet {
         JSONObject jso = jsr.getObject();
         
         /** 取出經解析到JSONObject之Request參數 */
-        int id = jso.getInt("room_id");
+        int room_id = jso.getInt("room_id");
         String room_name = jso.getString("room_name");
         int room_price = jso.getInt("room_price");
         String room_description = jso.getString("room_description");
 		String room_image = jso.getString("room_image");
 
         /** 透過傳入之參數，新建一個以這些參數之會員Member物件 */
-        Room r = new Room(room_id, room_price, room_description, room_image);
+        Room r = new Room(room_id, room_name, room_price, room_description, room_image);
         
         /** 透過Member物件的update()方法至資料庫更新該名會員資料，回傳之資料為JSONObject物件 */
         JSONObject data = r.updateRoom();

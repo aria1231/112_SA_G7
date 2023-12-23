@@ -1,6 +1,8 @@
-//package ncu.im3069.demo.app;
+package ncu.im3069.demo.app;
 
 import org.json.*;
+
+import java.security.Timestamp;
 import java.util.Calendar;
 
 public class Room {
@@ -22,6 +24,8 @@ public class Room {
 	
 	/** mh，MemberHelper之物件與Member相關之資料庫方法（Sigleton） */
     private RoomHelper rooh =  RoomHelper.getHelper();
+
+	private Timestamp room_update_time;
 	
     /**
      * 實例化（Instantiates）一個新的（new）Product 物件<br>
@@ -30,7 +34,7 @@ public class Room {
      * @param id 產品編號
      */
 	public Room(String room_name, int room_price, String room_description, String room_image) {
-		this.roome_name = room_name;
+		this.room_name = room_name;
 		this.room_price = room_price;
 		this.room_description= room_description;
 		this.room_image = room_image;
@@ -133,34 +137,35 @@ public class Room {
 	public JSONObject getRoomData() {
         /** 透過JSONObject將該項產品所需之資料全部進行封裝*/
         JSONObject jso = new JSONObject();
-        jso.put("room_id", getID());
-        jso.put("room_name", getNAME());
-        jso.put("room_price", getPRICE());
-        jso.put("room_image", getIMAGE());
-        jso.put("room_description", getDESCRIPTION());
+        jso.put("room_id", getRoomID());
+        jso.put("room_name", getRoomNAME());
+        jso.put("room_price", getRoomPRICE());
+        jso.put("room_image", getRoomIMAGE());
+        jso.put("room_description", getRoomDESCRIPTION());
 
         return jso;
     }
 	
-	private void getRoHUPDATETIME(){
+	/*private void getRoHUPDATETIME(){
 		JSONObject data = rooh.getRoomUPDATETIME(this);
 		this.room_update_time = data.getTimestamp("room_update_time");
-	}
+	}*/
 	
 	public JSONObject updateRoom(){
 		/** 新建一個JSONObject用以儲存更新後之資料 */
         JSONObject data = new JSONObject();
         /** 取得更新資料時間（即現在之時間）之分鐘數 */
-        Calendar calendar = Calendar.getInstance();
-        this.room_update_times = calendar.get(Calendar.MINUTE);
+        //Calendar calendar = Calendar.getInstance();
+        //this.room_update_time = calendar.get(Calendar.MINUTE);
         
         /** 檢查該名會員是否已經在資料庫 */
         if(this.room_id != 0) {
             /** 若有則將目前更新後之資料更新至資料庫中 */
-            rooh.updateRoomUPDATETIME(this);
+            //rooh.updateRoomUPDATETIME(this);
             /** 透過MemberHelper物件，更新目前之會員資料置資料庫中 */
             data = rooh.updateRoom(this);
         }
         
         return data;
+	}
 }
