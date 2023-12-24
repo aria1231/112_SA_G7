@@ -1,6 +1,12 @@
 package ncu.im3069.demo.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -64,9 +70,34 @@ public class MovieController extends HttpServlet {
         String movie_name = jso.getString("movie_name");
         int movie_time = jso.getInt("movie_time");
         String movie_description = jso.getString("movie_description");
-		String movie_image = jso.getString("movie_image");
+		//String movie_image = jso.getString("movie_image");
 		int movie_type = jso.getInt("movie_type");
         
+		// 取得上傳的檔案部分
+	    Part filePart = request.getPart("movie_image");
+
+	    // 取得檔案名稱
+	    String fileName = getSubmittedFileName(filePart);
+
+	    // 上傳目錄的相對路徑
+	    String uploadDirectory = "/statics/img";
+
+	    // 上傳目錄的實際路徑
+	    String uploadPath = getServletContext().getRealPath(uploadDirectory);
+
+	    // 確保上傳目錄存在，如果不存在就建立它
+	    File uploadDir = new File(uploadPath);
+	    if (!uploadDir.exists()) {
+	        uploadDir.mkdirs();  // 使用 mkdirs() 確保父目錄也被建立
+	    }
+
+	    // 將檔案保存到上傳目錄中
+	    Path targetPath = Paths.get(uploadPath, fileName);
+	    Files.copy(filePart.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+	    
+	    // 將相關參數存儲到 movie_image 字串中
+        String movie_image = uploadDirectory + "/" + fileName;
+
         /** 建立一個新的電影物件 */
         Movie m = new Movie(movie_name, movie_type, movie_description, movie_image, movie_type);
         
@@ -92,6 +123,18 @@ public class MovieController extends HttpServlet {
         }
 	}
 	
+	// 此方法用於從 Part 對象中獲取上傳的檔案名稱
+	private String getSubmittedFileName(Part part) {
+		for (String cd : part.getHeader("content-disposition").split(";")) {
+            if (cd.trim().startsWith("filename")) {
+                String fileName = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+                return fileName.substring(fileName.lastIndexOf('/') + 1).substring(fileName.lastIndexOf('\\') + 1); // MSIE fix.
+            }
+        }
+        return null;
+	}
+
+
 	/**
      * 處理Http Method請求DELETE方法（刪除）
      *
