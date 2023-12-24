@@ -254,7 +254,7 @@ public class MovieHelper {
 			  conn = DBMgr.getConnection();
 			  /** SQL指令 */
 			  
-			  String sql = "SELECT * FROM `final_pj`.`movie` WHERE `movie`.`movie_type` = ? LIMIT 1";
+			  String sql = "SELECT * FROM `final_pj`.`movie` WHERE `movie`.`movie_type` = ?";
 			  
 			  pres = conn.prepareStatement(sql);
 			  pres.setInt(1, Integer.parseInt(type));
