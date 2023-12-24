@@ -106,8 +106,9 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <!-- 下拉式選單中的選項 -->
-                            <a class="dropdown-item" href="sign_in.html">登入</a>
-                            <a class="dropdown-item" href="sign_up.html">註冊</a>
+                            <a class="dropdown-item" href="sign_in.html">會員登入</a>
+                            <a class="dropdown-item" href="sign_up.html">會員註冊</a>
+                            <a class="dropdown-item" href="mgr_sign_in.html">管理員登入</a>
                         </div>
                     </li>
                 </ul>
@@ -155,12 +156,12 @@
             let inner_html = '';
             inner_html += '<div class="movie-container">';
             inner_html += '<div class="movie-image">';
-            inner_html += '<img src="../images/' + data.movie_image + '">';
+            inner_html += '<img src="statics/img/movie/' + data.movie_image + '">';
             inner_html += '</div>';
             inner_html += '<div class="movie-details">';
-            inner_html += '<h2 id="movie-name">' + data.movie_name + '</h2>';
-            inner_html += '<p>' + data.movie_time + '</p>';
-            inner_html += '<p>' + data.movie_description + '</p>';
+            inner_html += '<h2 id="movie-name">電影名稱: ' + data.movie_name + '</h2>';
+            inner_html += '<p>片長: ' + data.movie_time + '</p>';
+            inner_html += '<p>簡介: ' + data.movie_description + '</p>';
             inner_html += '</div></div>';
             return inner_html;
         }

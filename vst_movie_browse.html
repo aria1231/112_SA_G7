@@ -1,5 +1,4 @@
 <!-- 瀏覽全部電影(訪客) -->
-<!-- 瀏覽全部電影(會員) -->
 <!doctype html>
 <html lang="en">
 
@@ -108,8 +107,9 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <!-- 下拉式選單中的選項 -->
-                            <a class="dropdown-item" href="sign_in.html">登入</a>
-                            <a class="dropdown-item" href="sign_up.html">註冊</a>
+                            <a class="dropdown-item" href="sign_in.html">會員登入</a>
+                            <a class="dropdown-item" href="sign_up.html">會員註冊</a>
+                            <a class="dropdown-item" href="mgr_sign_in.html">管理員登入</a>
                         </div>
                     </li>
                 </ul>
@@ -202,7 +202,7 @@
             inner_html += '<div class="col">';
             inner_html += '<a href="#" onclick="goToMovieInfo(' + data.movie_id + ')">';
             inner_html += '<div class="card">';
-            inner_html += '<img src="statics/images/' + data.movie_image + '" class="card-img-top" alt="Movie poster for ' + data.movie_name + '">';
+            inner_html += '<img src="statics/img/movie/' + data.movie_image + '" class="card-img-top" alt="Movie poster for ' + data.movie_name + '">';
             inner_html += '<div class="card-body">';
             inner_html += '<h4 class="card-title">' + data.movie_name + '</h4>';
             inner_html += '</div></div></a></div>';
@@ -211,8 +211,8 @@
 
         // 前往電影詳細資訊頁面
         function goToMovieInfo(movie_id) {
-            // 建立 movie_info.html 的 URL，並將 movie_id 作為參數傳遞
-            var url = 'movie_info.html?movie_id=' + movie_id;
+            // 建立 vst_movie_info.html 的 URL，並將 movie_id 作為參數傳遞
+            var url = 'vst_movie_info.html?movie_id=' + movie_id;
 
             // 使用 JavaScript 跳轉頁面
             window.location.href = url;
