@@ -1,62 +1,65 @@
-<!-- 查看單一電影(訪客) -->
+<!-- 瀏覽全部包廂(訪客) -->
+
 <!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FinalProject_group7</title>
+    <title>FinalPJ_G7</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
     <style>
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            /* 設定高度為視窗的100% */
-        }
-
-        .movie-container {
-            display: flex;
-            max-width: 800px;
-            /* 根據需要設定最大寬度 */
-            width: 100%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            /* 添加陰影效果 */
-            border-radius: 10px;
-            /* 添加圓角 */
-        }
-
-        .movie-image {
-            flex: 1;
-            border-radius: 10px 0 0 10px;
-            /* 左邊的圓角 */
+        .card {
+            width: 25rem;
+            height: 25rem;
+            /* 固定卡片高度，根据需要调整 */
+            border-radius: 30px;
+            /* 圓角 */
+            margin: 20px;
+            /* 间距 */
+            margin: 30px 30px;
+            /* 上方和下方间距 */
             overflow: hidden;
+            /* 防止圓角溢出 */
+            background-color: #c7d8b6;
+            /* 卡片背景颜色 */
         }
 
-        .movie-image img {
-            width: 100%;
-            height: auto;
+        .card img {
+            border-radius: 30px 30px 30px 30px;
+            /* 電影圖片圓角 */
+            width: 85%;
+            /* 图片宽度填充卡片 */
+            height: 85%;
+            /* 图片高度相对于卡片的百分比，根据需要调整 */
+            margin: 15px auto 0;
+            /* 图片水平居中，上方添加间距 */
             display: block;
-            border-radius: 10px 0 0 10px;
-            /* 左邊的圓角 */
+            /* margin属性生效 */
         }
 
-        .movie-details {
-            flex: 2;
-            padding: 20px;
-            border-radius: 0 10px 10px 0;
-            /* 右邊的圓角 */
+        .card-body {
+            text-align: center;
+            /* 電影名稱居中 */
         }
 
-        .movie-details h2 {
-            margin-bottom: 20px;
+        .card-title {
+            font-weight: bold;
+            /* 字体加粗 */
+            text-decoration: none !important;
+            /* 使用 !important 來覆蓋預設樣式 */
+            color: inherit;
+            /* 使用父元素的颜色，防止被默认颜色覆盖 */
         }
 
-        .movie-details p {
-            margin-bottom: 10px;
+        .card:hover {
+            background-color: #f0f0f0;
+        }
+
+        .row {
+            flex-wrap: wrap;
+            /* 將 flex-wrap 設為 wrap，讓元素換行 */
         }
     </style>
     <script src="statics/js/jquery-3.4.1.min.js"></script>
@@ -116,55 +119,66 @@
         </div>
     </nav>
 
-    <div class="container" id="movie_info_panel">
-        <!-- 這裡會插入電影詳細資訊 -->
+    <div class="container">
+        <div class="row justify-content-center" id="room_panel">
+            <!-- 包廂在這插入 -->
+        </div>
     </div>
 
     <script>
-        // 獲取 URL 中的參數
-        const urlParams = new URLSearchParams(window.location.search);
-        const movieId = urlParams.get('movie_id');
-        // 使用 Ajax 請求從後端獲取電影信息
-        $.ajax({
-            type: "GET",
-            url: "api/movie.do",
-            data: { movie_id: movieId },
-            crossDomain: true,
-            cache: false,
-            dataType: 'json',
-            timeout: 5000,
-            success: function (response) {
-                if (response.status == 200) {
-                    // 更新頁面上的電影信息
-                    updateMovieInfo(response.response.data);
-                }
-            },
-            error: function () {
-                alert("無法連線到伺服器！");
-            }
-        });
 
-        // 更新頁面上的電影信息
-        function updateMovieInfo(movieData) {
-            // 將生成的 HTML 元素插入到 #movie_info_panel 中
-            $("#movie_info_panel").html(addMovie(movieData));
+        // 當網頁載入完成後，執行 getAllRoom 函式取得所有包廂資料	
+        function getAllRoom() {
+            $.ajax({
+                type: "GET",
+                url: "api/room.do", // 使用 AJAX 向伺服器端的包廂 API 發送 GET 請求
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success: function (response) {
+                    if (response.status == 200) {
+                        // 將伺服器端回傳的包廂資料逐一處理，並呼叫 addRoom 函式生成 HTML 元素
+                        var Room_panel = '';
+
+                        $.each(response.response.data, function () {
+                            room_panel += addRoom(this);
+                        })
+                        // 將生成的 HTML 元素加入 id 為 "room_panel" 的區塊中
+                        $("#room_panel").append(room_panel);
+                    }
+                },
+                error: function () {
+                    alert("無法連線到伺服器！");
+                }
+            });
         }
 
+        // 呼叫 getAllRoom 函式以初始化包廂列表
+        getAllRoom();
 
-        // 生成電影詳細頁面的 HTML 結構
-        function addMovie(data) {
+        // 生成包廂元素的 HTML 結構
+        function addRoom(data) {
             let inner_html = '';
-            inner_html += '<div class="movie-container">';
-            inner_html += '<div class="movie-image">';
-            inner_html += '<img src="statics/img/movie/' + data.movie_image + '">';
-            inner_html += '</div>';
-            inner_html += '<div class="movie-details">';
-            inner_html += '<h2 id="movie-name">電影名稱: ' + data.movie_name + '</h2>';
-            inner_html += '<p>片長: ' + data.movie_time + '</p>';
-            inner_html += '<p>簡介: ' + data.movie_description + '</p>';
-            inner_html += '</div></div>';
+            inner_html += '<div class="col">';
+            inner_html += '<a href="#" onclick="goToRoomInfo(' + data.room_id + ')">';
+            inner_html += '<div class="card">';
+            inner_html += '<img src="statics/img/room/' + data.room_image + '" class="card-img-top" alt="Room poster for ' + data.room_name + '">';
+            inner_html += '<div class="card-body">';
+            inner_html += '<h4 class="card-title">' + data.room_name + '</h4>';
+            inner_html += '</div></div></a></div>';
             return inner_html;
-        } 
+        }
+
+        // 前往包廂詳細資訊頁面
+        function goToRoomInfo(room_id) {
+            // 建立 vst_room_info.html 的 URL，並將 room_id 作為參數傳遞
+            var url = 'vst_room_info.html?room_id=' + room_id;
+
+            // 使用 JavaScript 跳轉頁面
+            window.location.href = url;
+        }
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

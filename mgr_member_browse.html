@@ -1,0 +1,177 @@
+<!-- 瀏覽全部會員(管理員) -->
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FinalPJ_G7</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .card {
+            /* 調整卡片的最大寬度 */
+            max-width: 18rem;
+            /* 固定卡片高度 */
+            height: 17rem;
+            /* 圓角 */
+            border-radius: 10px;
+            /* 间距 */
+            margin: 5px 0;
+            /* 卡片背景颜色 */
+            background-color: #f0f0f0;
+        }
+
+        .btn-primary {
+            background-color: #c7d8b6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+            color: black;
+        }
+    </style>
+    <script src="statics/js/jquery-3.4.1.min.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid" style="max-width: 90%">
+            <!-- 網站標題 -->
+            <a class="navbar-brand" href="#">沉浸式精緻電影院</a>
+
+            <!-- navbar的切換按鈕，用於小屏幕設備 -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- navbar的折疊區域 -->
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <!-- 首頁連結 -->
+                    <a class="nav-link active" aria-current="page" href="manager_index.html">首頁</a>
+
+                    <!-- 會員管理連結 -->
+                    <a class="nav-link" href="mgr_member_browse.html">會員管理</a>
+
+                    <!-- 電影管理連結 -->
+                    <a class="nav-link" href="mgr_movie_browse.html">電影管理</a>
+
+                    <!-- 包廂設置連結 -->
+                    <a class="nav-link" href="mgr_room_browse.html">包廂設置</a>
+
+                    <!-- 餐點更動連結 -->
+                    <a class="nav-link" href="mgr_meal_browse.html">餐點更動</a>
+
+                </div>
+                <!-- 新增右側的下拉式選單 -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <!-- 在這裡加入你的人物圖示 -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                <path fill-rule="evenodd"
+                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                            </svg>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- 下拉式選單中的選項 -->
+                            <a class="dropdown-item" href="index.html">登出</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Member cards container -->
+    <div class="container mt-5">
+        <div class="row g-4" id="member_panel">
+            <!-- 將會員資料插入這裡 -->
+        </div>
+    </div>
+
+    <script>
+
+        // 當網頁載入完成後，執行 getAllMember 函式取得所有會員資料	
+        function getAllMember() {
+            $.ajax({
+                type: "GET",
+                url: "api/member.do", // 使用 AJAX 向伺服器端的會員 API 發送 GET 請求
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success: function (response) {
+                    if (response.status == 200) {
+                        // 將伺服器端回傳的會員資料逐一處理，並呼叫 addMember 函式生成 HTML 元素
+                        var member_panel = '';
+
+                        $.each(response.response.data, function () {
+                            member_panel += addMember(this);
+                        })
+                        // 將生成的 HTML 元素加入 id 為 "member_panel" 的區塊中
+                        $("#member_panel").append(member_panel);
+                    }
+                },
+                error: function () {
+                    alert("無法連線到伺服器！");
+                }
+            });
+        }
+
+        // 呼叫 getAllMember 函式以初始化會員列表
+        getAllMember();
+
+        // 生成會員元素的 HTML 結構
+        function addMember(data) {
+            let inner_html = '';
+            inner_html += '<div class="card">';
+            inner_html += '<div class="card-body">';
+            inner_html += '<h5 class="card-title">' + data.member_last_name + data.member_first_name + '</h5>';
+            inner_html += '<p class="card-text">Email: ' + data.member_email + '</p>';
+            inner_html += '<p class="card-text">Phone Number: ' + data.member_phone_number + '</p>';
+            inner_html += '<a href="mgr_member_edit.html?member_id=' + data.member_id + '" class="btn btn-primary">編輯</a>';
+            inner_html += '<button class="btn btn-danger" onclick="deleteMember(' + data.member_id + ')">';
+            inner_html += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">';
+            inner_html += '<path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5" />';
+            inner_html += '</svg>';
+            inner_html += 'Delete';
+            inner_html += '</button>';
+            inner_html += '</div></div>';
+            return inner_html;
+        }
+
+        function deleteMember(member_id) {
+            // 在這裡使用 member_id執行刪除會員
+            // 使用 AJAX 向伺服器端的刪除會員 API 發送 DELETE 請求
+            $.ajax({
+                type: "DELETE",
+                url: "api/member.do", // 請更換為實際的後端 API 端點
+                data: { member_id: member_id },
+                success: function (response) {
+                    // 在刪除成功後，可以刷新會員列表或執行其他相應的操作
+                    alert("會員刪除成功！");
+                    // 刷新會員列表的例子
+                    getAllMember();
+                },
+                error: function () {
+                    alert("無法刪除會員！");
+                }
+            });
+        }
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,11 +1,11 @@
-<!-- 電影編輯頁面(可以key字的那個畫面) -->
+<!-- 餐點編輯頁面(可以key字的那個畫面) -->
 <!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FinalProject_group7</title>
+    <title>Meal Edit - FinalProject_group7</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
@@ -15,47 +15,40 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            /* 設定高度為視窗的100% */
         }
 
-        .movie-container {
+        .meal-container {
             display: flex;
             max-width: 800px;
-            /* 根據需要設定最大寬度 */
             width: 100%;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            /* 添加陰影效果 */
             border-radius: 10px;
-            /* 添加圓角 */
         }
 
-        .movie-image {
+        .meal-image {
             flex: 1;
             border-radius: 10px 0 0 10px;
-            /* 左邊的圓角 */
             overflow: hidden;
         }
 
-        .movie-image img {
+        .meal-image img {
             width: 100%;
             height: auto;
             display: block;
             border-radius: 10px 0 0 10px;
-            /* 左邊的圓角 */
         }
 
-        .movie-details {
+        .meal-details {
             flex: 2;
             padding: 20px;
             border-radius: 0 10px 10px 0;
-            /* 右邊的圓角 */
         }
 
-        .movie-details h2 {
+        .meal-details h2 {
             margin-bottom: 20px;
         }
 
-        .movie-details p {
+        .meal-details p {
             margin-bottom: 10px;
         }
 
@@ -66,9 +59,7 @@
 
         .btn-primary:hover {
             background-color: #f0f0f0;
-            /* 使用淺灰色背景 */
             color: black;
-            /* 使用黑色文字顏色 */
         }
     </style>
     <script src="statics/js/jquery-3.4.1.min.js"></script>
@@ -78,40 +69,23 @@
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid" style="max-width: 90%">
-            <!-- 網站標題 -->
             <a class="navbar-brand" href="#">沉浸式精緻電影院</a>
-
-            <!-- navbar的切換按鈕，用於小屏幕設備 -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
-            <!-- navbar的折疊區域 -->
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <!-- 首頁連結 -->
                     <a class="nav-link active" aria-current="page" href="manager_index.html">首頁</a>
-
-                    <!-- 會員管理連結 -->
                     <a class="nav-link" href="mgr_member_browse.html">會員管理</a>
-
-                    <!-- 電影管理連結 -->
                     <a class="nav-link" href="mgr_movie_browse.html">電影管理</a>
-
-                    <!-- 包廂設置連結 -->
                     <a class="nav-link" href="mgr_room_browse.html">包廂設置</a>
-
-                    <!-- 餐點更動連結 -->
                     <a class="nav-link" href="mgr_meal_browse.html">餐點更動</a>
-
                 </div>
-                <!-- 新增右側的下拉式選單 -->
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <!-- 在這裡加入你的人物圖示 -->
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-person-circle" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
@@ -120,7 +94,6 @@
                             </svg>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <!-- 下拉式選單中的選項 -->
                             <a class="dropdown-item" href="index.html">登出</a>
                         </div>
                     </li>
@@ -132,50 +105,37 @@
     <div class="container mt-1">
         <form method="put" enctype="multipart/form-data">
 
-            <!-- Hidden input儲存movie_id -->
-            <input type="hidden" id="movieId" name="movieId">
+            <!-- Hidden input儲存meal_id -->
+            <input type="hidden" id="mealId" name="mealId">
 
             <div class="row mb-3">
-                <!-- 電影名字 -->
-                <div class="col">
-                    <label for="movieName" class="form-label">電影名稱</label>
-                    <input type="text" class="form-control" id="movieName" name="movieName" required>
+                <!-- 餐點名字 -->
+                <div class="mb-3">
+                    <label for="mealName" class="form-label">餐點名稱</label>
+                    <input type="text" class="form-control" id="mealName" name="mealName" required>
                 </div>
 
-                <!-- 電影片長 -->
-                <div class="col">
-                    <label for="duration" class="form-label">片長</label>
-                    <input type="text" class="form-control" id="duration" name="duration" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <!-- 電影簡介 -->
-                <div class="col">
-                    <label for="description" class="form-label">簡介</label>
-                    <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                <!-- 餐點價格 -->
+                <div class="mb-3">
+                    <label for="mealPrice" class="form-label">價格</label>
+                    <input type="text" class="form-control" id="mealPrice" name="mealPrice" required>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <!-- 電影分類 -->
-                <div class="col">
-                    <label for="category" class="form-label">分類</label>
-                    <select class="form-select" id="category" name="category" required>
-                        <option value="0">其他</option>
-                        <option value="1">愛情</option>
-                        <option value="2">劇情</option>
-                        <option value="3">動作</option>
-                        <option value="4">驚悚</option>
-                    </select>
+                <!-- 餐點簡介 -->
+                <div class="mb-3">
+                    <label for="mealDescription" class="form-label">簡介</label>
+                    <textarea class="form-control" id="mealDescription" name="mealDescription" rows="4"
+                        required></textarea>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <!-- 電影圖片上傳 -->
+                <!-- 餐點圖片上傳 -->
                 <div class="col">
-                    <label for="image" class="form-label">圖片</label>
-                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <label for="mealImage" class="form-label">圖片</label>
+                    <input type="file" id="mealImage" name="mealImage" accept="image/*" required>
                 </div>
             </div>
 
@@ -184,82 +144,79 @@
         </form>
     </div>
 
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // 從 URL 中獲取 movie_id 參數
+            // 從 URL 中獲取 meal_id 參數
             const urlParams = new URLSearchParams(window.location.search);
-            const movieId = urlParams.get('movie_id');
+            const mealId = urlParams.get('meal_id');
 
-            // 將 movie_id 存入 hidden input
-            document.getElementById('movieId').value = movieId;
+            // 將 meal_id 存入 hidden input
+            document.getElementById('mealId').value = mealId;
 
-            // 使用 movieId 從後端獲取電影資訊並填充表單
+            // 使用 mealId 從後端獲取餐點資訊並填充表單
             $.ajax({
                 type: 'GET',
-                url: `api/movie.do`,
-                data: { movie_id: movieId },
+                url: `api/meal.do`,
+                data: { meal_id: mealId },
                 success: function (response) {
-                    // 將後端返回的電影資訊填充到表單中
-                    document.getElementById('movieName').value = response.movie_name;  // 對應資料庫的 movie_name
-                    document.getElementById('duration').value = response.movie_time;  // 對應資料庫的 movie_time
-                    document.getElementById('description').value = response.movie_description;  // 對應資料庫的 movie_description
-                    document.getElementById('category').value = response.movie_type;  // 對應資料庫的 movie_type
-
+                    // 將後端返回的餐點資訊填充到表單中
+                    document.getElementById('mealName').value = response.meal_name;
+                    document.getElementById('mealPrice').value = response.meal_price;
+                    document.getElementById('mealDescription').value = response.meal_description;
                 },
                 error: function (error) {
-                    console.error('Failed to fetch movie information:', error);
+                    console.error('Failed to fetch meal information:', error);
                 }
             });
         });
-
         // 確認修改按鈕的點擊事件
         function confirmEdit() {
             // 獲取用戶輸入的值
-            const editedMovieId = document.getElementById('movieId').value;
-            const editedMovieName = document.getElementById('movieName').value;
-            const editedDuration = document.getElementById('duration').value;
-            const editedDescription = document.getElementById('description').value;
-            const editedCategory = document.getElementById('category').value;
-            const imageInput = document.getElementById('image');
+            const editedmealId = document.getElementById('mealId').value;
+            const editedmealName = document.getElementById('mealName').value;
+            const editedmealPrice = document.getElementById('mealPrice').value;
+            const editedmealDescription = document.getElementById('mealDescription').value;
+            const imageInput = document.getElementById('mealImage');
 
             // 檢查是否有欄位為空值
-            if (!editedMovieName || !editedDuration || !editedDescription || !editedCategory || !imageInput.files[0]) {
+            if (!editedmealName || !editedmealPrice || !editedmealDescription || !imageInput.files[0]) {
                 alert('請填寫所有欄位');
                 return;
             }
 
-            const image = imageInput.files[0]; // 取得上傳的檔案
+            const image = imageInput.files[0];
 
             // 使用 FormData 來處理上傳的檔案
             const formData = new FormData();
-            formData.append('movieId', editedMovieId);
-            formData.append('movieName', editedMovieName);
-            formData.append('duration', editedDuration);
-            formData.append('description', editedDescription);
-            formData.append('category', editedCategory);
-            formData.append('image', image);
+            formData.append('mealId', editedmealId);
+            formData.append('mealName', editedmealName);
+            formData.append('mealPrice', editedmealPrice);
+            formData.append('mealDescription', editedmealDescription);
+            formData.append('mealImage', image);
 
             // 使用 AJAX 向後端發送更新資料的請求
             $.ajax({
-                type: 'PUT', // 使用 PUT 方法
-                url: 'api/movie.do',
+                type: 'PUT',  // 使用 PUT 方法
+                url: 'api/meal.do',
                 data: formData,
-                contentType: false, // 必須設置為 false
-                processData: false, // 必須設置為 false
+                contentType: false,  // 必須設置為 false
+                processData: false,  // 必須設置為 false
                 success: function (response) {
-                    // 更新成功後的處理，可以根據需要進行操作
                     alert('電影資訊已成功更新！');
-                    // 重定向回 mgr_movie_info.html
-                    var url = 'mgr_movie_info.html?movie_id=' + editedMovieId;
+                    // 重定向回 mgr_meal_info.html
+                    var url = 'mgr_meal_info.html?meal_id=' + editedmealId;
                     // 使用 JavaScript 跳轉頁面
                     window.location.href = url;
                 },
                 error: function (error) {
-                    console.error('電影資訊更新失敗：', error);
-                    alert('電影資訊更新失敗！');
+                    console.error('餐點資訊更新失敗：', error);
+                    alert('餐點資訊更新失敗！');
                 }
             });
         }
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

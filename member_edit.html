@@ -1,0 +1,235 @@
+<!-- 會員編輯自己的資訊 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FinalPJ_G7</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .card {
+            border-radius: 20px;
+        }
+
+        .btn-primary {
+            background-color: #c7d8b6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+            color: black;
+        }
+    </style>
+    <!-- 引入 jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid" style="max-width: 90%">
+            <!-- 網站標題 -->
+            <a class="navbar-brand" href="#">沉浸式精緻電影院</a>
+
+            <!-- navbar的切換按鈕，用於小屏幕設備 -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- navbar的折疊區域 -->
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <!-- 首頁連結 -->
+                    <a class="nav-link active" aria-current="page" href="member_index.html">首頁</a>
+
+                    <!-- 電影資訊連結 -->
+                    <a class="nav-link" href="movie_browse.html">電影資訊</a>
+
+                    <!-- 包廂資訊連結 -->
+                    <a class="nav-link" href="room_browse.html">包廂資訊</a>
+
+                    <!-- 餐點資訊連結 -->
+                    <a class="nav-link" href="meal_browse.html">餐點資訊</a>
+
+                    <!-- 預約連結 -->
+                    <a class="nav-link" href="order.html">預約</a>
+                </div>
+                <!-- 新增右側的下拉式選單 -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                <path fill-rule="evenodd"
+                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                            </svg>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- 下拉式選單中的選項 -->
+                            <a class="dropdown-item" href="member_info.html">會員資料</a>
+                            <a class="dropdown-item" href="order_browse.html">訂單中心</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="../vst_pages/index.html">登出</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 會員編輯頁面 -->
+    <div class="member-edit-box" style="margin-top: 5px;">
+        <!-- Card 開始 -->
+        <div class="card m-100 mx-auto" style="width: 30rem; margin: 10px; padding: 20px;">
+            <p class="mb-4">以下是您的個人資料，更改完成後請按下確認更改。</p>
+
+            <!-- 名字和姓在同一列 -->
+            <div class="row mb-3">
+                <div class="col">
+                    <!-- 名字更改欄位 -->
+                    <label for="inputFirstName" class="form-label">名字:</label>
+                    <input type="text" id="inputFirstName" class="form-control" aria-describedby="firstNameHelpInline"
+                        placeholder="">
+                </div>
+                <div class="col">
+                    <!-- 姓更改欄位 -->
+                    <label for="inputLastName" class="form-label">姓:</label>
+                    <input type="text" id="inputLastName" class="form-control" aria-describedby="lastNameHelpInline"
+                        placeholder="">
+                </div>
+            </div>
+
+            <!-- 電話更改欄位 -->
+            <div class="mb-3">
+                <label for="inputPhoneNumber" class="form-label">電話:</label>
+                <input type="tel" id="inputPhoneNumber" class="form-control" aria-describedby="PhoneNumberHelpInline"
+                    placeholder="">
+            </div>
+
+            <!-- email展示 -->
+            <div class="mb-3">
+                <label for="displayEmail" class="form-label">Email:</label>
+                <div id="displayEmail" class="form-control" aria-describedby="emailHelpInline"></div>
+            </div>
+
+            <!-- 密碼更改欄位 -->
+            <div class="mb-3">
+                <label for="inputPassword" class="form-label">密碼:</label>
+                <input type="password" id="inputPassword" class="form-control" aria-describedby="passwordHelpInline"
+                    placeholder="">
+            </div>
+
+            <!-- 密碼確認框框 -->
+            <div class="mb-3">
+                <label for="inputPasswordConfirm" class="form-label">密碼確認:</label>
+                <input type="password" id="inputPasswordConfirm" class="form-control"
+                    aria-describedby="passwordConfirmHelpInline" placeholder="">
+                <span id="passwordConfirmHelpInline" class="form-text"></span>
+            </div>
+
+            <!-- 提交按钮 -->
+            <div class="mb-3">
+                <button type="button" class="btn btn-primary" onclick="validateForm()">確認更改</button>
+            </div>
+        </div>
+        <!-- Card 結束 -->
+    </div>
+
+    <script>
+        // 獲取 URL 參數中的 member_id
+        const urlParams = new URLSearchParams(window.location.search);
+        const member_id = urlParams.get('member_id');
+
+        // 使用 member_id 向後端發送 AJAX 請求
+        $.ajax({
+            type: "GET",
+            url: "/api/member.do",  // 請更換為實際的後端 API 端點
+            data: { member_id: member_id },
+            success: function (response) {
+                // 後端返回的資訊中有名字、姓、電話和 email 屬性
+                $('#inputFirstName').val(response.first_name);
+                $('#inputLastName').val(response.last_name);
+                $('#inputPhoneNumber').val(response.phone_number);
+                $('#displayEmail').text(response.email);
+            },
+            error: function () {
+                console.error('無法獲取會員資訊！');
+            }
+        });
+
+        // 驗證表單的函數
+        function validateForm() {
+            var firstName = $('#inputFirstName').val();
+            var lastName = $('#inputLastName').val();
+            var phoneNumber = $('#inputPhoneNumber').val();
+            var email = $('#displayEmail').text(); // 因為 email 欄位是展示用的，所以直接使用展示的值
+            var password = $('#inputPassword').val();
+            var confirmPassword = $('#inputPasswordConfirm').val();
+
+            // 密碼檢查（至少8個字符，包含英文大小寫和數字）
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+            if (firstName === "" || lastName === "" || phoneNumber === "" || password === "" || confirmPassword === "") {
+                // 顯示提醒
+                alert("請填寫所有必填欄位。");
+            } else if (!passwordRegex.test(password)) {
+                // 密碼檢查失敗
+                $('#passwordConfirmHelpInline').text("密碼至少8個字符，包含英文大小寫和數字。").css('color', 'red');
+            } else if (password !== confirmPassword) {
+                // 密碼不一致
+                $('#passwordConfirmHelpInline').text("密碼不一致。").css('color', 'red');
+            } else {
+                // 所有檢查通過，執行更新資料後的操作，連接到後端 API
+
+                // 將資料組成 JSON 格式
+                var dataObject = {
+                    "member_id": member_id,
+                    "firstName": firstName,
+                    "lastName": lastName,
+                    "phoneNumber": phoneNumber,
+                    "email": email,
+                    "password": password
+                };
+
+                // 將 JSON 格式轉換成字串
+                var dataString = JSON.stringify(dataObject);
+
+                // 發出 PUT 的 AJAX 請求
+                $.ajax({
+                    type: "PUT",
+                    url: "/api/member.do",
+                    data: dataString,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        // 處理後端回傳的結果
+                        if (response.status === 200) {
+                            // 更新成功，執行相應的操作
+                            alert(response.message);
+                            // 重定向到 member_info.html
+                            window.location.href = 'member_info.html?member_id=' + member_id;
+                        } else {
+                            // 其他狀態碼，可能是伺服器錯誤
+                            alert("更新失敗。");
+                        }
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+                });
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

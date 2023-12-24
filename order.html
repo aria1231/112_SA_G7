@@ -1,136 +1,629 @@
-<!doctype html>
+<!-- 預約內容畫面 -->
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
-  <meta name="generator" content="Jekyll v3.8.5">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinalPJ_G7</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .step-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
 
-  <title>訂單列表 ｜ NCU MIS SA</title>
+        .step {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+        }
 
-  <!-- Bootstrap core CSS -->
-  <link href="statics/css/bootstrap.min.css" rel="stylesheet">
-  <link href="statics/css/font-awesome.min.css" rel="stylesheet">
-  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="icon">
-  <link href="statics/icon/favicon.ico" type="image/x-icon" rel="shortcut icon">
+        .hidden {
+            display: none;
+        }
 
+        .btn-primary {
+            background-color: #c7d8b6;
+            color: white;
+        }
 
-  <style>
-    .bd-placeholder-img {
-      font-size: 1.125rem;
-      text-anchor: middle;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+            /* 使用淺灰色背景 */
+            color: black;
+            /* 使用黑色文字顏色 */
+        }
 
-    @media (min-width: 768px) {
-      .bd-placeholder-img-lg {
-        font-size: 3.5rem;
-      }
-    }
-  </style>
-  <!-- Custom styles for this template -->
-  <link href="statics/css/product.css" rel="stylesheet">
-  <link href="statics/css/jquery-confirm.css" rel="stylesheet">
-
-  <script src="statics/js/jquery-3.4.1.min.js"></script>
-  <script src="statics/js/jquery-confirm.js"></script>
-  <script src="statics/js/big.min.js"></script>
+        .selected {
+            background-color: #ccc;
+            /* 灰色背景顏色 */
+            border: 1px solid #333;
+            /* 選擇時的邊框 */
+            /* 其他樣式，視您的設計需求而定 */
+        }
+    </style>
+    <script src="statics/js/jquery-3.4.1.min.js"></script>
 </head>
 
 <body>
-  <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-    <h5 class="my-0 mr-md-auto font-weight-normal">NCU_MIS-SA</h5>
-    <nav class="my-2 my-md-0 mr-md-3">
-      <a class="p-2 text-dark" href="index.html">會員管理模組</a>
-      <a class="p-2 text-dark" href="product.html">商品列表</a>
-      <a class="p-2 text-dark" href="order.html">訂單列表</a>
-    </nav>
-    <a class="btn btn-outline-primary" href="cart.html">購物車</a>
-  </div>
 
-  <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center bg-light">
-    <h1 class="display-4">訂單列表</h1>
-    <p class="lead">以下是目前所存在之所有訂單</p>
-  </div>
-
-  <div class="container">
-	  <div class="py-5">
-	  	<div class='row'>
-		  	<div id='order_panel' class="row mb-2">
+    <div style="text-align: center;">
+        <div class="text-muted mb-4 fw-bold"
+            style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
+            <p id="step1">Step 1. 填寫預約資訊</p>
         </div>
-      </div>
-	  </div>
-  </div>
 
-  <script>
-  
-  function getAllOrderData() {
-	  $.ajax({
-          type: "GET",
-          url: "api/order.do",
-          crossDomain: true,
-          cache: false,
-          dataType: 'json',
-          timeout: 5000,
-          success: function (response) {
-              if(response.status == 200){
-            	  updateHTML(response.response.data);
-              }
-              console.log(response);
-          },
-          error: function () {
-              alert("無法連線到伺服器！");
-          }
-    });
-  }
-  
-  getAllOrderData();
-  
-  function updateHTML(data) {
-	  var inner_html = '';
-	  var temp = '';
-	  
-	  $.each(data, function (key, value) {
-		  var total_price = Big(0.0);
-		  $.each(value['product_info'], function (k, v) {
-			  total_price = total_price.plus(v['subtotal'])
-		  });
-		  
-		  temp = '<div class="col-md-6">';
-		  temp += '<div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">';
-		  temp += '<div class="col p-4 d-flex flex-column position-static">';
-		  temp += '<strong class="d-inline-block mb-2 text-primary">訂單編號：#' + value['order_info']['id'] + '</strong>';
-		  temp += '<h3 class="mb-0"><span class="p-2">' + value['order_info']['last_name'] + '</span>';
-		  temp += '<span>' + value['order_info']['first_name'] + '</span></h3>';
-		  temp += '<hr/>';
-		  temp += '<div class="mb-1 text-muted">建立時間：' + value['order_info']['create'] + '</div>';
-		  temp += '<div class="mb-1 text-muted">修改時間：' + value['order_info']['modify'] + '</div>';
-		  temp += '<p class="card-text mb-auto">總價：$ ' + total_price + '</p>';
-		  temp += '<a href="order_detail.html?id=' + value['order_info']['id'] + '" class="stretched-link">詳細資料</a>';
-		  temp += '</div></div></div>';
-		  inner_html = temp + inner_html;
-	  });
-	  
-	  $('#order_panel').append(inner_html);
-	  
-  }
-  </script>
+        <div class="text-muted mb-4 fw-bold"
+            style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
+            <p id="2">Step 2. 選擇包廂與餐點</p>
+        </div>
 
-  <footer class="text-muted">
-    <div class="container">
-      <p class="float-right">
-        <a href="#">Back to top</a>
-      </p>
-      <p>Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-      <p>New to Bootstrap? <a href="https://getbootstrap.com/">Visit the homepage</a> or read our <a
-          href="/docs/4.3/getting-started/introduction/">getting started guide</a>.</p>
+        <div class="text-muted mb-4 fw-bold"
+            style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
+            <p id="3">Step 3. 選擇電影</p>
+        </div>
+
+        <div class="text-muted mb-4 fw-bold"
+            style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
+            <p id="4">Step 4. 確認訂單資訊</p>
+        </div>
+
+        <div class="text-muted mb-4 fw-bold"
+            style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
+            <p id="5">Step 5. 付款</p>
+        </div>
+        <button onclick="cancelReservation()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle"
+                viewBox="0 0 16 16">
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+            </svg>
+            取消預約
+        </button>
     </div>
-  </footer>
+
+    <div class="container mt-5">
+        <!-- Step 1: 填寫預約資訊 -->
+        <div id="step1" class="step-container">
+            <select id="people" class="form-select">
+                <!-- 人數選項 -->
+                <option value="1">1 人</option>
+                <option value="2">2 人</option>
+                <option value="3">3 人</option>
+                <option value="4">4 人</option>
+                <option value="5">5 人</option>
+                <option value="6">6 人</option>
+            </select>
+
+            <select id="date" class="form-select"></select>
+
+            <select id="time" class="form-select">
+                <!-- 時段選項 -->
+                <option value="1">9:00 - 12:00</option>
+                <option value="2">12:00 - 15:00</option>
+                <option value="3">15:00 - 18:00</option>
+            </select>
+
+            <button onclick="confirmStep1()" class="btn btn-primary">確認</button>
+
+        </div>
+
+
+
+        <!-- Step 2: 選擇包廂與餐點 -->
+        <div id="step2" class="step-container hidden">
+            <p>請選擇包廂</p>
+            <!-- 選包廂 -->
+            <div class="container">
+                <div class="row justify-content-center" id="room_panel">
+                    <!-- 包廂在這插入 -->
+                </div>
+            </div>
+
+            <p>請選擇餐點</p>
+            <!-- 選餐點 -->
+
+            <div class="container">
+                <div class="row justify-content-center" id="meal_panel">
+                    <!-- 餐點在這插入 -->
+                </div>
+            </div>
+
+            <button onclick="confirmStep2()" class="btn btn-primary">確認</button>
+        </div>
+
+        <!-- Step 3: 選擇電影 -->
+        <div id="step3" class="step-container hidden">
+            <!-- 電影類別按鈕 -->
+            <div class="d-flex justify-content-center mt-3" role="group" aria-label="Movie Types">
+                <button type="button" class="btn btn-outline-dark" onclick="getAllMovie()">全部</button>
+                <button type="button" class="btn btn-outline-dark" onclick="getMovies('1')">愛情</button>
+                <button type="button" class="btn btn-outline-dark" onclick="getMovies('2')">劇情</button>
+                <button type="button" class="btn btn-outline-dark" onclick="getMovies('3')">動作</button>
+                <button type="button" class="btn btn-outline-dark" onclick="getMovies('4')">驚悚</button>
+                <button type="button" class="btn btn-outline-dark" onclick="getMovies('0')">其他</button>
+            </div>
+
+            <div class="container">
+                <div class="row justify-content-center" id="movie_panel">
+                    <!-- 電影元素在這插入 -->
+                </div>
+            </div>
+
+            <button onclick="confirmStep3()" class="btn btn-primary">確認</button>
+        </div>
+
+        <!-- Step 4: 確認訂單資訊 -->
+        <div id="step4" class="step-container hidden">
+            <!-- 顯示訂單資訊 -->
+            <div id="orderInfo"></div>
+            <button onclick="confirmStep4()" class="btn btn-primary">確認</button>
+        </div>
+
+        <!-- Step 5: 付款 -->
+        <div id="step5" class="step-container hidden">
+            <div id="paymentMethod">
+                <!-- 顯示付款方式 -->
+                <label class="form-check-label">
+                    <input type="radio" name="payment" value="credit" class="form-check-input"
+                        onclick="showCreditInfo()"> 信用卡
+                </label>
+                <label class="form-check-label">
+                    <input type="radio" name="payment" value="bank" class="form-check-input" onclick="showBankInfo()">
+                    銀行轉帳
+                </label>
+            </div>
+            <div id="creditInfo" class="hidden">
+                <!-- 信用卡輸入欄位 -->
+                <label for="creditCard">信用卡號碼：</label>
+                <input type="text" id="creditCard" class="form-control">
+                <label for="securityCode">安全碼：</label>
+                <input type="text" id="securityCode" class="form-control">
+            </div>
+            <div id="bankInfo" class="hidden">
+                <!-- 銀行轉帳資訊 -->
+                <p>請於三天內匯款至以下帳號：</p>
+                <p>銀行：XXXX</p>
+                <p>帳號：XXXX-XXXX-XXXX</p>
+            </div>
+            <button onclick="confirmStep5()" class="btn btn-primary">確認付款</button>
+        </div>
+    </div>
+
+    <script>
+        // 生成日期選項
+        function generateDateOptions() {
+            const today = new Date();
+            const dateSelect = document.getElementById("date");
+
+            for (let i = 0; i < 14; i++) {
+                const date = new Date(today);
+                date.setDate(today.getDate() + i);
+                const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+                const option = document.createElement("option");
+                option.value = formattedDate;
+                option.textContent = formattedDate;
+                dateSelect.appendChild(option);
+            }
+        }
+
+        // 初始化日期選項
+        generateDateOptions();
+
+        //取消預約
+        function cancelReservation() {
+            const cancel = confirm('確定取消預約嗎？');
+            if (cancel) {
+                alert('預約已取消！');
+
+                // 回會員首頁
+                window.location.href = 'member_index.html';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // 初始化日曆選擇器
+            var today = new Date();
+            var fourteenDaysLater = new Date(today);
+            fourteenDaysLater.setDate(today.getDate() + 14);
+
+            var datepicker = new bootstrap.DatePicker(document.getElementById('date'), {
+                startDate: today,
+                endDate: fourteenDaysLater
+            });
+        });
+
+
+        // 在全域宣告變數以保存選擇的包廂和餐點
+        let selectedRoomId = null;
+        let selectedMeals = [];
+
+        // 第一步的確認鍵
+        function confirmStep1() {
+            // 取得選擇的值
+            var selectedPeople = parseInt(document.getElementById('people').value, 10);
+            var selectedDate = document.getElementById('date').value;
+            var selectedTime = parseInt(document.getElementById('time').value, 10);
+
+            // 確認是否已選擇所有欄位
+            if (isNaN(selectedPeople) || selectedDate === "" || isNaN(selectedTime)) {
+                alert('請選擇完整的預約資訊');
+                return;
+            }
+
+            showStep(2);
+
+            // 使用 AJAX 的 GET 方法傳送資料給後端
+            $.ajax({
+                type: "GET",
+                url: `api/room.do?people=${selectedPeople}&date=${selectedDate}&time=${selectedTime}`,
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success: function (response) {
+                    if (response.status == 200) {
+                        var roomPanel = '';
+                        $.each(response.response.data, function () {
+                            roomPanel += addRoom(this);
+                        })
+                        $("#room_panel").append(roomPanel);
+                    }
+                },
+                error: function () {
+                    alert("無法連線到伺服器！");
+                }
+            });
+
+            function addRoom(data) {
+                let inner_html = '';
+                inner_html += '<div class="col">';
+                inner_html += '<div class="card room-card" onclick="selectRoom(' + data.room_id + ')">';
+                inner_html += '<img src="../images/' + data.room_image + '" class="card-img-top" alt="Room poster for ' + data.room_name + '">';
+                inner_html += '<div class="card-body">';
+                inner_html += '<h4 class="card-title">' + data.room_name + '</h4>';
+                inner_html += '</div></div></div>';
+                return inner_html;
+            }
+
+            function selectRoom(roomId) {
+                // 取消先前選擇的卡片的背景顏色
+                if (selectedRoomId !== null) {
+                    document.getElementById('room_' + selectedRoomId).classList.remove('selected');
+                }
+
+                // 更新當前選擇的 room_id
+                selectedRoomId = roomId;
+
+                // 添加新選擇卡片的背景顏色
+                document.getElementById('room_' + roomId).classList.add('selected');
+            }
+
+            // 在頁面載入完成後初始化一些卡片的點擊事件
+            document.addEventListener('DOMContentLoaded', function () {
+                const roomCards = document.querySelectorAll('.room-card');
+                roomCards.forEach(function (card) {
+                    card.addEventListener('click', function () {
+                        const roomId = parseInt(this.id.split('_')[1], 10);
+                        selectRoom(roomId);
+                    });
+                });
+            });
+
+            function getAllMeal() {
+                $.ajax({
+                    type: "GET",
+                    url: "api/meal.do",
+                    crossDomain: true,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            var meal_panel = '';
+                            $.each(response.response.data, function () {
+                                meal_panel += addMeal(this);
+                            })
+                            $("#meal_panel").append(meal_panel);
+                        }
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+                });
+
+                getAllMeal();
+
+                function addMeal(data) {
+                    let inner_html = '';
+                    inner_html += '<div class="col">';
+                    inner_html += '<div class="card">';
+                    inner_html += '<div class="card-body">';
+                    inner_html += '<h4 class="card-title">' + data.meal_name + '</h4>';
+                    inner_html += '<p class="card-text">' + data.meal_description + '</p>';
+                    inner_html += '<p class="card-text">價格：' + data.meal_price + '元</p>';
+                    inner_html += '<label for="quantity">數量：</label>';
+                    inner_html += '<input type="number" id="quantity_' + data.meal_id + '" name="quantity" min="0" value="0">';
+                    inner_html += '</div></div></div>';
+                    return inner_html;
+                }
+            }
+        }
+
+        // 第二步的確認鍵
+        function confirmStep2() {
+            // 確認是否已選擇包廂
+            if (selectedRoomId === null) {
+                alert('請選擇包廂');
+                return;
+            }
+
+            // 清空先前的餐點選擇
+            selectedMeals = [];
+
+            // 獲取所有餐點的數量
+            const mealElements = document.querySelectorAll('[name="quantity"]');
+            mealElements.forEach(function (element) {
+                const mealId = parseInt(element.id.split('_')[1], 10);
+                const quantity = parseInt(element.value, 10);
+
+                // 如果數量大於 0，將餐點添加到 selectedMeals 中
+                if (!isNaN(quantity) && quantity > 0) {
+                    selectedMeals.push({ mealId, quantity });
+                }
+            });
+
+            // 確認是否選擇了餐點
+            if (selectedMeals.length === 0) {
+                alert('請選擇餐點');
+                return;
+            }
+
+            // 在這裡處理第二步的邏輯
+
+            // 顯示第三步
+            showStep(3);
+
+            function getAllMovie() {
+                $.ajax({
+                    type: "GET",
+                    url: "api/movie.do", // 使用 AJAX 向伺服器端的電影 API 發送 GET 請求
+                    crossDomain: true,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            // 將伺服器端回傳的電影資料逐一處理，並呼叫 addMovie 函式生成 HTML 元素
+                            var movie_panel = '';
+
+                            $.each(response.response.data, function () {
+                                movie_panel += addMovie(this);
+                            })
+                            // 將生成的 HTML 元素加入 id 為 "movie_panel" 的區塊中
+                            $("#movie_panel").append(movie_panel);
+                        }
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+                });
+            }
+
+            // 呼叫 getAllMovie 函式以初始化電影列表
+            getAllMovie();
+
+            //電影分類取得以movie_type判斷的資料
+            function getMovies(movieType) {
+                $.ajax({
+                    type: "GET",
+                    url: "api/movie.do",
+                    data: { movie_type: movieType },
+                    crossDomain: true,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function (response) {
+                        if (response.status == 200) {
+                            // 清空現有的電影列表
+                            $("#movie_panel").empty();
+
+                            // 將伺服器端回傳的電影資料逐一處理，並呼叫 addMovie 函式生成 HTML 元素
+                            var movie_panel = '';
+                            $.each(response.response.data, function () {
+                                movie_panel += addMovie(this);
+                            })
+
+                            // 將生成的 HTML 元素加入 id 為 "movie_panel" 的區塊中
+                            $("#movie_panel").append(movie_panel);
+                        }
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+                });
+            }
+
+            // 生成電影元素的 HTML 結構
+            function addMovie(data) {
+                let inner_html = '';
+                inner_html += '<div class="col">';
+                inner_html += '<div class="card movie-card" onclick="selectMovie(' + data.movie_id + ')">';
+                inner_html += '<div class="card-body">';
+                inner_html += '<h4 class="card-title">' + data.movie_name + '</h4>';
+                inner_html += '</div></div></div>';
+                return inner_html;
+            }
+
+            function selectMovie(movieId) {
+                // 取消先前選擇的卡片的背景顏色
+                if (MovieId !== null) {
+                    document.getElementById('movie_' + MovieId).classList.remove('selected');
+                }
+
+                // 更新當前選擇的 movie_id
+                MovieId = movieId;
+
+                // 添加新選擇卡片的背景顏色
+                document.getElementById('movie_' + movieId).classList.add('selected');
+            }
+
+            //頁面載入完成後初始化一些卡片的點擊事件
+            document.addEventListener('DOMContentLoaded', function () {
+                const movieCards = document.querySelectorAll('.movie-card');
+                movieCards.forEach(function (card) {
+                    card.addEventListener('click', function () {
+                        const movieId = parseInt(this.id.split('_')[1], 10);
+                        selectMovie(movieId);
+                    });
+                });
+            });
+        }
+
+        // 第三步的確認鍵
+        function confirmStep3() {
+            // 確認是否已選擇電影
+            if (selectedMovieId === null) {
+                alert('請選擇電影');
+                return;
+            }
+
+            // 顯示第四步
+            showStep(4);
+
+            // 使用 AJAX 向伺服器端的會員 API 發送 GET 請求，根據會員 ID 取得會員名字
+            $.ajax({
+                type: "GET",
+                url: `api/member.do?member_id=${memberId}`,
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success: function (response) {
+                    if (response.status == 200) {
+                        // 取得會員名字
+                        const memberName = response.response.data.member_last_name;
+
+                        // 顯示訂單資訊
+                        const orderInfoElement = document.getElementById('orderInfo');
+                        orderInfoElement.innerHTML = `
+                    <p>會員名字：${memberName}</p>
+                    <p>人數：${document.getElementById('people').value}</p>
+                    <p>日期：${document.getElementById('date').value}</p>
+                    <p>時段：${getSelectedTimeLabel()}</p>
+                    <p>電影：${getSelectedMovieName()}</p>
+                    <p>餐點：${getSelectedMeals()}</p>
+                    <p>包廂：${getSelectedRoomName()}</p>
+                    <p>總金額：${calculateTotalAmount()}元</p>
+                `;
+                    }
+                },
+                error: function () {
+                    alert("無法連線到伺服器！");
+                }
+            });
+
+            // 取得所選時段的對應字串
+            function getSelectedTimeLabel() {
+                const selectedTime = parseInt(document.getElementById('time').value, 10);
+                switch (selectedTime) {
+                    case 1:
+                        return '9:00 - 12:00';
+                    case 2:
+                        return '12:00 - 15:00';
+                    case 3:
+                        return '15:00 - 18:00';
+                    default:
+                        return '';
+                }
+            }
+
+            // 取得所選電影的名稱
+            function getSelectedMovieName() {
+                const selectedMovieCard = document.querySelector('.movie-card.selected');
+                if (selectedMovieCard) {
+                    return selectedMovieCard.querySelector('.card-title').textContent;
+                }
+                return '';
+            }
+
+            // 取得所選餐點的名稱和數量
+            function getSelectedMeals() {
+                let mealsInfo = '';
+                selectedMeals.forEach(meal => {
+                    mealsInfo += `${meal.mealId} x ${meal.quantity}, `;
+                });
+                // 移除最後的逗號和空格
+                return mealsInfo.slice(0, -2);
+            }
+
+            // 取得所選包廂的名稱
+            function getSelectedRoomName() {
+                const selectedRoomCard = document.querySelector('.room-card.selected');
+                if (selectedRoomCard) {
+                    return selectedRoomCard.querySelector('.card-title').textContent;
+                }
+                return '';
+            }
+
+            // 計算總金額，還要改
+            function calculateTotalAmount() {
+                const roomPrice = 100;  // 假設包廂價格為100元
+                const mealsPrice = selectedMeals.reduce((total, meal) => total + (meal.quantity * meal.price), 0);
+                return roomPrice + mealsPrice;
+            }
+        }
+
+        //第四步的確認鍵
+        function confirmStep4() {
+            // 顯示第五步
+            showStep(5);
+        }
+
+        //第五步的確認鍵，要加壓進資料庫的動作
+        function confirmStep5() {
+
+            // 已經是最後一步，完成整個流程
+            alert('訂單已完成！');
+        }
+
+        // 顯示步驟
+        function showStep(step) {
+            for (let i = 1; i <= 5; i++) {
+                const stepElement = document.getElementById(`step${i}`);
+                stepElement.classList.add('hidden');
+            }
+            const currentStepElement = document.getElementById(`step${step}`);
+            currentStepElement.classList.remove('hidden');
+        }
+
+
+
+        // 顯示信用卡輸入欄位
+        function showCreditInfo() {
+            document.getElementById('creditInfo').classList.remove('hidden');
+            document.getElementById('bankInfo').classList.add('hidden');
+        }
+
+        // 顯示銀行轉帳資訊
+        function showBankInfo() {
+            document.getElementById('creditInfo').classList.add('hidden');
+            document.getElementById('bankInfo').classList.remove('hidden');
+        }
+
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-<!-- 查看單一電影(訪客) -->
+<!-- 查看單一電影(會員) -->
 <!doctype html>
 <html lang="en">
 
@@ -79,17 +79,19 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <!-- 首頁連結 -->
-                    <a class="nav-link active" aria-current="page" href="index.html">首頁</a>
+                    <a class="nav-link active" aria-current="page" href="member_index.html">首頁</a>
 
                     <!-- 電影資訊連結 -->
-                    <a class="nav-link" href="vst_movie_browse.html">電影資訊</a>
+                    <a class="nav-link" href="movie_browse.html">電影資訊</a>
 
                     <!-- 包廂資訊連結 -->
-                    <a class="nav-link" href="vst_room_browse.html">包廂資訊</a>
+                    <a class="nav-link" href="room_browse.html">包廂資訊</a>
 
                     <!-- 餐點資訊連結 -->
-                    <a class="nav-link" href="vst_meal_browse.html">餐點資訊</a>
+                    <a class="nav-link" href="meal_browse.html">餐點資訊</a>
 
+                    <!-- 預約連結 -->
+                    <a class="nav-link" href="order.html">預約</a>
                 </div>
                 <!-- 新增右側的下拉式選單 -->
                 <ul class="navbar-nav ms-auto">
@@ -106,9 +108,10 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <!-- 下拉式選單中的選項 -->
-                            <a class="dropdown-item" href="sign_in.html">會員登入</a>
-                            <a class="dropdown-item" href="sign_up.html">會員註冊</a>
-                            <a class="dropdown-item" href="mgr_sign_in.html">管理員登入</a>
+                            <a class="dropdown-item" href="member_info.html">會員資料</a>
+                            <a class="dropdown-item" href="order_browse.html">訂單中心</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="../vst_pages/index.html">登出</a>
                         </div>
                     </li>
                 </ul>
@@ -164,7 +167,7 @@
             inner_html += '<p>簡介: ' + data.movie_description + '</p>';
             inner_html += '</div></div>';
             return inner_html;
-        } 
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

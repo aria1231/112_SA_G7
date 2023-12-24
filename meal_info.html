@@ -1,4 +1,4 @@
-<!-- 查看單一電影(訪客) -->
+<!-- 查看單一餐點(會員) -->
 <!doctype html>
 <html lang="en">
 
@@ -8,7 +8,6 @@
     <title>FinalProject_group7</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
     <style>
         .container {
             display: flex;
@@ -18,7 +17,7 @@
             /* 設定高度為視窗的100% */
         }
 
-        .movie-container {
+        .meal-container {
             display: flex;
             max-width: 800px;
             /* 根據需要設定最大寬度 */
@@ -29,14 +28,14 @@
             /* 添加圓角 */
         }
 
-        .movie-image {
+        .meal-image {
             flex: 1;
             border-radius: 10px 0 0 10px;
             /* 左邊的圓角 */
             overflow: hidden;
         }
 
-        .movie-image img {
+        .meal-image img {
             width: 100%;
             height: auto;
             display: block;
@@ -44,18 +43,18 @@
             /* 左邊的圓角 */
         }
 
-        .movie-details {
+        .meal-details {
             flex: 2;
             padding: 20px;
             border-radius: 0 10px 10px 0;
             /* 右邊的圓角 */
         }
 
-        .movie-details h2 {
+        .meal-details h2 {
             margin-bottom: 20px;
         }
 
-        .movie-details p {
+        .meal-details p {
             margin-bottom: 10px;
         }
     </style>
@@ -63,7 +62,6 @@
 </head>
 
 <body>
-
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid" style="max-width: 90%">
             <!-- 網站標題 -->
@@ -79,17 +77,19 @@
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
                     <!-- 首頁連結 -->
-                    <a class="nav-link active" aria-current="page" href="index.html">首頁</a>
+                    <a class="nav-link active" aria-current="page" href="member_index.html">首頁</a>
 
                     <!-- 電影資訊連結 -->
-                    <a class="nav-link" href="vst_movie_browse.html">電影資訊</a>
+                    <a class="nav-link" href="movie_browse.html">電影資訊</a>
 
                     <!-- 包廂資訊連結 -->
-                    <a class="nav-link" href="vst_room_browse.html">包廂資訊</a>
+                    <a class="nav-link" href="room_browse.html">包廂資訊</a>
 
                     <!-- 餐點資訊連結 -->
-                    <a class="nav-link" href="vst_meal_browse.html">餐點資訊</a>
+                    <a class="nav-link" href="meal_browse.html">餐點資訊</a>
 
+                    <!-- 預約連結 -->
+                    <a class="nav-link" href="order.html">預約</a>
                 </div>
                 <!-- 新增右側的下拉式選單 -->
                 <ul class="navbar-nav ms-auto">
@@ -106,9 +106,10 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <!-- 下拉式選單中的選項 -->
-                            <a class="dropdown-item" href="sign_in.html">會員登入</a>
-                            <a class="dropdown-item" href="sign_up.html">會員註冊</a>
-                            <a class="dropdown-item" href="mgr_sign_in.html">管理員登入</a>
+                            <a class="dropdown-item" href="member_info.html">會員資料</a>
+                            <a class="dropdown-item" href="order_browse.html">訂單中心</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="../vst_pages/index.html">登出</a>
                         </div>
                     </li>
                 </ul>
@@ -116,27 +117,28 @@
         </div>
     </nav>
 
-    <div class="container" id="movie_info_panel">
-        <!-- 這裡會插入電影詳細資訊 -->
+    <div class="container" id="meal_info_panel">
+        <!-- 這裡會插入餐點詳細資訊 -->
     </div>
 
     <script>
         // 獲取 URL 中的參數
         const urlParams = new URLSearchParams(window.location.search);
-        const movieId = urlParams.get('movie_id');
-        // 使用 Ajax 請求從後端獲取電影信息
+        const mealId = urlParams.get('meal_id');
+        // 使用 Ajax 請求從後端獲取餐點信息
+
         $.ajax({
             type: "GET",
-            url: "api/movie.do",
-            data: { movie_id: movieId },
+            url: "api/meal.do",
+            data: { meal_id: mealId },
             crossDomain: true,
             cache: false,
             dataType: 'json',
             timeout: 5000,
             success: function (response) {
                 if (response.status == 200) {
-                    // 更新頁面上的電影信息
-                    updateMovieInfo(response.response.data);
+                    // 更新頁面上的餐點信息
+                    updateMealInfo(response.response.data);
                 }
             },
             error: function () {
@@ -144,27 +146,26 @@
             }
         });
 
-        // 更新頁面上的電影信息
-        function updateMovieInfo(movieData) {
-            // 將生成的 HTML 元素插入到 #movie_info_panel 中
-            $("#movie_info_panel").html(addMovie(movieData));
+        // 更新頁面上的餐點信息
+        function updateMealInfo(mealData) {
+            // 將生成的 HTML 元素插入到 #meal_info_panel 中
+            $("#meal_info_panel").html(addMeal(mealData));
         }
 
-
-        // 生成電影詳細頁面的 HTML 結構
-        function addMovie(data) {
+        // 生成餐點詳細頁面的 HTML 結構
+        function addMeal(data) {
             let inner_html = '';
-            inner_html += '<div class="movie-container">';
-            inner_html += '<div class="movie-image">';
-            inner_html += '<img src="statics/img/movie/' + data.movie_image + '">';
+            inner_html += '<div class="meal-container">';
+            inner_html += '<div class="meal-image">';
+            inner_html += '<img src="statics/img/meal/' + data.meal_image + '">';
             inner_html += '</div>';
-            inner_html += '<div class="movie-details">';
-            inner_html += '<h2 id="movie-name">電影名稱: ' + data.movie_name + '</h2>';
-            inner_html += '<p>片長: ' + data.movie_time + '</p>';
-            inner_html += '<p>簡介: ' + data.movie_description + '</p>';
+            inner_html += '<div class="meal-details">';
+            inner_html += '<h2 id="meal-name">餐點名稱: ' + data.meal_name + '</h2>';
+            inner_html += '<p id="meal-price">價格: ' + data.meal_price + '</p>';
+            inner_html += '<p id="meal-description">簡介: ' + data.meal_description + '</p>';
             inner_html += '</div></div>';
             return inner_html;
-        } 
+        }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

@@ -1,11 +1,10 @@
-<!-- 電影編輯頁面(可以key字的那個畫面) -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>FinalProject_group7</title>
+    <title>FinalProject_group7 - Edit Room</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
@@ -18,7 +17,7 @@
             /* 設定高度為視窗的100% */
         }
 
-        .movie-container {
+        .room-container {
             display: flex;
             max-width: 800px;
             /* 根據需要設定最大寬度 */
@@ -29,14 +28,14 @@
             /* 添加圓角 */
         }
 
-        .movie-image {
+        .room-image {
             flex: 1;
             border-radius: 10px 0 0 10px;
             /* 左邊的圓角 */
             overflow: hidden;
         }
 
-        .movie-image img {
+        .room-image img {
             width: 100%;
             height: auto;
             display: block;
@@ -44,18 +43,18 @@
             /* 左邊的圓角 */
         }
 
-        .movie-details {
+        .room-details {
             flex: 2;
             padding: 20px;
             border-radius: 0 10px 10px 0;
             /* 右邊的圓角 */
         }
 
-        .movie-details h2 {
+        .room-details h2 {
             margin-bottom: 20px;
         }
 
-        .movie-details p {
+        .room-details p {
             margin-bottom: 10px;
         }
 
@@ -70,12 +69,22 @@
             color: black;
             /* 使用黑色文字顏色 */
         }
+
+        .btn-danger {
+            background-color: pink;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: red;
+            /* 使用淺灰色背景 */
+            color: black;
+            /* 使用黑色文字顏色 */
+        }
     </style>
-    <script src="statics/js/jquery-3.4.1.min.js"></script>
 </head>
 
 <body>
-
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid" style="max-width: 90%">
             <!-- 網站標題 -->
@@ -132,50 +141,37 @@
     <div class="container mt-1">
         <form method="put" enctype="multipart/form-data">
 
-            <!-- Hidden input儲存movie_id -->
-            <input type="hidden" id="movieId" name="movieId">
+            <!-- Hidden input儲存room_id -->
+            <input type="hidden" id="roomId" name="roomId">
 
             <div class="row mb-3">
-                <!-- 電影名字 -->
-                <div class="col">
-                    <label for="movieName" class="form-label">電影名稱</label>
-                    <input type="text" class="form-control" id="movieName" name="movieName" required>
+                <!-- 包廂名字 -->
+                <div class="mb-3">
+                    <label for="roomName" class="form-label">包廂名稱</label>
+                    <input type="text" class="form-control" id="roomName" name="roomName" required>
                 </div>
 
-                <!-- 電影片長 -->
-                <div class="col">
-                    <label for="duration" class="form-label">片長</label>
-                    <input type="text" class="form-control" id="duration" name="duration" required>
-                </div>
-            </div>
-
-            <div class="row mb-3">
-                <!-- 電影簡介 -->
-                <div class="col">
-                    <label for="description" class="form-label">簡介</label>
-                    <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+                <!-- 包廂價格 -->
+                <div class="mb-3">
+                    <label for="roomPrice" class="form-label">價格</label>
+                    <input type="text" class="form-control" id="roomPrice" name="roomPrice" required>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <!-- 電影分類 -->
-                <div class="col">
-                    <label for="category" class="form-label">分類</label>
-                    <select class="form-select" id="category" name="category" required>
-                        <option value="0">其他</option>
-                        <option value="1">愛情</option>
-                        <option value="2">劇情</option>
-                        <option value="3">動作</option>
-                        <option value="4">驚悚</option>
-                    </select>
+                <!-- 包廂簡介 -->
+                <div class="mb-3">
+                    <label for="roomDescription" class="form-label">簡介</label>
+                    <textarea class="form-control" id="roomDescription" name="roomDescription" rows="4"
+                        required></textarea>
                 </div>
             </div>
 
             <div class="row mb-3">
-                <!-- 電影圖片上傳 -->
+                <!-- 包廂圖片上傳 -->
                 <div class="col">
-                    <label for="image" class="form-label">圖片</label>
-                    <input type="file" id="image" name="image" accept="image/*" required>
+                    <label for="roomImage" class="form-label">圖片</label>
+                    <input type="file" id="roomImage" name="roomImage" accept="image/*" required>
                 </div>
             </div>
 
@@ -184,82 +180,79 @@
         </form>
     </div>
 
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // 從 URL 中獲取 movie_id 參數
+            // 從 URL 中獲取 room_id 參數
             const urlParams = new URLSearchParams(window.location.search);
-            const movieId = urlParams.get('movie_id');
+            const roomId = urlParams.get('room_id');
 
-            // 將 movie_id 存入 hidden input
-            document.getElementById('movieId').value = movieId;
+            // 將 room_id 存入 hidden input
+            document.getElementById('roomId').value = roomId;
 
-            // 使用 movieId 從後端獲取電影資訊並填充表單
+            // 使用 roomId 從後端獲取包廂資訊並填充表單
             $.ajax({
                 type: 'GET',
-                url: `api/movie.do`,
-                data: { movie_id: movieId },
+                url: `api/room.do`,
+                data: { room_id: roomId },
                 success: function (response) {
-                    // 將後端返回的電影資訊填充到表單中
-                    document.getElementById('movieName').value = response.movie_name;  // 對應資料庫的 movie_name
-                    document.getElementById('duration').value = response.movie_time;  // 對應資料庫的 movie_time
-                    document.getElementById('description').value = response.movie_description;  // 對應資料庫的 movie_description
-                    document.getElementById('category').value = response.movie_type;  // 對應資料庫的 movie_type
-
+                    // 將後端返回的包廂資訊填充到表單中
+                    document.getElementById('roomName').value = response.room_name;
+                    document.getElementById('roomPrice').value = response.room_price;
+                    document.getElementById('roomDescription').value = response.room_description;
                 },
                 error: function (error) {
-                    console.error('Failed to fetch movie information:', error);
+                    console.error('Failed to fetch room information:', error);
                 }
             });
         });
-
         // 確認修改按鈕的點擊事件
         function confirmEdit() {
             // 獲取用戶輸入的值
-            const editedMovieId = document.getElementById('movieId').value;
-            const editedMovieName = document.getElementById('movieName').value;
-            const editedDuration = document.getElementById('duration').value;
-            const editedDescription = document.getElementById('description').value;
-            const editedCategory = document.getElementById('category').value;
-            const imageInput = document.getElementById('image');
+            const editedroomId = document.getElementById('roomId').value;
+            const editedroomName = document.getElementById('roomName').value;
+            const editedroomPrice = document.getElementById('roomPrice').value;
+            const editedroomDescription = document.getElementById('roomDescription').value;
+            const imageInput = document.getElementById('roomImage');
 
             // 檢查是否有欄位為空值
-            if (!editedMovieName || !editedDuration || !editedDescription || !editedCategory || !imageInput.files[0]) {
+            if (!editedroomName || !editedroomPrice || !editedroomDescription || !imageInput.files[0]) {
                 alert('請填寫所有欄位');
                 return;
             }
 
-            const image = imageInput.files[0]; // 取得上傳的檔案
+            const image = imageInput.files[0];
 
             // 使用 FormData 來處理上傳的檔案
             const formData = new FormData();
-            formData.append('movieId', editedMovieId);
-            formData.append('movieName', editedMovieName);
-            formData.append('duration', editedDuration);
-            formData.append('description', editedDescription);
-            formData.append('category', editedCategory);
-            formData.append('image', image);
+            formData.append('roomId', editedroomId);
+            formData.append('roomName', editedroomName);
+            formData.append('roomPrice', editedroomPrice);
+            formData.append('roomDescription', editedroomDescription);
+            formData.append('roomImage', image);
 
             // 使用 AJAX 向後端發送更新資料的請求
             $.ajax({
-                type: 'PUT', // 使用 PUT 方法
-                url: 'api/movie.do',
+                type: 'PUT',  // 使用 PUT 方法
+                url: 'api/room.do',
                 data: formData,
-                contentType: false, // 必須設置為 false
-                processData: false, // 必須設置為 false
+                contentType: false,  // 必須設置為 false
+                processData: false,  // 必須設置為 false
                 success: function (response) {
-                    // 更新成功後的處理，可以根據需要進行操作
-                    alert('電影資訊已成功更新！');
-                    // 重定向回 mgr_movie_info.html
-                    var url = 'mgr_movie_info.html?movie_id=' + editedMovieId;
+                    alert('包廂資訊已成功更新！');
+                    // 重定向回 mgr_room_info.html
+                    var url = 'mgr_room_info.html?room_id=' + editedroomId;
                     // 使用 JavaScript 跳轉頁面
                     window.location.href = url;
                 },
                 error: function (error) {
-                    console.error('電影資訊更新失敗：', error);
-                    alert('電影資訊更新失敗！');
+                    console.error('包廂資訊更新失敗：', error);
+                    alert('包廂資訊更新失敗！');
                 }
             });
         }
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

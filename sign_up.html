@@ -1,0 +1,250 @@
+<!-- 註冊頁面 -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinalPJ_G7</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .card {
+            border-radius: 20px;
+        }
+
+        /* 精緻電影院背景色 */
+        .jumbotron {
+            background-color: #c7d8b6;
+            border-radius: 60px;
+            padding: 20px;
+            max-width: 700px;
+            /* 這個容器的的寬度 */
+            margin: 0 auto;
+            /* 將容器水平置中 */
+        }
+
+
+        .form-control {
+            background-color: #f0f0f0;
+            /* 淺灰色背景 */
+        }
+
+        .registration-box {
+            width: 400px;
+            /* 設定固定寬度 */
+            margin: auto;
+            /* 自動置於水平中間 */
+            margin-top: 10vh;
+            /* 自動置於垂直中間，這裡假設框框的高度是10%螢幕高度 */
+            background-color: #ffffff;
+            /* 白色框框 */
+            padding: 20px;
+            /* 內邊距 */
+            border-radius: 10px;
+            /* 圓角 */
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            /* 淺色陰影 */
+        }
+
+        .btn-primary {
+            background-color: #c7d8b6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #f0f0f0;
+            /* 使用淺灰色背景 */
+            color: black;
+            /* 使用黑色文字顏色 */
+        }
+    </style>
+    <script src="statics/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid" style="max-width: 90%">
+            <!-- 網站標題 -->
+            <a class="navbar-brand" href="#">沉浸式精緻電影院</a>
+
+            <!-- navbar的切換按鈕，用於小屏幕設備 -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- navbar的折疊區域 -->
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav">
+                    <!-- 首頁連結 -->
+                    <a class="nav-link active" aria-current="page" href="index.html">首頁</a>
+
+                    <!-- 電影資訊連結 -->
+                    <a class="nav-link" href="vst_movie_browse.html">電影資訊</a>
+
+                    <!-- 包廂資訊連結 -->
+                    <a class="nav-link" href="vst_room_browse.html">包廂資訊</a>
+
+                    <!-- 餐點資訊連結 -->
+                    <a class="nav-link" href="vst_meal_browse.html">餐點資訊</a>
+
+                </div>
+                <!-- 新增右側的下拉式選單 -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <!-- 在這裡加入你的人物圖示 -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                <path fill-rule="evenodd"
+                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                            </svg>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <!-- 下拉式選單中的選項 -->
+                            <a class="dropdown-item" href="sign_in.html">會員登入</a>
+                            <a class="dropdown-item" href="sign_up.html">會員註冊</a>
+                            <a class="dropdown-item" href="mgr_sign_in.html">管理員登入</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 注册框框 -->
+    <div class="registration-box" style="margin-top: 5px;">
+        <!-- Card 開始 -->
+        <div class="card m-100 mx-auto" style="width: 30rem; margin: 10px; padding: 20px;">
+            <form>
+                <p class="mb-4">歡迎光臨本沉浸式電影院，請填寫以下個人資料。</p>
+
+                <!-- 名字和姓在同一列 -->
+                <div class="row mb-3">
+                    <div class="col">
+                        <!-- 名字填寫框框 -->
+                        <label for="inputFirstName" class="form-label">名字:</label>
+                        <input type="text" id="inputFirstName" class="form-control"
+                            aria-describedby="firstNameHelpInline" required placeholder="請輸入您的中文名字" maxlength="30"
+                            required="required">
+                    </div>
+                    <div class="col">
+                        <!-- 姓填寫框框 -->
+                        <label for="inputLastName" class="form-label">姓:</label>
+                        <input type="text" id="inputLastName" class="form-control" aria-describedby="lastNameHelpInline"
+                            required placeholder="請輸入您的中文姓氏" maxlength="30" required="required">
+                    </div>
+                </div>
+
+                <!-- 電話填寫框框 -->
+                <div class="mb-3">
+                    <label for="inputPhoneNumberName" class="form-label">電話:</label>
+                    <input type="tel" id="inputPhoneNumberName" class="form-control"
+                        aria-describedby="PhoneNumberHelpInline" required placeholder="請輸入十位數字的號碼。EX:09xxoooxxx"
+                        required="required">
+                </div>
+
+                <!-- email填寫框框 -->
+                <div class="mb-3">
+                    <label for="inputEmailName" class="form-label">Email:</label>
+                    <input type="email" id="inputEmailName" class="form-control" aria-describedby="emailHelpInline"
+                        required placeholder="請輸入您常用的email" maxlength="50" required="required">
+                </div>
+
+                <!-- 密碼填寫框框 -->
+                <div class="mb-3">
+                    <label for="inputPassword" class="form-label">密碼:</label>
+                    <input type="password" id="inputPassword" class="form-control" aria-describedby="passwordHelpInline"
+                        required placeholder="8位字符以上且包含英文大小寫與數字" required="required">
+                </div>
+
+                <!-- 密碼確認框框 -->
+                <div class="mb-3">
+                    <label for="inputPasswordConfirm" class="form-label">密碼確認:</label>
+                    <input type="password" id="inputPasswordConfirm" class="form-control"
+                        aria-describedby="passwordConfirmHelpInline" required placeholder="再次輸入密碼">
+                    <span id="passwordConfirmHelpInline" class="form-text"></span>
+                </div>
+
+                <!-- 提交按钮 -->
+                <div class="mb-3">
+                    <button type="button" class="btn btn-primary" onclick="submitForm()">確認註冊</button>
+                </div>
+            </form>
+        </div>
+        <!-- Card 結束 -->
+    </div>
+
+    <script>
+        function submitForm() {
+            var firstName = $('#inputFirstName').val();
+            var lastName = $('#inputLastName').val();
+            var phoneNumber = $('#inputPhoneNumberName').val();
+            var email = $('#inputEmailName').val();
+            var password = $('#inputPassword').val();
+            var confirmPassword = $('#inputPasswordConfirm').val();
+
+            // 密碼檢查（至少8個字符，包含英文大小寫和數字）
+            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+            if (firstName === "" || lastName === "" || phoneNumber === "" || email === "" || password === "" || confirmPassword === "") {
+                // 顯示提醒
+                alert("請填寫所有必填欄位。");
+            } else if (!passwordRegex.test(password)) {
+                // 密碼檢查失敗
+                $('#passwordConfirmHelpInline').text("密碼至少8個字符，包含英文大小寫和數字。").css('color', 'red');
+            } else if (password !== confirmPassword) {
+                // 密碼不一致
+                $('#passwordConfirmHelpInline').text("密碼不一致。").css('color', 'red');
+            } else {
+                // 所有檢查通過，執行註冊成功後的操作，連接到後端 API
+                $('#passwordConfirmHelpInline').text("");
+
+                // 將資料組成 JSON 格式
+                var dataObject = {
+                    "firstName": firstName,
+                    "lastName": lastName,
+                    "phoneNumber": phoneNumber,
+                    "email": email,
+                    "password": password
+                };
+
+                // 將 JSON 格式轉換成字串
+                var dataString = JSON.stringify(dataObject);
+
+                // 發出 POST 的 AJAX 請求
+                $.ajax({
+                    type: "POST",
+                    url: "api/member.do",
+                    data: dataString,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        // 處理後端回傳的結果
+                        if (response.status === 200) {
+                            // 註冊成功，執行相應的操作
+                            alert(response.message);
+                        } else {
+                            // 其他狀態碼，可能是伺服器錯誤、email重複等
+                            alert("註冊失敗。");
+                        }
+                    },
+                    error: function () {
+                        alert("無法連線到伺服器！");
+                    }
+                });
+            }
+        }
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
