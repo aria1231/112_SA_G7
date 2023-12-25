@@ -1,10 +1,11 @@
-//package ncu.im3069.demo.app;
+package ncu.im3069.demo.app;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import org.json.*;
 
-//import ncu.im3069.demo.util.DBMgr;
+import ncu.im3069.demo.util.DBMgr;
+//import ncu.im3069.demo.app.Member;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -71,7 +72,7 @@ public class MemberHelper {
             conn = DBMgr.getConnection();
             
             /** SQL指令 */
-            String sql = "DELETE FROM `final_pj`.`Member` WHERE `member_id` = ? LIMIT 1";
+            String sql = "DELETE FROM `final_pj`.`members` WHERE `member_id` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -109,6 +110,87 @@ public class MemberHelper {
     }
     
     /**
+     * 取回登入時輸入的email之該會員的資料
+     *
+     * @return the JSONObject 回傳SQL執行結果與自資料庫取回之所有資料
+     */
+    public JSONObject getOne(String email) {
+    	/** 新建一個 Member 物件之 m 變數，用於紀錄每一位查詢回之會員資料 */
+        Member m = null;
+        /** 用於儲存所有檢索回之會員，以JSONArray方式儲存 */
+        JSONArray jsa = new JSONArray();
+        /** 記錄實際執行之SQL指令 */
+        String exexcute_sql = "";
+        /** 紀錄程式開始執行時間 */
+        long start_time = System.nanoTime();
+        /** 紀錄SQL總行數 */
+        int row = 0;
+        /** 儲存JDBC檢索資料庫後回傳之結果，以 pointer 方式移動到下一筆資料 */
+        ResultSet rs = null;
+        
+        try {
+            /** 取得資料庫之連線 */
+            conn = DBMgr.getConnection();
+            /** SQL指令 */
+            String sql = "SELECT * FROM `final_pj`.`members` WHERE `member_email` = ? LIMIT 1";
+            
+            /** 將參數回填至SQL指令當中 */
+            pres = conn.prepareStatement(sql);
+            pres.setString(1, email);
+            /** 執行查詢之SQL指令並記錄其回傳之資料 */
+            rs = pres.executeQuery();
+
+            /** 紀錄真實執行的SQL指令，並印出 **/
+            exexcute_sql = pres.toString();
+            System.out.println(exexcute_sql);
+            
+            /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
+            /** 正確來說資料庫只會有一筆該會員編號之資料，因此如果最後row=0則表示該email沒有被註冊過 */
+            while(rs.next()) {
+                /** 每執行一次迴圈表示有一筆資料 */
+                row += 1;
+                
+                /** 將 ResultSet 之資料取出 */
+                int member_id = rs.getInt("member_id");
+                String member_first_name = rs.getString("member_first_name");
+                String member_last_name = rs.getString("member_last_name");
+                String member_email = rs.getString("member_email");
+                String member_password = rs.getString("member_password");
+                String member_phone_number = rs.getString("member_phone_number");
+                
+                /** 將每一筆會員資料產生一名新Member物件 */
+                m = new Member(member_id, member_email, member_password, member_first_name, member_last_name, member_phone_number);
+                /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
+                jsa.put(m.getAllData());
+            }
+            
+        } catch (SQLException e) {
+            /** 印出JDBC SQL指令錯誤 **/
+            System.err.format("SQL State: %s\n%s\n%s", e.getErrorCode(), e.getSQLState(), e.getMessage());
+        } catch (Exception e) {
+            /** 若錯誤則印出錯誤訊息 */
+            e.printStackTrace();
+        } finally {
+            /** 關閉連線並釋放所有資料庫相關之資源 **/
+            DBMgr.close(rs, pres, conn);
+        }
+        
+        /** 紀錄程式結束執行時間 */
+        long end_time = System.nanoTime();
+        /** 紀錄程式執行時間 */
+        long duration = (end_time - start_time);
+        
+        /** 將SQL指令、花費時間、影響行數與所有會員資料之JSONArray，封裝成JSONObject回傳 */
+        JSONObject response = new JSONObject();
+        response.put("sql", exexcute_sql);
+        response.put("row", row);
+        response.put("time", duration);
+        response.put("data", jsa);
+
+        return response;
+    }
+    
+    /**
      * 取回所有會員資料
      *
      * @return the JSONObject 回傳SQL執行結果與自資料庫取回之所有資料
@@ -131,7 +213,7 @@ public class MemberHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `final_pj`.`Member`";
+            String sql = "SELECT * FROM `final_pj`.`members`";
             
             /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
             pres = conn.prepareStatement(sql);
@@ -152,12 +234,13 @@ public class MemberHelper {
                 String member_first_name = rs.getString("member_first_name");
                 String member_last_name = rs.getString("member_last_name");
                 String member_email = rs.getString("member_email");
+                String member_password = rs.getString("member_password");
                 String member_phone_number = rs.getString("member_phone_number");
                 
                 /** 將每一筆會員資料產生一名新Member物件 */
-                m = new Member(member_id, member_email, member_first_name, member_last_name, member_phone_number);
+                m = new Member(member_id, member_email, member_password, member_first_name, member_last_name, member_phone_number);
                 /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
-                jsa.put(m.getData());
+                jsa.put(m.getAllData());
             }
 
         } catch (SQLException e) {
@@ -210,7 +293,7 @@ public class MemberHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `final_pj`.`Member` WHERE `member_id` = ? LIMIT 1";
+            String sql = "SELECT * FROM `final_pj`.`members` WHERE `member_id` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -238,7 +321,7 @@ public class MemberHelper {
                 /** 將每一筆會員資料產生一名新Member物件 */
                 m = new Member(member_id, member_email, member_first_name, member_last_name, member_phone_number);
                 /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
-                jsa.put(m.getData());
+                jsa.put(m.getOneData());
             }
             
         } catch (SQLException e) {
@@ -283,7 +366,7 @@ public class MemberHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT count(*) FROM `final_pj`.`Member` WHERE `member_email` = ?";
+            String sql = "SELECT count(*) FROM `final_pj`.`members` WHERE `member_email` = ?";
             
             /** 取得所需之參數 */
             String member_email = m.getMemberEMAIL();
@@ -335,7 +418,7 @@ public class MemberHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "INSERT INTO `final_pj`.`Member`(`member_first_name`, `member_last_name`, `member_email`, `member_password`, `member_phone_number`, `member_update_time`, `member_created_time`)"
+            String sql = "INSERT INTO `final_pj`.`members`(`member_first_name`, `member_last_name`, `member_email`, `member_password`, `member_phone_number`, `member_update_time`, `member_created_time`)"
                     + " VALUES(?, ?, ?, ?, ?, ?, ?)";
             
             /** 取得所需之參數 */
@@ -350,7 +433,7 @@ public class MemberHelper {
             pres.setString(1, member_first_name);
             pres.setString(2, member_last_name);
             pres.setString(3, member_email);
-            pres.setTimestamp(4, member_password);
+            pres.setString(4, member_password);
             pres.setString(5, member_phone_number);
             pres.setTimestamp(6, Timestamp.valueOf(LocalDateTime.now()));
             pres.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
@@ -407,13 +490,13 @@ public class MemberHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "Update `final_pj`.`Member` SET `member_first_name` = ? , `member_last_name` = ? ,`member_password` = ? ,  `member_phone_number` = ? ,`member_update_time` = ? WHERE `member_email` = ?";
+            String sql = "Update `final_pj`.`members` SET `member_first_name` = ? , `member_last_name` = ? ,`member_password` = ? ,  `member_phone_number` = ? ,`member_update_time` = ? WHERE `member_email` = ?";
             /** 取得所需之參數 */
             String member_first_name = m.getMemberFIRSTNAME();
             String member_last_name = m.getMemberLASTNAME();
             String member_email = m.getMemberEMAIL();
             String member_password = m.getMemberPASSWORD();
-            Strung member_phone_number = m.getMemberPHONENUMBER();
+            String member_phone_number = m.getMemberPHONENUMBER();
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);

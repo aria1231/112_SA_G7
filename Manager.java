@@ -1,7 +1,11 @@
+package ncu.im3069.demo.app;
+
 import org.json.*;
-import java.security.Timestamp;
-import java.time.LocalDateTime;
-import java.util.*;
+//import java.security.Timestamp;
+//import java.time.LocalDateTime;
+//import java.util.*;
+
+//import ncu.im3069.demo.app.ManagerHelper;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,8 +39,28 @@ public class Manager {
     private String manager_password;
  
     /** manh，ManagerHelper之物件與Manager相關之資料庫方法（Sigleton） */
-    private ManagerHelper manh =  ManagHelper.getHelper();
+    //private ManagerHelper manh = ManagerHelper.getHelper();
 
+    /**
+     * 實例化（Instantiates）一個新的（new）Manager物件<br>
+     * 採用多載（overload）方法進行，此建構子用於管理員登入時，將每一筆資料新增為一個管理員物件
+     *
+     * @param manager_id 管理員編號
+     * @param manager_email 管理員電子信箱
+     * @param manager_password 管理員密碼
+     * @param manager_first_name 管理員名
+     * @param manager_last_name 管理員姓
+     * @param manager_phone_number 管理員電話號碼
+     */
+    public Manager(int manager_id, String manager_email, String manager_password, String manager_first_name, String manager_last_name, String manager_phone_number) {
+        this.manager_id = manager_id;
+        this.manager_email = manager_email;
+        this.manager_password = manager_password;
+        this.manager_first_name = manager_first_name;
+        this.manager_last_name = manager_last_name;
+        this.manager_phone_number = manager_phone_number;
+    }
+    
     /**
      * 實例化（Instantiates）一個新的（new）Manager物件<br>
      * 採用多載（overload）方法進行，此建構子用於查詢管理員資料時，將每一筆資料新增為一個管理員物件
@@ -114,7 +138,25 @@ public class Manager {
      *
      * @return the data 取得該名管理員之所有資料並封裝於JSONObject物件內
      */
-    public JSONObject getData() {
+    public JSONObject getAllData() {
+        /** 透過JSONObject將該名管理員所需之資料全部進行封裝*/ 
+        JSONObject jso = new JSONObject();
+        jso.put("manager_id", getManagerID());
+        jso.put("manager_first_name", getManagerFIRSTNAME());
+        jso.put("manager_last_name", getManagerLASTNAME());
+        jso.put("manager_email", getManagerEMAIL());
+        jso.put("manager_password", getManagerPASSWORD());
+        jso.put("manager_phone_number", getManagerPHONENUMBER());
+        
+        return jso;
+    }
+    
+    /**
+     * 取得該名管理員所有資料
+     *
+     * @return the data 取得該名管理員之所有資料並封裝於JSONObject物件內
+     */
+    public JSONObject getOneData() {
         /** 透過JSONObject將該名管理員所需之資料全部進行封裝*/ 
         JSONObject jso = new JSONObject();
         jso.put("manager_id", getManagerID());

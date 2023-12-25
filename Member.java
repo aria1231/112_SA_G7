@@ -1,9 +1,10 @@
-//package ncu.im3069.demo.app;
+package ncu.im3069.demo.app;
 
 import org.json.*;
-import java.security.Timestamp;
-import java.time.LocalDateTime;
-import java.util.*;
+//import java.security.Timestamp;
+//import java.time.LocalDateTime;
+//import java.util.*;
+//import ncu.im3069.demo.app.MemberHelper;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,7 +38,7 @@ public class Member {
     /** member_password，會員密碼 */
     private String member_password;
  
-    /** mh，MemberHelper之物件與Member相關之資料庫方法（Sigleton） */
+    /** memh，MemberHelper之物件與Member相關之資料庫方法（Sigleton） */
     private MemberHelper memh =  MemberHelper.getHelper();
     
     /**
@@ -61,7 +62,7 @@ public class Member {
 
     /**
      * 實例化（Instantiates）一個新的（new）Member物件<br>
-     * 採用多載（overload）方法進行，此建構子用於更新會員資料時，產生一名會員
+     * 採用多載（overload）方法進行，此建構子用於登入、更新會員資料時，將每一筆資料新增為一個會員物件
      * 
      * @param member_id 會員編號
      * @param member_email 會員電子信箱
@@ -175,11 +176,29 @@ public class Member {
     }
     
     /**
+     * 取得所有會員所有資料
+     *
+     * @return the data 取得所有會員之所有資料並封裝於JSONObject物件內
+     */
+    public JSONObject getAllData() {
+        /** 透過JSONObject將所有會員所需之資料全部進行封裝*/ 
+        JSONObject jso = new JSONObject();
+        jso.put("member_id", getMemberID());
+        jso.put("member_first_name", getMemberFIRSTNAME());
+        jso.put("member_last_name", getMemberLASTNAME());
+        jso.put("member_email", getMemberEMAIL());
+        jso.put("member_password", getMemberPASSWORD());
+        jso.put("member_phone_number", getMemberPHONENUMBER());
+        
+        return jso;
+    }
+    
+    /**
      * 取得該名會員所有資料
      *
      * @return the data 取得該名會員之所有資料並封裝於JSONObject物件內
      */
-    public JSONObject getData() {
+    public JSONObject getOneData() {
         /** 透過JSONObject將該名會員所需之資料全部進行封裝*/ 
         JSONObject jso = new JSONObject();
         jso.put("member_id", getMemberID());
