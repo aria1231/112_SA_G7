@@ -294,8 +294,44 @@
 
         // 在全域宣告變數以保存選擇的包廂和餐點
         let selectedRoomId = null;
-        let selectedMeals = [];
+        let meal = [];
+        let meal_serving = [];
+        let selectedMovieId = null;
 
+        //function selectRoom(roomId) {
+            // 取消先前選擇的卡片的背景顏色
+            //if (selectedRoomId !== null) {
+                //document.getElementById('room_' + selectedRoomId).classList.remove('selected');
+            //}
+
+            // 更新當前選擇的 room_id
+            //selectedRoomId = roomId;
+
+            // 添加新選擇卡片的背景顏色
+            //document.getElementById('room_' + roomId).classList.add('selected');
+        //}
+        
+        //function getMealDataFromClient() {
+    		//let meal = JSON.parse(localStorage.getItem("meal"));
+    		//meal = !meal ? new Array() : meal;
+    		//return meal;
+   		//}
+        
+        //function getMealServingDataFromClient() {
+    		//let meal_serving = JSON.parse(localStorage.getItem("meal_serving"));
+    		//meal_serving = !meal_serving ? new Array() : meal_serving;
+    		//return meal_serving;
+   		//}
+        
+        /////////////////////////////////////////////////////////////////////////////////////
+        
+		function setRoomId(id){
+			selectedRoomId = id;
+			console.log(selectedRoomId);
+		}
+        
+		//////////////////////////////////////////////////////////////////////////////////////
+		
         // 第一步的確認鍵
         function confirmStep1() {
             // 取得選擇的值
@@ -333,29 +369,21 @@
                 }
             });
 
+
+            
             function addRoom(data) {
                 let inner_html = '';
                 inner_html += '<div class="col">';
-                inner_html += '<div class="card room-card" onclick="selectRoom(' + data.room_id + ')">';
+                inner_html += '<div class="card room-card">';
                 inner_html += '<img src="statics/img/room/' + data.room_image + '" class="card-img-top" alt="Room poster for ' + data.room_name + '">';
                 inner_html += '<div class="card-body">';
                 inner_html += '<h4 class="card-title">' + data.room_name + '</h4>';
+                inner_html += '<a href="#" class="btn btn-primary" id="' + data.room_id + '" onclick="setRoomId(' + data.room_id + ')">選擇</a>';
                 inner_html += '</div></div></div>';
                 return inner_html;
             }
 
-            function selectRoom(roomId) {
-                // 取消先前選擇的卡片的背景顏色
-                if (selectedRoomId !== null) {
-                    document.getElementById('room_' + selectedRoomId).classList.remove('selected');
-                }
-
-                // 更新當前選擇的 room_id
-                selectedRoomId = roomId;
-
-                // 添加新選擇卡片的背景顏色
-                document.getElementById('room_' + roomId).classList.add('selected');
-            }
+			
 
             // 在頁面載入完成後初始化一些卡片的點擊事件
             document.addEventListener('DOMContentLoaded', function () {
@@ -367,7 +395,7 @@
                     });
                 });
             });
-
+            
             function getAllMeal() {
                 $.ajax({
                     type: "GET",
@@ -390,24 +418,119 @@
                     }
                 });
 
-                getAllMeal();
-
-                function addMeal(data) {
-                    let inner_html = '';
-                    inner_html += '<div class="col">';
-                    inner_html += '<div class="card">';
-                    inner_html += '<div class="card-body">';
-                    inner_html += '<h4 class="card-title">' + data.meal_name + '</h4>';
-                    inner_html += '<p class="card-text">' + data.meal_description + '</p>';
-                    inner_html += '<p class="card-text">價格：' + data.meal_price + '元</p>';
-                    inner_html += '<label for="quantity">數量：</label>';
-                    inner_html += '<input type="number" id="quantity_' + data.meal_id + '" name="quantity" min="0" value="0">';
-                    inner_html += '</div></div></div>';
-                    return inner_html;
-                }
             }
+            
+            getAllMeal();
+
+            function addMeal(data) {
+                let inner_html = '';
+                inner_html += '<div class="col">';
+                inner_html += '<div class="card">';
+                inner_html += '<div class="card-body">';
+                inner_html += '<h4 class="card-title">' + data.meal_name + '</h4>';
+                inner_html += '<p class="card-text">' + data.meal_description + '</p>';
+                inner_html += '<p class="card-text">價格：' + data.meal_price + '元</p>';
+                inner_html += '<label for="quantity">數量：</label>';
+                inner_html += '<input type="number" id="quantity_' + data.meal_id + '" name="quantity" min="0" value="0">';
+                inner_html += '</div></div></div>';
+                return inner_html;
+            }
+        }   
+		
+		//////////////////////////////////////////////////////////////////////////////////////
+        
+        function getAllMovie() {
+            $.ajax({
+                type: "GET",
+                url: "api/movie.do", // 使用 AJAX 向伺服器端的電影 API 發送 GET 請求
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success: function (response) {
+                    if (response.status == 200) {
+                    	$("#movie_panel").empty();
+                        // 將伺服器端回傳的電影資料逐一處理，並呼叫 addMovie 函式生成 HTML 元素
+                        var movie_panel = '';
+
+                        $.each(response.response.data, function () {
+                            movie_panel += addMovie(this);
+                        })
+                        // 將生成的 HTML 元素加入 id 為 "movie_panel" 的區塊中
+                        $("#movie_panel").append(movie_panel);
+                    }
+                },
+                error: function () {
+                    alert("無法連線到伺服器！");
+                }
+            });
         }
 
+        
+
+        //電影分類取得以movie_type判斷的資料
+        function getMovies(movieType) {
+            $.ajax({
+                type: "GET",
+                url: "api/movie.do",
+                data: { movie_type: movieType },
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success: function (response) {
+                    if (response.status == 200) {
+                        // 清空現有的電影列表
+                        $("#movie_panel").empty();
+
+                        // 將伺服器端回傳的電影資料逐一處理，並呼叫 addMovie 函式生成 HTML 元素
+                        var movie_panel = '';
+                        $.each(response.response.data, function () {
+                            movie_panel += addMovie(this);
+                        })
+
+                        // 將生成的 HTML 元素加入 id 為 "movie_panel" 的區塊中
+                        $("#movie_panel").append(movie_panel);
+                    }
+                },
+                error: function () {
+                    alert("無法連線到伺服器！");
+                }
+            });
+        }
+
+        // 生成電影元素的 HTML 結構
+        function addMovie(data) {
+            let inner_html = '';
+            inner_html += '<div class="col">';
+            inner_html += '<div class="card movie-card" onclick="setMovieId(' + data.movie_id + ')">';
+            inner_html += '<div class="card-body">';
+            inner_html += '<h4 class="card-title">' + data.movie_name + '</h4>';
+            inner_html += '<img src="statics/img/movie/' + data.movie_image + '" class="card-img-top" alt="Room poster for ' + data.movie_name + '">';
+            inner_html += '</div></div></div>';
+            return inner_html;
+        }
+        
+        //function selectMovie(movieId) {
+            // 取消先前選擇的卡片的背景顏色
+            //if (MovieId !== null) {
+                //document.getElementById('movie_' + MovieId).classList.remove('selected');
+            //}
+
+            // 更新當前選擇的 movie_id
+            //MovieId = movieId;
+
+            // 添加新選擇卡片的背景顏色
+            //document.getElementById('movie_' + movieId).classList.add('selected');
+        //}
+        
+        function setMovieId(id){
+			selectedMovieId = id;
+			console.log(selectedMovieId);
+		}
+        
+		//////////////////////////////////////////////////////////////////////////////////////
+        
         // 第二步的確認鍵
         function confirmStep2() {
             // 確認是否已選擇包廂
@@ -416,8 +539,19 @@
                 return;
             }
 
-            // 清空先前的餐點選擇
-            selectedMeals = [];
+
+            
+            function addMealToOrder(id, amount) {           	
+            		meal.push(id);
+            		meal_serving.push(amount);
+            		updateMealOrderData();
+            }
+            
+            function updateMealOrderData() {
+            	localStorage.setItem("meal", JSON.stringify(meal));
+            	localStorage.setItem("meal_serving", JSON.stringify(meal_serving));
+            }
+            
 
             // 獲取所有餐點的數量
             const mealElements = document.querySelectorAll('[name="quantity"]');
@@ -426,117 +560,34 @@
                 const quantity = parseInt(element.value, 10);
 
                 // 如果數量大於 0，將餐點添加到 selectedMeals 中
-                if (!isNaN(quantity) && quantity > 0) {
-                    selectedMeals.push({ mealId, quantity });
+                if (!isNaN(quantity) && quantity >= 0) {
+                	addMealToOrder(mealId,quantity);
+                	console.log(meal);
+                	console.log(meal_serving);
                 }
             });
 
-            // 確認是否選擇了餐點
-            if (selectedMeals.length === 0) {
-                alert('請選擇餐點');
-                return;
-            }
 
             // 在這裡處理第二步的邏輯
 
             // 顯示第三步
             showStep(3);
-
-            function getAllMovie() {
-                $.ajax({
-                    type: "GET",
-                    url: "api/movie.do", // 使用 AJAX 向伺服器端的電影 API 發送 GET 請求
-                    crossDomain: true,
-                    cache: false,
-                    dataType: 'json',
-                    timeout: 5000,
-                    success: function (response) {
-                        if (response.status == 200) {
-                            // 將伺服器端回傳的電影資料逐一處理，並呼叫 addMovie 函式生成 HTML 元素
-                            var movie_panel = '';
-
-                            $.each(response.response.data, function () {
-                                movie_panel += addMovie(this);
-                            })
-                            // 將生成的 HTML 元素加入 id 為 "movie_panel" 的區塊中
-                            $("#movie_panel").append(movie_panel);
-                        }
-                    },
-                    error: function () {
-                        alert("無法連線到伺服器！");
-                    }
-                });
-            }
-
-            // 呼叫 getAllMovie 函式以初始化電影列表
+			// 呼叫 getAllMovie 函式以初始化電影列表
             getAllMovie();
-
-            //電影分類取得以movie_type判斷的資料
-            function getMovies(movieType) {
-                $.ajax({
-                    type: "GET",
-                    url: "api/movie.do",
-                    data: { movie_type: movieType },
-                    crossDomain: true,
-                    cache: false,
-                    dataType: 'json',
-                    timeout: 5000,
-                    success: function (response) {
-                        if (response.status == 200) {
-                            // 清空現有的電影列表
-                            $("#movie_panel").empty();
-
-                            // 將伺服器端回傳的電影資料逐一處理，並呼叫 addMovie 函式生成 HTML 元素
-                            var movie_panel = '';
-                            $.each(response.response.data, function () {
-                                movie_panel += addMovie(this);
-                            })
-
-                            // 將生成的 HTML 元素加入 id 為 "movie_panel" 的區塊中
-                            $("#movie_panel").append(movie_panel);
-                        }
-                    },
-                    error: function () {
-                        alert("無法連線到伺服器！");
-                    }
-                });
-            }
-
-            // 生成電影元素的 HTML 結構
-            function addMovie(data) {
-                let inner_html = '';
-                inner_html += '<div class="col">';
-                inner_html += '<div class="card movie-card" onclick="selectMovie(' + data.movie_id + ')">';
-                inner_html += '<div class="card-body">';
-                inner_html += '<h4 class="card-title">' + data.movie_name + '</h4>';
-                inner_html += '</div></div></div>';
-                return inner_html;
-            }
-
-            function selectMovie(movieId) {
-                // 取消先前選擇的卡片的背景顏色
-                if (MovieId !== null) {
-                    document.getElementById('movie_' + MovieId).classList.remove('selected');
-                }
-
-                // 更新當前選擇的 movie_id
-                MovieId = movieId;
-
-                // 添加新選擇卡片的背景顏色
-                document.getElementById('movie_' + movieId).classList.add('selected');
-            }
-
+			
             //頁面載入完成後初始化一些卡片的點擊事件
             document.addEventListener('DOMContentLoaded', function () {
                 const movieCards = document.querySelectorAll('.movie-card');
                 movieCards.forEach(function (card) {
                     card.addEventListener('click', function () {
                         const movieId = parseInt(this.id.split('_')[1], 10);
-                        selectMovie(movieId);
+                        setMovieId(movieId);
                     });
                 });
             });
         }
+		
+		//////////////////////////////////////////////////////////////////////////////////////
 
         // 第三步的確認鍵
         function confirmStep3() {
