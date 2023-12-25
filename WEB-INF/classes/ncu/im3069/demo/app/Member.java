@@ -62,7 +62,7 @@ public class Member {
 
     /**
      * 實例化（Instantiates）一個新的（new）Member物件<br>
-     * 採用多載（overload）方法進行，此建構子用於登入、更新會員資料時，將每一筆資料新增為一個會員物件
+     * 採用多載（overload）方法進行，此建構子用於更新會員資料時，將每一筆資料新增為一個會員物件
      * 
      * @param member_id 會員編號
      * @param member_email 會員電子信箱
@@ -96,6 +96,18 @@ public class Member {
         this.member_first_name = member_first_name;
         this.member_last_name = member_last_name;
         this.member_phone_number = member_phone_number;
+    }
+    
+    /**
+     * 實例化（Instantiates）一個新的（new）Member物件<br>
+     * 採用多載（overload）方法進行，此建構子用於會員登入時，將每一筆資料新增為一個會員物件
+     * 
+     * @param member_email 會員電子信箱
+     * @param member_password 會員密碼
+     */
+    public Member(String member_email, String member_password) {
+        this.member_email = member_email;
+        this.member_password = member_password;
     }
     
     /**
@@ -137,7 +149,7 @@ public class Member {
     /**
      * 取得會員之密碼
      *
-     * @return themember_ password 回傳會員密碼
+     * @return the member_ password 回傳會員密碼
      */
     public String getMemberPASSWORD() {
         return this.member_password;

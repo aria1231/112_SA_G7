@@ -44,36 +44,42 @@ public class ManagerController extends HttpServlet {
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
         String manager_id = jsr.getParameter("manager_id");
         String manager_email = jsr.getParameter("manager_email");
+        String manager_password = jsr.getParameter("manager_password");
         
-        /** 判斷該字串是否存在，若存在代表要取回個別會員之資料，否則代表要取回全部資料庫內會員之資料 */
-        if (manager_id.isEmpty()) {
-        	//判斷是是否為登入請求
-        	if (!manager_email.isEmpty()) {
-        		//透過MemberHelper物件之getOne()方法取回該會員之資料，回傳之資料為JSONObject物件
-        		JSONObject query = manh.getOne(manager_email);
+        /** 判斷該字串是否存在，若存在代表要取回個別管理員之資料，否則代表要取回全部資料庫內管理員之資料 */
+        if (manager_id.isEmpty()) {        	
+        	// 判斷email和password是否存在
+        	if (!manager_email.isEmpty() && !manager_password.isEmpty()) {
+        		// 進行登入驗證，例如使用MemberHelper物件的方法進行登入驗證
+        		 boolean loginSuccess = manh.verifyLogin(manager_email, manager_password);
         		
-        		/** 新建一個JSONObject用於將回傳之資料進行封裝 */
-            	JSONObject resp = new JSONObject();
-            	resp.put("status", "200");
-            	resp.put("message", "所有會員資料取得成功");
-            	resp.put("response", query);
-    
-            	/** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-            	jsr.response(resp, response);
+        		// 根據登入結果回傳不同的訊息
+        	    JSONObject resp = new JSONObject();
+        	    if (loginSuccess) {
+       		        // 登入成功的處理
+       		        resp.put("status", "200");
+       		        resp.put("success", true);
+       		        resp.put("message", "登入成功");
+       		        // 如果需要回傳會員資訊，也可以在這裡加上
+       		        //resp.put("member_id", member_id); // 請替換為實際的會員資訊
+       		    } else {
+        	        // 登入失敗的處理
+        	        resp.put("status", "401");
+       		        resp.put("success", false);
+       		        resp.put("message", "Email或密碼錯誤");
+       		    }
+
+       		    // 透過JsonReader物件回傳到前端
+       		    jsr.response(resp, response);
         	}
         	else {
-            	/** 透過MemberHelper物件之getAll()方法取回所有會員之資料，回傳之資料為JSONObject物件 */
-            	JSONObject query = manh.getAll();
-            
-            	/** 新建一個JSONObject用於將回傳之資料進行封裝 */
-            	JSONObject resp = new JSONObject();
-            	resp.put("status", "200");
-            	resp.put("message", "所有管理員資料取得成功");
-            	resp.put("response", query);
-    
-            	/** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-            	jsr.response(resp, response);
-        	}
+           	 // email或password為空的處理
+               JSONObject resp = new JSONObject();
+               resp.put("status", "400");
+               resp.put("success", false);
+               resp.put("message", "請提供有效的Email和密碼");
+               jsr.response(resp, response);
+           }
         }
         else{
             /** 透過ManagerHelper物件的getByID()方法自資料庫取回該名管理員之資料，回傳之資料為JSONObject物件 */
