@@ -142,7 +142,7 @@
                         var meal_panel = '';
 
                         $.each(response.response.data, function () {
-                            meal_panel += addMovie(this);
+                            meal_panel += addMeal(this);
                         })
                         // 將生成的 HTML 元素加入 id 為 "meal_panel" 的區塊中
                         $("#meal_panel").append(meal_panel);

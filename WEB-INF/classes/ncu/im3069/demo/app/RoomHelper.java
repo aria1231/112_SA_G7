@@ -69,7 +69,7 @@ public class RoomHelper {
                 String room_description = rs.getString("room_description");
                 
                 /** 將每一筆包廂資料產生一名新Room物件 */
-                r = new Room(room_id, room_name, room_price, room_image, room_description);
+                r = new Room(room_id, room_name, room_price, room_description, room_image);
                 /** 取出該項包廂之資料並封裝至 JSONsonArray 內 */
                 jsa.put(r.getRoomData());
             }
@@ -117,21 +117,23 @@ public class RoomHelper {
       try {
           /** 取得資料庫之連線 */
           conn = DBMgr.getConnection();
-          String[] in_para = DBMgr.stringToArray(data, ",");
+          //String[] in_para = DBMgr.stringToArray(data, ",");
           /** SQL指令 */
 		  
-          String sql = "SELECT * FROM `final_pj`.`room` WHERE `room`.`room_id`";
+          String sql = "SELECT * FROM `final_pj`.`room` WHERE `room`.`room_id`=?";
 		  
-          for (int i=0 ; i < in_para.length ; i++) {
+          /*for (int i=0 ; i < in_para.length ; i++) {
               sql += (i == 0) ? "in (?" : ", ?";
               sql += (i == in_para.length-1) ? ")" : "";
-          }
+          }*/
           
           /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
           pres = conn.prepareStatement(sql);
-          for (int i=0 ; i < in_para.length ; i++) {
+          /*for (int i=0 ; i < in_para.length ; i++) {
             pres.setString(i+1, in_para[i]);
-          }
+          }*/
+          
+          pres.setString(1, data);
           /** 執行查詢之SQL指令並記錄其回傳之資料 */
           rs = pres.executeQuery();
 
@@ -152,7 +154,7 @@ public class RoomHelper {
               String room_description = rs.getString("room_description");
               
               /** 將每一筆包廂資料產生一名新Room物件 */
-              r = new Room(room_id, room_name, room_price, room_image, room_description);
+              r = new Room(room_id, room_name, room_price, room_description, room_image);
               /** 取出該項包廂之資料並封裝至 JSONsonArray 內 */
               jsa.put(r.getRoomData());
           }

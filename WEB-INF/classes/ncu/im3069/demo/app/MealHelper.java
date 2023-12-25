@@ -67,7 +67,7 @@ public class MealHelper {
                 String meal_description = rs.getString("meal_description");
                 
                 /** 將每一筆餐點資料產生一名新Meal物件 */
-                m = new Meal(meal_id, meal_name, meal_price, meal_image, meal_description);
+                m = new Meal(meal_id, meal_name, meal_price, meal_description, meal_image);
                 /** 取出該項餐點之資料並封裝至 JSONsonArray 內 */
                 jsa.put(m.getMealData());
             }
@@ -150,7 +150,7 @@ public class MealHelper {
               String meal_description = rs.getString("meal_description");
               
               /** 將每一筆餐點資料產生一名新Meal物件 */
-              m = new Meal(meal_id, meal_name, meal_price, meal_image, meal_description);
+              m = new Meal(meal_id, meal_name, meal_price, meal_description, meal_image);
               /** 取出該項餐點之資料並封裝至 JSONsonArray 內 */
               jsa.put(m.getMealData());
           }

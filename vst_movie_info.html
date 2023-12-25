@@ -153,16 +153,19 @@
 
         // 生成電影詳細頁面的 HTML 結構
         function addMovie(data) {
+        	console.log('Data object:', data);
+        	console.log('Data image:', data[0].movie_image);
             let inner_html = '';
             inner_html += '<div class="movie-container">';
             inner_html += '<div class="movie-image">';
-            inner_html += '<img src="statics/img/movie/' + data.movie_image + '">';
+            inner_html += '<img src="statics/img/movie/' + data[0].movie_image + '">';
             inner_html += '</div>';
             inner_html += '<div class="movie-details">';
-            inner_html += '<h2 id="movie-name">電影名稱: ' + data.movie_name + '</h2>';
-            inner_html += '<p>片長: ' + data.movie_time + '</p>';
-            inner_html += '<p>簡介: ' + data.movie_description + '</p>';
+            inner_html += '<h2 id="movie-name">電影名稱: ' + data[0].movie_name + '</h2>';
+            inner_html += '<p>片長: ' + data[0].movie_time + '</p>';
+            inner_html += '<p>簡介: ' + data[0].movie_description + '</p>';
             inner_html += '</div></div>';
+        	console.log(inner_html);
             return inner_html;
         } 
     </script>

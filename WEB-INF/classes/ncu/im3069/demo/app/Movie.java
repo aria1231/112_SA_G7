@@ -161,7 +161,7 @@ public class Movie {
         JSONObject jso = new JSONObject();
         jso.put("movie_id", getMovieID());
         jso.put("movie_name", getMovieNAME());
-        jso.put("movie_time", getMovieTYPE());
+        jso.put("movie_time", getMovieTIME());
         jso.put("movie_image", getMovieIMAGE());
         jso.put("movie_description", getMovieDESCRIPTION());
 		jso.put("movie_type", getMovieTYPE());

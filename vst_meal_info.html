@@ -155,12 +155,12 @@
             let inner_html = '';
             inner_html += '<div class="meal-container">';
             inner_html += '<div class="meal-image">';
-            inner_html += '<img src="statics/img/meal/' + data.meal_image + '">';
+            inner_html += '<img src="statics/img/meal/' + data[0].meal_image + '">';
             inner_html += '</div>';
             inner_html += '<div class="meal-details">';
-            inner_html += '<h2 id="meal-name">餐點名稱: ' + data.meal_name + '</h2>';
-            inner_html += '<p id="meal-price">價格: ' + data.meal_price + '</p>';
-            inner_html += '<p id="meal-description">簡介: ' + data.meal_description + '</p>';
+            inner_html += '<h2 id="meal-name">餐點名稱: ' + data[0].meal_name + '</h2>';
+            inner_html += '<p id="meal-price">價格: ' + data[0].meal_price + '</p>';
+            inner_html += '<p id="meal-description">簡介: ' + data[0].meal_description + '</p>';
             inner_html += '</div></div>';
             return inner_html;
         }
