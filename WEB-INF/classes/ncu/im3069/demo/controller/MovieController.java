@@ -33,7 +33,7 @@ public class MovieController extends HttpServlet {
 		/** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
-        String id_list = jsr.getParameter("id_list");
+        String id_list = jsr.getParameter("movie_id");
 		String type = jsr.getParameter("movie_type");
 
         JSONObject resp = new JSONObject();

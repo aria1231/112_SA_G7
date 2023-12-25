@@ -27,7 +27,8 @@ public class RoomController extends HttpServlet {
 		/** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
-        String id_list = jsr.getParameter("id_list");
+        String id_list = jsr.getParameter("room_id");
+        System.out.print(id_list.isEmpty());
 
         JSONObject resp = new JSONObject();
         /** 判斷該字串是否存在，若存在代表要取回查詢之資料，否則代表要取回全部資料庫內包廂之資料 */
@@ -46,6 +47,7 @@ public class RoomController extends HttpServlet {
         }
 
         jsr.response(resp, response);
+        System.out.print(resp);
 	}
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
