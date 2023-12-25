@@ -55,7 +55,7 @@ public class ManagerHelper {
      *
      * @return boolean 登入是否有效
      */
-    public boolean verifyLogin(String email, String password) {
+    public boolean verifyLogin(Manager m) {
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄SQL總行數 */
@@ -68,6 +68,10 @@ public class ManagerHelper {
             conn = DBMgr.getConnection();
             /** SQL指令 */
             String sql = "SELECT * FROM `final_pj`.`members` WHERE `member_email` = ? LIMIT 1";
+            
+            /** 取得所需之參數 */
+            String email = m.getManagerEMAIL();
+            String password = m.getManagerPASSWORD();
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -83,10 +87,10 @@ public class ManagerHelper {
             /** 正確來說資料庫只會有一筆該會員編號之資料，因此如果最後row=0則表示該email沒有被註冊過 */
             while(rs.next()) {                                
                 /** 將 ResultSet 之資料取出 */
-                String member_password = rs.getString("member_password");
+                String manager_password = rs.getString("manager_password");
                 
                 //判斷該email之密碼是否正確
-                if(member_password == password) {
+                if(manager_password == password) {
                 	/** 每執行一次迴圈表示有一筆資料 */
                     row += 1;
                 }

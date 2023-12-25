@@ -80,6 +80,18 @@ public class Manager {
     }
     
     /**
+     * 實例化（Instantiates）一個新的（new）Manager物件<br>
+     * 採用多載（overload）方法進行，此建構子用於員登入時，將每一筆資料新增為一個員物件
+     * 
+     * @param manager_email 員電子信箱
+     * @param manager_password 員密碼
+     */
+    public Manager(String manager_email, String manager_password) {
+        this.manager_email = manager_email;
+        this.manager_password = manager_password;
+    }
+    
+    /**
      * 取得管理員之編號
      *
      * @return the manager_id 回傳管理員編號
