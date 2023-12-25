@@ -129,7 +129,7 @@ public class OrderHelper {
 				int room_id = rs.getInt("room_id");
 				String order_date = rs.getString("order_date");
 				int order_total_price = rs.getInt("order_total_price");
-				int order_time_of_day = re.getInt("order_time_of_day");
+				int order_time_of_day = rs.getInt("order_time_of_day");
                 java.sql.Timestamp order_datetime = rs.getTimestamp("order_datetime");
 				int order_status = rs.getInt("order_status");
                 
@@ -199,18 +199,18 @@ public class OrderHelper {
                 row += 1;
                 
                 /** 將 ResultSet 之資料取出 */
-                int order_id = rs.getInt("order_id");
+                int o_id = rs.getInt("order_id");
 				int member_id = rs.getInt("member_id");
 				int movie_id = rs.getInt("movie_id");
 				int room_id = rs.getInt("room_id");
 				String order_date = rs.getString("order_date");
 				int order_total_price = rs.getInt("order_total_price");
-				int order_time_of_day = re.getInt("order_time_of_day");
+				int order_time_of_day = rs.getInt("order_time_of_day");
                 java.sql.Timestamp order_datetime = rs.getTimestamp("order_datetime");
 				int order_status = rs.getInt("order_status");
                 
                 /** 將每一筆訂單資料產生一名新Order物件 */
-                o = new Order(order_id, member_id, movie_id, room_id, order_date, order_total_price, order_time_of_day, order_datetime, order_status);
+                o = new Order(o_id, member_id, movie_id, room_id, order_date, order_total_price, order_time_of_day, order_datetime, order_status);
                 /** 取出該筆訂單之資料並封裝至 JSONsonArray 內 */
                 data = o.getOrderAllInfo();
             }
@@ -277,7 +277,7 @@ public class OrderHelper {
                 
                 /** 將 ResultSet 之資料取出 */
                 int order_id = rs.getInt("order_id");
-				int member_id = rs.getInt("member_id");
+				int mem_id = rs.getInt("member_id");
 				int movie_id = rs.getInt("movie_id");
 				int room_id = rs.getInt("room_id");
 				String order_date = rs.getString("order_date");
@@ -287,7 +287,7 @@ public class OrderHelper {
 				int order_status = rs.getInt("order_status");
                 
                 /** 將每一筆訂單資料產生一名新Order物件 */
-                o = new Order(order_id, member_id, movie_id, room_id, order_date, order_total_price, order_time_of_day, order_datetime, order_status);
+                o = new Order(order_id, mem_id, movie_id, room_id, order_date, order_total_price, order_time_of_day, order_datetime, order_status);
                 /** 取出該筆訂單之資料並封裝至 JSONsonArray 內 */
                 jsa.put(o.getOrderAllInfo());
             }

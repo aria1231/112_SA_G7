@@ -33,8 +33,8 @@ public class OrderMeal {
     public OrderMeal(Meal meal, int omlinking_serving) {
         this.meal = meal;
         this.omlinking_serving = omlinking_serving;
-        this.omlinking_price = this.meal.getPrice();
-        this.omlinking_subtotal = Arith.mul(this.omlinking_serving, this.omlinking_price);		
+        this.omlinking_price = this.meal.getMealPRICE();
+        this.omlinking_subtotal = (int)Arith.mul(this.omlinking_serving, this.omlinking_price);		
     }
 
     /**
@@ -61,7 +61,7 @@ public class OrderMeal {
      * 設定訂單的餐點細項編號
      */
     public void setOmlMealId(int id) {
-        this.meal_id = id;
+        this.id = id;
     }
 
     /**
@@ -87,7 +87,7 @@ public class OrderMeal {
      * @return int 回傳訂單細項的餐點編號
      */
     public int getOmlMealId() {
-        return this.meal_id;
+        return this.id;
     }
 
     /**
@@ -125,7 +125,7 @@ public class OrderMeal {
     public JSONObject getOmlData() {
         JSONObject data = new JSONObject();
         data.put("meal_id", getOmlMealId());
-        data.put("meal", getOmlMeal().getData());
+        data.put("meal", getOmlMeal().getMealData());
         data.put("omlinking_price", getOmlPrice());
         data.put("omlinking_serving", getOmlServing());
         data.put("omlinking_subtotal", getOmlSubTotal());

@@ -6,11 +6,17 @@ import javax.servlet.http.*;
 import org.json.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.ArrayList;
 
 import ncu.im3069.demo.app.Order;
-import ncu.im3069.demo.app.Product;
-import ncu.im3069.demo.app.ProductHelper;
+import ncu.im3069.demo.app.Meal;
+import ncu.im3069.demo.app.MealHelper;
+import ncu.im3069.demo.app.RoomHelper;
+import ncu.im3069.demo.app.MovieHelper;
 import ncu.im3069.demo.app.OrderHelper;
+import ncu.im3069.demo.app.OrderMeal;
+import ncu.im3069.demo.app.OrderMealHelper;
+import ncu.im3069.demo.app.Room;
 import ncu.im3069.tools.JsonReader;
 
 import javax.servlet.annotation.WebServlet;
@@ -89,7 +95,7 @@ public class OrderController extends HttpServlet {
 		String mov_id = jso.getString("movie_id");  
 		int movie_id = Integer.parseInt(mov_id);		
 		String roo_id = jso.getString("room_id");
-		int room_id = Integer.parseInt(room_id);
+		int room_id = Integer.parseInt(roo_id);
 		
 																						
 		String date = jso.getString("order_date");																										
@@ -103,7 +109,7 @@ public class OrderController extends HttpServlet {
 		
 		
         /** 建立一個新的訂單物件 */
-        Order od = new Order(int member_id,int movie_id,int room_id,String date,int time_of_day);
+        Order od = new Order(member_id,movie_id,room_id,date,time_of_day);
 
         /** 將每一筆訂單餐點細項取出來 */
         for(int i=0 ; i < meal.length() ; i++) {
@@ -120,7 +126,7 @@ public class OrderController extends HttpServlet {
 		Room r = rooh.getById(roo_id);												/**roo不是我打錯，是getById()裡面的參數型態就是String*/
 		int total_price = r.getRoomPRICE();
 		
-		for(int i=0;i<o.length();i++){
+		for(int i=0;i<o.size();i++){
 			total_price += o.get(i).getOmlSubTotal();
 		}
 		od.setOrderTotalPrice(total_price);

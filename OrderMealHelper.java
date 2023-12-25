@@ -119,7 +119,7 @@ public class OrderMealHelper {
                 int meal_id = rs.getInt("meal_id");
                 int omlinking_price = rs.getInt("omlinking_price");
                 int omlinking_serving = rs.getInt("omlinking_serving");
-                int omlinking_subtotal = rs.getDouble("omlinking_subtotal");		/************************************************/
+                int omlinking_subtotal = rs.getInt("omlinking_subtotal");		/************************************************/
                 
                 /** 將每一筆訂單餐點資料產生一名新OrderMeal物件 */
                 om = new OrderMeal(oml_id, order_id, meal_id, omlinking_price, omlinking_serving, omlinking_subtotal);
