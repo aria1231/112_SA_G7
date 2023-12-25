@@ -139,7 +139,7 @@
                 success: function (response) {
                     if (response.status == 200) {
                         // 將伺服器端回傳的包廂資料逐一處理，並呼叫 addRoom 函式生成 HTML 元素
-                        var Room_panel = '';
+                        var room_panel = '';
 
                         $.each(response.response.data, function () {
                             room_panel += addRoom(this);
