@@ -92,15 +92,9 @@ public class OrderController extends HttpServlet {
 		int room_id = Integer.parseInt(room_id);
 		
 																						
-		String d = jso.getString("order_date");											/**json沒有date型態，嘗試中*/
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try {
-            Date order_date = dateFormat.parse(d);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }															
+		String date = jso.getString("order_date");																										
 		
-		String tod = jso.getInt("time_of_day");
+		String tod = jso.getString("time_of_day");
 		int time_of_day = Integer.parseInt(tod);
 		
         JSONArray meal = jso.getJSONArray("meal");
@@ -109,7 +103,7 @@ public class OrderController extends HttpServlet {
 		
 		
         /** 建立一個新的訂單物件 */
-        Order od = new Order(int member_id,int movie_id,int room_id,Date date,int time_of_day);
+        Order od = new Order(int member_id,int movie_id,int room_id,String date,int time_of_day);
 
         /** 將每一筆訂單餐點細項取出來 */
         for(int i=0 ; i < meal.length() ; i++) {

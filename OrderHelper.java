@@ -18,9 +18,9 @@ public class OrderHelper {
     }
     
     public static OrderHelper getHelper() {
-        if(oh == null) oh = new OrderHelper();
+        if(ordh == null) ordh = new OrderHelper();
         
-        return oh;
+        return ordh;
     }
    
     public JSONObject create(Order order) {							
@@ -41,7 +41,7 @@ public class OrderHelper {
             int member_id = order.getOrderMemberId();
             int movie_id = order.getOrderMovieId();
             int room_id = order.getOrderRoomId();
-            Date date = order.getOrderDate();
+            String date = order.getOrderDate();
 			int total_price = order.getOrderTotalPrice();
             int time_of_day = order.getOrderTimeOfDay();
 			Timestamp datetime = order.getOrderDatetime();
@@ -51,7 +51,7 @@ public class OrderHelper {
             pres.setInt(1, member_id);
             pres.setInt(2, movie_id);
             pres.setInt(3, room_id);
-            pres.setDate(4, new java.sql.Date(order_date.getTime()));
+            pres.setString(4, date);
             pres.setInt(5, total_price);
             pres.setInt(6, time_of_day);
 			pres.setTimestamp(7, datetime);
@@ -127,10 +127,10 @@ public class OrderHelper {
 				int member_id = rs.getInt("member_id");
 				int movie_id = rs.getInt("movie_id");
 				int room_id = rs.getInt("room_id");
-				Date order_date = rs.getDate("order_date");
+				String order_date = rs.getString("order_date");
 				int order_total_price = rs.getInt("order_total_price");
 				int order_time_of_day = re.getInt("order_time_of_day");
-                Timestamp order_datetime = rs.getTimestamp("order_datetime");
+                java.sql.Timestamp order_datetime = rs.getTimestamp("order_datetime");
 				int order_status = rs.getInt("order_status");
                 
                 /** 將每一筆訂單資料產生一名新Order物件 */
@@ -203,10 +203,10 @@ public class OrderHelper {
 				int member_id = rs.getInt("member_id");
 				int movie_id = rs.getInt("movie_id");
 				int room_id = rs.getInt("room_id");
-				Date order_date = rs.getDate("order_date");
+				String order_date = rs.getString("order_date");
 				int order_total_price = rs.getInt("order_total_price");
 				int order_time_of_day = re.getInt("order_time_of_day");
-                Timestamp order_datetime = rs.getTimestamp("order_datetime");
+                java.sql.Timestamp order_datetime = rs.getTimestamp("order_datetime");
 				int order_status = rs.getInt("order_status");
                 
                 /** 將每一筆訂單資料產生一名新Order物件 */
@@ -280,10 +280,10 @@ public class OrderHelper {
 				int member_id = rs.getInt("member_id");
 				int movie_id = rs.getInt("movie_id");
 				int room_id = rs.getInt("room_id");
-				Date order_date = rs.getDate("order_date");
+				String order_date = rs.getString("order_date");
 				int order_total_price = rs.getInt("order_total_price");
-				int order_time_of_day = re.getInt("order_time_of_day");
-                Timestamp order_datetime = rs.getTimestamp("order_datetime");
+				int order_time_of_day = rs.getInt("order_time_of_day");
+                java.sql.Timestamp order_datetime = rs.getTimestamp("order_datetime");
 				int order_status = rs.getInt("order_status");
                 
                 /** 將每一筆訂單資料產生一名新Order物件 */

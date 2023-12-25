@@ -21,7 +21,7 @@ public class Order {
     private int room_id;
 
     /** order_date，預約哪一天 */
-    private Date order_date;
+    private String order_date;
 
     /** order_total_price，訂單總金額 */
     private int order_total_price;
@@ -33,7 +33,7 @@ public class Order {
     private int order_status;
 	
     /** datetime，訂單創建時間 */
-    private Timestamp order_datetime;
+    private Timestamp order_datetime = null;
 	
     /** list，餐點列表 */
     private ArrayList<OrderMeal> list = new ArrayList<OrderMeal>();
@@ -53,7 +53,7 @@ public class Order {
      * @param date 預約哪一天
      * @param time_of_day 預約的時段
      */
-	public Order(int member_id,int movie_id,int room_id,Date date,int time_of_day) {		
+	public Order(int member_id,int movie_id,int room_id,String date,int time_of_day) {		
         this.member_id = member_id;
         this.movie_id = movie_id;
         this.room_id = room_id;
@@ -77,7 +77,7 @@ public class Order {
 	 * @param order_status 訂單狀態
      */
 	 
-    public Order(int order_id, int member_id, int movie_id, int room_id, Date order_date, int order_total_price, int order_time_of_day, Timestamp order_datetime, int order_status) {
+    public Order(int order_id, int member_id, int movie_id, int room_id, String order_date, int order_total_price, int order_time_of_day, Timestamp order_datetime, int order_status) {
         this.order_id = order_id;
         this.member_id = member_id;
         this.movie_id = movie_id;
@@ -85,7 +85,7 @@ public class Order {
         this.order_date = order_date;
         this.order_total_price = order_total_price;
         this.order_time_of_day = order_time_of_day;
-        this.order_datetime order_datetime;
+        this.order_datetime = order_datetime;
 		this.order_status = order_status;
         getOrderMealFromDB();
     } 
@@ -146,7 +146,7 @@ public class Order {
      *
      * @return Date 回傳訂單預約哪一天
      */
-    public Date getOrderDate() {
+    public String getOrderDate() {
         return this.order_date;
     }
 	
@@ -221,7 +221,12 @@ public class Order {
         jso.put("total_price", getOrderTotalPrice());
         jso.put("time_of_day", getOrderTimeOfDay());
 		jso.put("datetime", getOrderDatetime());
-        jso.put("status", getOrderStatus());
+		int s = getOrderStatus();
+		if(s == 0){
+			jso.put("status", "未完成");
+		}else if(s == 1){
+			jso.put("status", "已完成");
+		}
 
         return jso;
     }
