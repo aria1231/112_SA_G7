@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-12-21 19:20:13
+-- 產生時間： 2023-12-25 09:53:16
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -32,7 +32,7 @@ CREATE TABLE `order` (
   `member_id` int(11) NOT NULL,
   `movie_id` int(11) NOT NULL,
   `room_id` int(11) NOT NULL,
-  `order_date` date NOT NULL,
+  `order_date` varchar(50) NOT NULL,
   `order_total_price` int(50) NOT NULL DEFAULT 0,
   `order_time_of_day` int(11) NOT NULL,
   `order_datetime` datetime(6) NOT NULL,
