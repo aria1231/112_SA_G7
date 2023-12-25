@@ -4,11 +4,19 @@ import java.io.IOException;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import org.json.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.ArrayList;
 
 import ncu.im3069.demo.app.Order;
-import ncu.im3069.demo.app.Product;
-import ncu.im3069.demo.app.ProductHelper;
+import ncu.im3069.demo.app.Meal;
+import ncu.im3069.demo.app.MealHelper;
+import ncu.im3069.demo.app.RoomHelper;
+import ncu.im3069.demo.app.MovieHelper;
 import ncu.im3069.demo.app.OrderHelper;
+import ncu.im3069.demo.app.OrderMeal;
+import ncu.im3069.demo.app.OrderMealHelper;
+import ncu.im3069.demo.app.Room;
 import ncu.im3069.tools.JsonReader;
 
 import javax.servlet.annotation.WebServlet;
@@ -19,18 +27,27 @@ public class OrderController extends HttpServlet {
     /** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-    /** ph，ProductHelper 之物件與 Product 相關之資料庫方法（Sigleton） */
-    private ProductHelper ph =  ProductHelper.getHelper();
+    /** meah，MealHelper 之物件與 meal 相關之資料庫方法（Sigleton） */
+    private MealHelper meah =  MealHelper.getHelper();
+	
+	/** rooh，RoomHelper 之物件與 Room 相關之資料庫方法（Sigleton） */
+    private RoomHelper rooh =  RoomHelper.getHelper();
+	
+	/** movh，MovieHelper 之物件與 Movie 相關之資料庫方法（Sigleton） */
+    private MovieHelper movh =  MovieHelper.getHelper();
 
-    /** oh，OrderHelper 之物件與 order 相關之資料庫方法（Sigleton） */
-	private OrderHelper oh =  OrderHelper.getHelper();
+    /** ordh，OrderHelper 之物件與 Order 相關之資料庫方法（Sigleton） */
+	private OrderHelper ordh =  OrderHelper.getHelper();
+	
+	/** omh，OrderMealHelper 之物件與 OrderMeal 相關之資料庫方法（Sigleton） */
+	private OrderMealHelper omh =  OrderMealHelper.getHelper();
 
     public OrderController() {
         super();
     }
 
     /**
-     * 處理 Http Method 請求 GET 方法（新增資料）
+     * 處理 Http Method 請求 GET 方法（取得資料）
      *
      * @param request Servlet 請求之 HttpServletRequest 之 Request 物件（前端到後端）
      * @param response Servlet 回傳之 HttpServletResponse 之 Response 物件（後端到前端）
@@ -42,26 +59,18 @@ public class OrderController extends HttpServlet {
         JsonReader jsr = new JsonReader(request);
 
         /** 取出經解析到 JsonReader 之 Request 參數 */
-        String id = jsr.getParameter("id");
+        String member_id = jsr.getParameter("member_id");
 
         /** 新建一個 JSONObject 用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
 
-        /** 判斷該字串是否存在，若存在代表要取回個別訂單之資料，否則代表要取回全部資料庫內訂單之資料 */
-        if (!id.isEmpty()) {
-          /** 透過 orderHelper 物件的 getByID() 方法自資料庫取回該筆訂單之資料，回傳之資料為 JSONObject 物件 */
-          JSONObject query = oh.getById(id);
-          resp.put("status", "200");
-          resp.put("message", "單筆訂單資料取得成功");
-          resp.put("response", query);
-        }
-        else {
-          /** 透過 orderHelper 物件之 getAll() 方法取回所有訂單之資料，回傳之資料為 JSONObject 物件 */
-          JSONObject query = oh.getAll();
-          resp.put("status", "200");
-          resp.put("message", "所有訂單資料取得成功");
-          resp.put("response", query);
-        }
+        
+         /** 透過 orderHelper 物件的 getByMemberId() 方法自資料庫取回該會員所有訂單之資料，回傳之資料為 JSONObject 物件 */
+         JSONObject query = ordh.getByMemberId(member_id);
+         resp.put("status", "200");
+         resp.put("message", "會員訂單資料取得成功");
+         resp.put("response", query);
+        
 
         /** 透過 JsonReader 物件回傳到前端（以 JSONObject 方式） */
         jsr.response(resp, response);
@@ -80,34 +89,54 @@ public class OrderController extends HttpServlet {
         JsonReader jsr = new JsonReader(request);
         JSONObject jso = jsr.getObject();
 
-        /** 取出經解析到 JSONObject 之 Request 參數 */
-        String first_name = jso.getString("first_name");
-        String last_name = jso.getString("last_name");
-        String email = jso.getString("email");
-        String address = jso.getString("address");
-        String phone = jso.getString("phone");
-        JSONArray item = jso.getJSONArray("item");
-        JSONArray quantity = jso.getJSONArray("quantity");
-
+		/** 取出經解析到 JSONObject 之 Request 參數 */
+		String mem_id = jso.getString("member_id");										/**參數名要記得確認 */
+		int member_id = Integer.parseInt(mem_id);										/**這邊再把抓下來的String換成int*/
+		String mov_id = jso.getString("movie_id");  
+		int movie_id = Integer.parseInt(mov_id);		
+		String roo_id = jso.getString("room_id");
+		int room_id = Integer.parseInt(roo_id);
+		
+																						
+		String date = jso.getString("order_date");																										
+		
+		String tod = jso.getString("time_of_day");
+		int time_of_day = Integer.parseInt(tod);
+		
+        JSONArray meal = jso.getJSONArray("meal");
+        JSONArray meal_serving = jso.getJSONArray("meal_serving");
+				
+		
+		
         /** 建立一個新的訂單物件 */
-        Order od = new Order(first_name, last_name, email, address, phone);
+        Order od = new Order(member_id,movie_id,room_id,date,time_of_day);
 
-        /** 將每一筆訂單細項取得出來 */
-        for(int i=0 ; i < item.length() ; i++) {
-            String product_id = item.getString(i);
-            int amount = quantity.getInt(i);
+        /** 將每一筆訂單餐點細項取出來 */
+        for(int i=0 ; i < meal.length() ; i++) {
+            String meal_id = meal.getString(i);
+            int amount = meal_serving.getInt(i);
 
-            /** 透過 ProductHelper 物件之 getById()，取得產品的資料並加進訂單物件裡 */
-            Product pd = ph.getById(product_id);
-            od.addOrderProduct(pd, amount);
+            /** 透過 MealHelper 物件之 getById()，取得餐點的資料並加進訂單物件裡 *//**把各項商品加進訂單的arrayList<orderMeal>，並且這裡有算每樣商品的subtotal*/
+            Meal m = meah.getById(meal_id);
+            od.addOrderMeal(m, amount);												
         }
+		
+																					
+		ArrayList<OrderMeal> o = od.getOrderMealList();								/**嘗試在這邊算total price*/
+		Room r = rooh.getById(roo_id);												/**roo不是我打錯，是getById()裡面的參數型態就是String*/
+		int total_price = r.getRoomPRICE();
+		
+		for(int i=0;i<o.size();i++){
+			total_price += o.get(i).getOmlSubTotal();
+		}
+		od.setOrderTotalPrice(total_price);
+		
+        /** 透過 orderHelper 物件的 create() 方法新建一筆訂單至資料庫 *//**加進order跟order_meal_linking的table裡*/
+        JSONObject result = ordh.create(od);										
 
-        /** 透過 orderHelper 物件的 create() 方法新建一筆訂單至資料庫 */
-        JSONObject result = oh.create(od);
-
-        /** 設定回傳回來的訂單編號與訂單細項編號 */
-        od.setId((int) result.getLong("order_id"));
-        od.setOrderProductId(result.getJSONArray("order_product_id"));
+        /** 設定回傳回來的訂單編號與訂單餐點細項編號 */
+        od.setOrderId((int) result.getLong("order_id"));
+        od.setOrderMealId(result.getJSONArray("order_meal_id"));
 
         /** 新建一個 JSONObject 用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
@@ -118,5 +147,39 @@ public class OrderController extends HttpServlet {
         /** 透過 JsonReader 物件回傳到前端（以 JSONObject 方式） */
         jsr.response(resp, response);
 	}
+
+    /**
+     * 處理Http Method請求DELETE方法（刪除）
+     *
+     * @param request Servlet請求之HttpServletRequest之Request物件（前端到後端）
+     * @param response Servlet回傳之HttpServletResponse之Response物件（後端到前端）
+     * @throws ServletException the servlet exception
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    public void doDelete(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
+        JsonReader jsr = new JsonReader(request);
+        JSONObject jso = jsr.getObject();
+        
+        /** 取出經解析到JSONObject之Request參數 */
+        int order_id = jso.getInt("order_id");
+        
+		/** 透過OrderMealHelper物件的deleteOrderMealByOrderId()方法至資料庫刪除該筆訂單，回傳之資料為JSONObject物件 */
+        JSONObject query1 = omh.deleteOrderMealByOrderId(order_id);
+		
+        /** 透過OrderHelper物件的deleteOrderByOrderId()方法至資料庫刪除該筆訂單，回傳之資料為JSONObject物件 */
+        JSONObject query2 = ordh.deleteOrderByOrderId(order_id);
+        
+        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+        JSONObject resp = new JSONObject();
+        resp.put("status", "200");
+        resp.put("message", "訂單移除成功！");
+        resp.put("response1", query1);
+		resp.put("response2", query2);
+
+        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
+        jsr.response(resp, response);
+    }
 
 }
