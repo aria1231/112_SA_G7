@@ -67,7 +67,7 @@ public class MovieHelper {
               int movie_type = rs.getInt("movie_type");
                 
                 /** 將每一筆電影資料產生一名新Movie物件 */
-				m = new Movie(movie_id, movie_name, movie_time, movie_image, movie_description, movie_type);
+				m = new Movie(movie_id, movie_name, movie_time, movie_description, movie_image, movie_type);
                 /** 取出該項電影之資料並封裝至 JSONsonArray 內 */
                 jsa.put(m.getMovieData());
             }
@@ -118,18 +118,20 @@ public class MovieHelper {
           String[] in_para = DBMgr.stringToArray(data, ",");
           /** SQL指令 */
 		  
-          String sql = "SELECT * FROM `final_pj`.`movie` WHERE `movie`.`movie_id`";
+          String sql = "SELECT * FROM `final_pj`.`movie` WHERE `movie`.`movie_id`=?";
 		  
-          for (int i=0 ; i < in_para.length ; i++) {
+          /*for (int i=0 ; i < in_para.length ; i++) {
               sql += (i == 0) ? "in (?" : ", ?";
               sql += (i == in_para.length-1) ? ")" : "";
-          }
+          }*/
           
           /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
           pres = conn.prepareStatement(sql);
-          for (int i=0 ; i < in_para.length ; i++) {
+          /*for (int i=0 ; i < in_para.length ; i++) {
             pres.setString(i+1, in_para[i]);
-          }
+          }*/
+
+          pres.setString(1, data);
           /** 執行查詢之SQL指令並記錄其回傳之資料 */
           rs = pres.executeQuery();
 
@@ -151,9 +153,10 @@ public class MovieHelper {
               int movie_type = rs.getInt("movie_type");
               
               /** 將每一筆電影資料產生一名新Movie物件 */
-              m = new Movie(movie_id, movie_name, movie_time, movie_image, movie_description, movie_type);
+              m = new Movie(movie_id, movie_name, movie_time, movie_description, movie_image, movie_type);
               /** 取出該項電影之資料並封裝至 JSONsonArray 內 */
               jsa.put(m.getMovieData());
+              //System.out.print(m.getMovieData());
           }
 
       } catch (SQLException e) {
@@ -278,7 +281,7 @@ public class MovieHelper {
 				  int movie_type = rs.getInt("movie_type");
 				  
 				  /** 將每一筆電影資料產生一名新Movie物件 */
-				  m = new Movie(movie_id, movie_name, movie_time, movie_image, movie_description, movie_type);
+				  m = new Movie(movie_id, movie_name, movie_time, movie_description, movie_image, movie_type);
 				  /** 取出該項電影之資料並封裝至 JSONsonArray 內 */
 				  jsa.put(m.getMovieData());
 			  }
@@ -389,7 +392,7 @@ public class MovieHelper {
             conn = DBMgr.getConnection();
             /** SQL指令 */
 			
-            String sql = "INSERT INTO `final_pj`.`movie`(`movie_name`, `movie_time`, `movie_description`, `movie_image`, `movie_type` `movie_update_time`)"
+            String sql = "INSERT INTO `final_pj`.`movie`(`movie_name`, `movie_time`, `movie_description`, `movie_image`, `movie_type`, `movie_update_time`)"
                     + " VALUES(?, ?, ?, ?, ?,?)";
             
             /** 取得所需之參數 */
