@@ -47,6 +47,57 @@
             /* 選擇時的邊框 */
             /* 其他樣式，視您的設計需求而定 */
         }
+        .card {
+            width: 25rem;
+            height: 25rem;
+            /* 固定卡片高度，根据需要调整 */
+            border-radius: 30px;
+            /* 圓角 */
+            margin: 20px;
+            /* 间距 */
+            margin: 30px 30px;
+            /* 上方和下方间距 */
+            overflow: hidden;
+            /* 防止圓角溢出 */
+            background-color: #c7d8b6;
+            /* 卡片背景颜色 */
+        }
+
+        .card img {
+            border-radius: 30px 30px 30px 30px;
+            /* 電影圖片圓角 */
+            width: 85%;
+            /* 图片宽度填充卡片 */
+            height: 85%;
+            /* 图片高度相对于卡片的百分比，根据需要调整 */
+            margin: 15px auto 0;
+            /* 图片水平居中，上方添加间距 */
+            display: block;
+            /* margin属性生效 */
+        }
+
+        .card-body {
+            text-align: center;
+            /* 電影名稱居中 */
+        }
+
+        .card-title {
+            font-weight: bold;
+            /* 字体加粗 */
+            text-decoration: none !important;
+            /* 使用 !important 來覆蓋預設樣式 */
+            color: inherit;
+            /* 使用父元素的颜色，防止被默认颜色覆盖 */
+        }
+
+        .card:hover {
+            background-color: #f0f0f0;
+        }
+
+        .row {
+            flex-wrap: wrap;
+            /* 將 flex-wrap 設為 wrap，讓元素換行 */
+        }
     </style>
     <script src="statics/js/jquery-3.4.1.min.js"></script>
 </head>
@@ -286,7 +337,7 @@
                 let inner_html = '';
                 inner_html += '<div class="col">';
                 inner_html += '<div class="card room-card" onclick="selectRoom(' + data.room_id + ')">';
-                inner_html += '<img src="../images/' + data.room_image + '" class="card-img-top" alt="Room poster for ' + data.room_name + '">';
+                inner_html += '<img src="statics/img/room/' + data.room_image + '" class="card-img-top" alt="Room poster for ' + data.room_name + '">';
                 inner_html += '<div class="card-body">';
                 inner_html += '<h4 class="card-title">' + data.room_name + '</h4>';
                 inner_html += '</div></div></div>';

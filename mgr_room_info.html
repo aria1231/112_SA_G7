@@ -173,17 +173,17 @@
             $("#room_info_panel").html(addRoom(roomData));
         }
 
-        // 生成包廂詳細頁面的 HTML 結構
+     // 生成包廂詳細頁面的 HTML 結構
         function addRoom(data) {
             let inner_html = '';
             inner_html += '<div class="room-container">';
             inner_html += '<div class="room-image">';
-            inner_html += '<img src="statics/img/room/' + data.room_image + '">';
+            inner_html += '<img src="statics/img/room/' + data[0].room_image + '">';
             inner_html += '</div>';
             inner_html += '<div class="room-details">';
-            inner_html += '<h2 id="room-name">包廂名稱: ' + data.room_name + '</h2>';
-            inner_html += '<p id="room-price">價格: ' + data.room_price + '</p>';
-            inner_html += '<p id="room-description">簡介 ' + data.room_description + '</p>';
+            inner_html += '<h2 id="room-name">包廂名稱: ' + data[0].room_name + '</h2>';
+            inner_html += '<p id="room-price">價格: ' + data[0].room_price + '</p>';
+            inner_html += '<p id="room-description">簡介 ' + data[0].room_description + '</p>';
             inner_html += '<button class="btn btn-primary" onclick="editRoom()">編輯</button>';
             inner_html += '<button class="btn btn-danger" onclick="deleteRoom()">刪除</button>';
             inner_html += '</div></div>';
