@@ -24,6 +24,9 @@ public class Room {
     /** update time 更新時間 */
 	private Timestamp room_update_time;
 	
+	/** update time 更新時間 */
+	private int room_limited;
+	
     /**
      * 實例化（Instantiates）一個新的（new）Room 物件<br>
      * 採用多載（overload）方法進行，此建構子用於新增包廂時
@@ -33,11 +36,12 @@ public class Room {
      * @param description 包廂描述
      * @param image 包廂照片
      */
-	public Room(String room_name, int room_price, String room_description, String room_image) {
+	public Room(String room_name, int room_price, String room_description, String room_image, int room_limited) {
 		this.room_name = room_name;
 		this.room_price = room_price;
 		this.room_description= room_description;
 		this.room_image = room_image;
+		this.room_limited = room_limited;
 	}
 
     /**
@@ -50,12 +54,13 @@ public class Room {
      * @param description　包廂描述
      * @param image 包廂圖片
      */
-	public Room(int room_id, String room_name, int room_price, String room_description, String room_image) {
+	public Room(int room_id, String room_name, int room_price, String room_description, String room_image, int room_limited) {
 		this.room_id = room_id;
 		this.room_name = room_name;
 		this.room_price = room_price;
 		this.room_description = room_description;
 		this.room_image = room_image;
+		this.room_limited = room_limited;
 	}
 
     /**
@@ -69,13 +74,14 @@ public class Room {
      * @param describe 產品敘述
      * @param update time 更新時間
      */
-	public Room(int room_id, String room_name, int room_price, String room_description, String room_image, Timestamp room_update_time) {
+	public Room(int room_id, String room_name, int room_price, String room_description, String room_image, Timestamp room_update_time, int room_limited) {
 		this.room_id = room_id;
 		this.room_name = room_name;
 		this.room_price = room_price;
 		this.room_description = room_description;
 		this.room_image = room_image;
 		this.room_update_time = room_update_time;
+		this.room_limited = room_limited;
 	}
 
     /**
@@ -131,6 +137,15 @@ public class Room {
 	public Timestamp getRoomUPDATETIME() {
 		return this.room_update_time;
 	}
+	
+	/**
+     * 取得包廂敘述
+     *
+     * @return String 回傳包廂敘述
+     */
+	public int getRoomLIMITED() {
+		return this.room_limited;
+	}
 
     /**
      * 取得包廂資訊
@@ -145,6 +160,7 @@ public class Room {
         jso.put("room_price", getRoomPRICE());
         jso.put("room_image", getRoomIMAGE());
         jso.put("room_description", getRoomDESCRIPTION());
+        jso.put("room_limited", getRoomLIMITED());
 
         return jso;
     }

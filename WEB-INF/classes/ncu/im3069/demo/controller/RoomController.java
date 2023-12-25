@@ -60,9 +60,10 @@ public class RoomController extends HttpServlet {
         int room_price = jso.getInt("room_price");
         String room_description = jso.getString("room_description");
 		String room_image = jso.getString("room_image");
+        int room_limited = jso.getInt("room_limited");
         
         /** 建立一個新的包廂物件 */
-        Room r = new Room(room_name, room_price, room_description, room_image);
+        Room r = new Room(room_name, room_price, room_description, room_image, room_limited);
         
         /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
         if(room_name.isEmpty() || room_price == 0 || room_description.isEmpty() || room_image.isEmpty()) {
@@ -134,9 +135,10 @@ public class RoomController extends HttpServlet {
         int room_price = jso.getInt("room_price");
         String room_description = jso.getString("room_description");
 		String room_image = jso.getString("room_image");
+        int room_limited = jso.getInt("room_limited");
 
         /** 透過傳入之參數，新建一個以這些參數之包廂Room物件 */
-        Room r = new Room(room_id, room_name, room_price, room_description, room_image);
+        Room r = new Room(room_id, room_name, room_price, room_description, room_image, room_limited);
         
         /** 透過RoomHelper物件的updateRoom()方法至資料庫更新該包廂資料，回傳之資料為JSONObject物件 */
         JSONObject data = rooh.updateRoom(r);

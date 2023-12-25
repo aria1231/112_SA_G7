@@ -67,9 +67,10 @@ public class RoomHelper {
                 int room_price = rs.getInt("room_price");
                 String room_image = rs.getString("room_image");
                 String room_description = rs.getString("room_description");
+                int room_limited = rs.getInt("room_limited");
                 
                 /** 將每一筆包廂資料產生一名新Room物件 */
-                r = new Room(room_id, room_name, room_price, room_description, room_image);
+                r = new Room(room_id, room_name, room_price, room_description, room_image, room_limited);
                 /** 取出該項包廂之資料並封裝至 JSONsonArray 內 */
                 jsa.put(r.getRoomData());
             }
@@ -152,9 +153,10 @@ public class RoomHelper {
               int room_price = rs.getInt("room_price");
               String room_image = rs.getString("room_image");
               String room_description = rs.getString("room_description");
+              int room_limited = rs.getInt("room_limited");
               
               /** 將每一筆包廂資料產生一名新Room物件 */
-              r = new Room(room_id, room_name, room_price, room_description, room_image);
+              r = new Room(room_id, room_name, room_price, room_description, room_image, room_limited);
               /** 取出該項包廂之資料並封裝至 JSONsonArray 內 */
               jsa.put(r.getRoomData());
           }
@@ -238,9 +240,11 @@ public class RoomHelper {
               int room_price = rs.getInt("room_price");
               String room_image = rs.getString("room_image");
               String room_description = rs.getString("room_description");
+              int room_limited = rs.getInt("room_limited");
+              
               
               /** 將每一筆包廂資料產生一名新Room物件 */
-              r = new Room(room_id, room_name, room_price, room_image, room_description);
+              r = new Room(room_id, room_name, room_price, room_image, room_description, room_limited);
               /** 取出該項包廂之資料並封裝至 JSONsonArray 內 */
               jsa.put(r.getRoomData());
           }
@@ -304,9 +308,11 @@ public class RoomHelper {
 				int room_price = rs.getInt("room_price");
 				String room_image = rs.getString("room_image");
 				String room_description = rs.getString("room_description");
+	            int room_limited = rs.getInt("room_limited");
+	              
                 
                 /** 將每一筆包廂資料產生一名新Room物件 */
-                r = new Room(room_id, room_name, room_price, room_image, room_description);
+                r = new Room(room_id, room_name, room_price, room_image, room_description, room_limited);
             }
 
         } catch (SQLException e) {
