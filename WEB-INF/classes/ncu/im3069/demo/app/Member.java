@@ -98,6 +98,10 @@ public class Member {
         this.member_phone_number = member_phone_number;
     }
     
+    public Member(int member_id) {
+    	this.member_id = member_id;
+    }
+    
     /**
      * 實例化（Instantiates）一個新的（new）Member物件<br>
      * 採用多載（overload）方法進行，此建構子用於會員登入時，將每一筆資料新增為一個會員物件
@@ -218,6 +222,13 @@ public class Member {
         jso.put("last_name", getMemberLASTNAME());
         jso.put("email", getMemberEMAIL());
         jso.put("phone_number", getMemberPHONENUMBER());
+        
+        return jso;
+    }
+    
+    public JSONObject getMemID() {
+    	JSONObject jso = new JSONObject();
+        jso.put("member_id", getMemberID());
         
         return jso;
     }

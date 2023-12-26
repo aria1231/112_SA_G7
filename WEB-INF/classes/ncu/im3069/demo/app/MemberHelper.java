@@ -174,7 +174,7 @@ public class MemberHelper {
     	/** 新建一個 Member 物件之 m 變數，用於紀錄每一位查詢回之會員資料 */
         Member m = null;
         /** 用於儲存所有檢索回之會員，以JSONArray方式儲存 */
-        JSONArray jsa = new JSONArray();
+        JSONObject jso = new JSONObject();
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */
@@ -188,7 +188,7 @@ public class MemberHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `final_pj`.`members` WHERE `member_email` = ? LIMIT 1";
+            String sql = "SELECT `member_id` FROM `final_pj`.`members` WHERE `member_email` = ? LIMIT 1";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -208,15 +208,15 @@ public class MemberHelper {
                 
                 /** 將 ResultSet 之資料取出 */
                 int member_id = rs.getInt("member_id");
-                String member_first_name = rs.getString("member_first_name");
-                String member_last_name = rs.getString("member_last_name");
-                String member_email = rs.getString("member_email");
-                String member_phone_number = rs.getString("member_phone_number");
+//                String member_first_name = rs.getString("member_first_name");
+//                String member_last_name = rs.getString("member_last_name");
+//                String member_email = rs.getString("member_email");
+//                String member_phone_number = rs.getString("member_phone_number");
                 
                 /** 將每一筆會員資料產生一名新Member物件 */
-                m = new Member(member_id, member_email, member_first_name, member_last_name, member_phone_number);
+                m = new Member(member_id);
                 /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
-                jsa.put(m.getOneData());
+                jso.put("member_id", m.getMemID());
             }
             
         } catch (SQLException e) {
@@ -240,7 +240,7 @@ public class MemberHelper {
         response.put("sql", exexcute_sql);
         response.put("row", row);
         response.put("time", duration);
-        response.put("data", jsa);
+        response.put("data", jso);
 
         return response;
     }
