@@ -143,13 +143,13 @@ public class MemberHelper {
             System.out.println(exexcute_sql);
             
             /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
-            /** 正確來說資料庫只會有一筆該會員編號之資料，因此如果最後row=0則表示該email沒有被註冊過 */
+            /** 正確來說資料庫只會有一筆該會員編號之資料，因此如果最後row=0則表示帳號或密碼錯 */
             while(rs.next()) {                                
                 /** 將 ResultSet 之資料取出 */
                 String member_password = rs.getString("member_password");
                 
                 //判斷該email之密碼是否正確
-                if(member_password == password) { //資料庫中的密碼 = 輸入的密碼
+                if(password.compareTo(member_password) == 0) { //輸入的密碼 == 資料庫中的密碼
                 	/** 每執行一次迴圈表示有一筆資料 */
                     row += 1;
                 }
@@ -166,12 +166,7 @@ public class MemberHelper {
             /** 關閉連線並釋放所有資料庫相關之資源 **/
             DBMgr.close(rs, pres, conn);
         }
-        if(row == 1) {
-        	return true;
-        }
-        else {
-        	return false;
-        }
+        return (row == 0) ? false : true;
     }
     
     /**
@@ -279,9 +274,10 @@ public class MemberHelper {
             /** SQL指令 */
             String sql = "SELECT * FROM `final_pj`.`members` WHERE `member_id` = ? LIMIT 1";
             
+            int int_id = Integer.valueOf(id);
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
-            pres.setString(1, id);
+            pres.setInt(1, int_id);
             /** 執行查詢之SQL指令並記錄其回傳之資料 */
             rs = pres.executeQuery();
 

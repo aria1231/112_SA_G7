@@ -67,7 +67,7 @@ public class ManagerHelper {
             /** 取得資料庫之連線 */
             conn = DBMgr.getConnection();
             /** SQL指令 */
-            String sql = "SELECT * FROM `final_pj`.`members` WHERE `member_email` = ? LIMIT 1";
+            String sql = "SELECT * FROM `final_pj`.`manager` WHERE `manager_email` = ? LIMIT 1";
             
             /** 取得所需之參數 */
             String email = m.getManagerEMAIL();
@@ -90,7 +90,7 @@ public class ManagerHelper {
                 String manager_password = rs.getString("manager_password");
                 
                 //判斷該email之密碼是否正確
-                if(manager_password == password) {
+                if(password.compareTo(manager_password) == 0) {
                 	/** 每執行一次迴圈表示有一筆資料 */
                     row += 1;
                 }
@@ -107,12 +107,7 @@ public class ManagerHelper {
             /** 關閉連線並釋放所有資料庫相關之資源 **/
             DBMgr.close(rs, pres, conn);
         }
-        if(row == 1) {
-        	return true;
-        }
-        else {
-        	return false;
-        }
+        return (row == 0) ? false : true;
     }
     
     /**

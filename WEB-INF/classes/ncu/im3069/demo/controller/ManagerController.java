@@ -45,36 +45,42 @@ public class ManagerController extends HttpServlet {
         JSONObject jso = jsr.getObject();
         
         /** 取出經解析到JSONObject之Request參數 */
-        String manager_email = jso.getString("member_email");	//登入也會用到
-        String manager_password = jso.getString("member_password");
+        String manager_email = jso.getString("email");	//登入也會用到
+        String manager_password = jso.getString("password");
         
+        if ((!manager_email.isEmpty()) && (!manager_email.isEmpty())) {
+        	/** 透過MemberHelper物件的verifyLogin()檢查該會員電子郵件信箱是否有效 */
+        	if (manh.verifyLogin(new Manager(manager_email, manager_password))) {
+        		// 登入驗證成功
+        		// 登入成功的處理
+        		JSONObject resp = new JSONObject();
+        		resp.put("status", "200");
+        		resp.put("success", true);
+        		resp.put("message", "登入成功");
+        		jsr.response(resp, response);
+        		// 如果需要回傳會員資訊，也可以在這裡加上
+        		//resp.put("member_id", member_id); // 請替換為實際的會員資訊
+        	}
+        	else if (!manh.verifyLogin(new Manager(manager_email, manager_password))) {
+        		// 登入驗證失敗
+        		// 登入失敗的處理
+        		JSONObject resp = new JSONObject();
+        		resp.put("status", "401");
+        		resp.put("success", false);
+        		resp.put("message", "Email或密碼錯誤");
+        		jsr.response(resp, response);
+        	}
+        }
         /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
-        if(manager_email.isEmpty() || manager_password.isEmpty()) { //登入判斷有無空值
+        else if(manager_email.isEmpty() || manager_password.isEmpty()) { //登入判斷有無空值
             /** 以字串組出JSON格式之資料 */
-            String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
-            /** 透過JsonReader物件回傳到前端（以字串方式） */
-            jsr.response(resp, response);
-        }
-        /** 透過MemberHelper物件的verifyLogin()檢查該會員電子郵件信箱是否有效 */
-        else if (manh.verifyLogin(new Manager(manager_email, manager_password))) {
-        	// 登入驗證成功
-        	// 登入成功的處理
+            //String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
         	JSONObject resp = new JSONObject();
-	        resp.put("status", "200");
-	        resp.put("success", true);
-	        resp.put("message", "登入成功");
-	        jsr.response(resp, response);
-	        // 如果需要回傳會員資訊，也可以在這裡加上
-	        //resp.put("member_id", member_id); // 請替換為實際的會員資訊
-        }
-        else if (!manh.verifyLogin(new Manager(manager_email, manager_password))) {
-        	// 登入驗證失敗
-        	// 登入失敗的處理
-        	JSONObject resp = new JSONObject();
-	        resp.put("status", "401");
+	        resp.put("status", "400");
 		    resp.put("success", false);
-		    resp.put("message", "Email或密碼錯誤");
-		    jsr.response(resp, response);
+		    resp.put("message", "欄位不能有空值");
+        	/** 透過JsonReader物件回傳到前端（以字串方式） */
+            jsr.response(resp, response);
         }
     }
     /**

@@ -187,6 +187,7 @@
             var email = $('#inputEmailName').val();
             var password = $('#inputPassword').val();
             var confirmPassword = $('#inputPasswordConfirm').val();
+            var InorUp = "1";
 
             // 密碼檢查（至少8個字符，包含英文大小寫和數字）
             var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
@@ -210,7 +211,8 @@
                     "lastName": lastName,
                     "phoneNumber": phoneNumber,
                     "email": email,
-                    "password": password
+                    "password": password,
+                    "InorUp":InorUp
                 };
 
                 // 將 JSON 格式轉換成字串

@@ -177,12 +177,12 @@ public class Member {
         
         
         /** 檢查該名會員是否已經在資料庫 */
-        if(this.member_id != 0) {
+        //if(this.member_id != 0) {
             /** 若有則將目前更新後之資料更新至資料庫中 */
             //memh.updateLoginTimes(this);
             /** 透過MemberHelper物件，更新目前之會員資料置資料庫中 */
             data = memh.updateMember(this);
-        }
+        //}
         
         return data;
     }
@@ -196,11 +196,11 @@ public class Member {
         /** 透過JSONObject將所有會員所需之資料全部進行封裝*/ 
         JSONObject jso = new JSONObject();
         jso.put("member_id", getMemberID());
-        jso.put("member_first_name", getMemberFIRSTNAME());
-        jso.put("member_last_name", getMemberLASTNAME());
-        jso.put("member_email", getMemberEMAIL());
-        jso.put("member_password", getMemberPASSWORD());
-        jso.put("member_phone_number", getMemberPHONENUMBER());
+        jso.put("first_name", getMemberFIRSTNAME());
+        jso.put("last_name", getMemberLASTNAME());
+        jso.put("email", getMemberEMAIL());
+        jso.put("password", getMemberPASSWORD());
+        jso.put("phone_number", getMemberPHONENUMBER());
         
         return jso;
     }
@@ -214,10 +214,10 @@ public class Member {
         /** 透過JSONObject將該名會員所需之資料全部進行封裝*/ 
         JSONObject jso = new JSONObject();
         jso.put("member_id", getMemberID());
-        jso.put("member_first_name", getMemberFIRSTNAME());
-        jso.put("member_last_name", getMemberLASTNAME());
-        jso.put("member_email", getMemberEMAIL());
-        jso.put("member_phone_number", getMemberPHONENUMBER());
+        jso.put("first_name", getMemberFIRSTNAME());
+        jso.put("last_name", getMemberLASTNAME());
+        jso.put("email", getMemberEMAIL());
+        jso.put("phone_number", getMemberPHONENUMBER());
         
         return jso;
     }
