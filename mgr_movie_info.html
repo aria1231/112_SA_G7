@@ -208,11 +208,14 @@
         // 刪除按鈕的點擊事件
         function deleteMovie() {
             if (confirm('確定要刪除這部電影嗎？')) {
+            	
+                var request = {'movie_id': movieId };
+                var data_string = JSON.stringify(request);
                 // 使用 AJAX 向後端發送刪除請求
                 $.ajax({
                     type: "DELETE",
                     url: "api/movie.do",
-                    data: { movie_id: movieId },
+                    data: data_string,
                     crossDomain: true,
                     cache: false,
                     dataType: 'json',
