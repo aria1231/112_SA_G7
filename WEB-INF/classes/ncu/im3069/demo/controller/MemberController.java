@@ -43,15 +43,26 @@ public class MemberController extends HttpServlet {
         JsonReader jsr = new JsonReader(request);
         JSONObject jso = jsr.getObject();
         
-        /** 取出經解析到JSONObject之Request參數 */
-        String sign_up_email = jso.getString("sign_up_email");
-        String sign_up_password = jso.getString("sign_up_password");       
-        String sign_up_first_name = jso.getString("sign_up_first_name");
-        String sign_up_last_name = jso.getString("sign_up_last_name");
-        String sign_up_phone_number = jso.getString("sign_up_phone_number");
+        String InorUp = jso.getString("InorUp");
+        String sign_in_email="",sign_in_password="",sign_up_email="",sign_up_first_name="",sign_up_last_name="",sign_up_phone_number="",sign_up_password="";
         
-        String sign_in_email = jso.getString("sign_in_email");
-        String sign_in_password = jso.getString("sign_in_password");
+         /** 取出經解析到JSONObject之Request參數 */
+        if (InorUp.equals("0")) {
+        	sign_in_email = jso.getString("email");
+            sign_in_password = jso.getString("password");
+        }
+        else {
+        	 sign_up_email = jso.getString("sign_up_email");
+             sign_up_password = jso.getString("sign_up_password");       
+             sign_up_first_name = jso.getString("sign_up_first_name");
+             sign_up_last_name = jso.getString("sign_up_last_name");
+             sign_up_phone_number = jso.getString("sign_up_phone_number");
+        }
+        
+       
+ 
+        System.out.println(sign_in_email);
+        
                 
         
               

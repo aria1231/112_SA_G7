@@ -130,15 +130,27 @@
         function login() {
             var email = document.getElementById("inputEmail").value;
             var password = document.getElementById("inputPassword").value;
+            var InorUp = "0";
+            
+            var dataObject = {
+                    "email": email,
+                    "password": password,
+                    "InorUp":InorUp
+                };
 
-            // 使用 AJAX 發送登入請求
+                // 將 JSON 格式轉換成字串
+                var dataString = JSON.stringify(dataObject);
+            
             $.ajax({
                 type: "POST",
                 url: "api/member.do",
-                data: JSON.stringify({ email: email, password: password }),
-                contentType: "application/json; charset=utf-8",
+                data: dataString,
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
                 success: function (response) {
-                    // 登入成功
+                	// 登入成功
                     if (response.success) {
                         alert('登入成功！');
                         // 儲存會員資訊到 localStorage
@@ -151,9 +163,11 @@
                     }
                 },
                 error: function () {
-                    console.error('無法連線到伺服器！');
+                	console.error('無法連線到伺服器！');
                 }
-            });
+        });
+
+            
         }
 
     </script>
