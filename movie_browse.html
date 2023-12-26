@@ -148,6 +148,8 @@
                 dataType: 'json',
                 timeout: 5000,
                 success: function (response) {
+                	// 清空現有的電影列表
+                    $("#movie_panel").empty();
                     if (response.status == 200) {
                         // 將伺服器端回傳的電影資料逐一處理，並呼叫 addMovie 函式生成 HTML 元素
                         var movie_panel = '';
