@@ -47,7 +47,7 @@ public class MemberController extends HttpServlet {
         String sign_in_email="",sign_in_password="",sign_up_email="",sign_up_first_name="",sign_up_last_name="",sign_up_phone_number="",sign_up_password="";
         
          /** 取出經解析到JSONObject之Request參數 */
-        if (InorUp.equals("0")) {
+        if (InorUp.equals("0")) { //登入
         	sign_in_email = jso.getString("email");
             sign_in_password = jso.getString("password");
             
@@ -55,11 +55,14 @@ public class MemberController extends HttpServlet {
             	/** 透過MemberHelper物件的verifyLogin()檢查該會員電子郵件信箱是否有效 */
             	if (memh.verifyLogin(new Member(sign_in_email, sign_in_password))) {
             		// 登入驗證成功
+            		JSONObject data = memh.getLoginID(sign_in_email);
+            		
             		// 登入成功的處理
             		JSONObject resp = new JSONObject();
             		resp.put("status", "200");
             		resp.put("success", true);
             		resp.put("message", "登入成功");
+            		resp.put("reponse", data);
     	        	jsr.response(resp, response);
     	        	// 如果需要回傳會員資訊，也可以在這裡加上
     	        	//resp.put("member_id", member_id); // 請替換為實際的會員資訊
@@ -88,14 +91,14 @@ public class MemberController extends HttpServlet {
                 
             }
         }
-        else if(InorUp.equals("1")){
+        else if(InorUp.equals("1")){ //註冊
         	 sign_up_email = jso.getString("email");
              sign_up_password = jso.getString("password");       
              sign_up_first_name = jso.getString("firstName");
              sign_up_last_name = jso.getString("lastName");
              sign_up_phone_number = jso.getString("phoneNumber");
              
-             if(!(sign_up_email.isEmpty() || sign_up_password.isEmpty() || sign_up_first_name.isEmpty() || sign_up_last_name.isEmpty() || sign_up_phone_number.isEmpty()))	{
+             //if(!(sign_up_email.isEmpty() || sign_up_password.isEmpty() || sign_up_first_name.isEmpty() || sign_up_last_name.isEmpty() || sign_up_phone_number.isEmpty()))	{
                  /** 建立一個新的會員物件 */
                  Member m = new Member(sign_up_email, sign_up_password, sign_up_first_name, sign_up_last_name, sign_up_phone_number);
                  
@@ -112,19 +115,19 @@ public class MemberController extends HttpServlet {
                  	/** 透過JsonReader物件回傳到前端（以JSONObject方式） */
                  	jsr.response(resp, response);
                  }
-                 else {
+                 else if(memh.checkDuplicate(m)){
                      /** 以字串組出JSON格式之資料 */
                      String resp = "{\"status\": \'400\', \"message\": \'新增帳號失敗，此E-Mail帳號重複！\', \'response\': \'\'}";
                      /** 透過JsonReader物件回傳到前端（以字串方式） */
                      jsr.response(resp, response);
                  }
-             }
+             //}
              /** 以字串組出JSON格式之資料 */
-             else {
-               String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
-               /** 透過JsonReader物件回傳到前端（以字串方式） */
-               jsr.response(resp, response);
-             }
+//             else {
+//               String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
+//               /** 透過JsonReader物件回傳到前端（以字串方式） */
+//               jsr.response(resp, response);
+//             }
         }
         
        
