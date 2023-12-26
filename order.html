@@ -297,7 +297,13 @@
         let meal = [];
         let meal_serving = [];
         let selectedMovieId = null;
+        let membetId = getMemberIdFromClient();
 
+      	function getMemberIdFromClient() {
+			let id = JSON.parse(localStorage.getItem("member_id"));
+			return id;
+		}
+        
         //function selectRoom(roomId) {
             // 取消先前選擇的卡片的背景顏色
             //if (selectedRoomId !== null) {
