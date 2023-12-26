@@ -297,7 +297,7 @@
         let meal = [];
         let meal_serving = [];
         let selectedMovieId = null;
-        let membetId = getMemberIdFromClient();
+        let memberId = getMemberIdFromClient();
 
       	function getMemberIdFromClient() {
 			let id = JSON.parse(localStorage.getItem("member_id"));
@@ -605,7 +605,9 @@
 
             // 顯示第四步
             showStep(4);
-
+			
+            console.log(memberId);
+            
             // 使用 AJAX 向伺服器端的會員 API 發送 GET 請求，根據會員 ID 取得會員名字
             $.ajax({
                 type: "GET",

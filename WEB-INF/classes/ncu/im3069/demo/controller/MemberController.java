@@ -2,6 +2,7 @@ package ncu.im3069.demo.controller;
 
 import java.io.*;
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import org.json.*;
 //記得改import路徑
@@ -62,8 +63,9 @@ public class MemberController extends HttpServlet {
             		resp.put("status", "200");
             		resp.put("success", true);
             		resp.put("message", "登入成功");
-            		resp.put("reponse", data.getInt("member_id"));
+            		resp.put("response", data);
     	        	jsr.response(resp, response);
+    	        	
     	        	// 如果需要回傳會員資訊，也可以在這裡加上
     	        	//resp.put("member_id", member_id); // 請替換為實際的會員資訊
             	}  

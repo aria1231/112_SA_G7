@@ -150,11 +150,14 @@
                 dataType: 'json',
                 timeout: 5000,
                 success: function (response) {
+                	console.log("response=",response.response.data.member_id.member_id);
                 	// 登入成功
                     if (response.success) {
+                    	
                         alert('登入成功！');
                         // 儲存會員資訊到 localStorage
-                        localStorage.setItem('member_id', response.member_id);
+                        localStorage.setItem('member_id', response.response.data.member_id.member_id);
+                        
                         // 跳轉到會員中心頁面
                         window.location.href = 'member_index.html';
                     } else {
