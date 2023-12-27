@@ -107,6 +107,7 @@ public class ManagerHelper {
             /** 關閉連線並釋放所有資料庫相關之資源 **/
             DBMgr.close(rs, pres, conn);
         }
+        System.out.println(row);
         return (row == 0) ? false : true;
     }
     

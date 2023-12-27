@@ -223,12 +223,19 @@
                     type: "POST",
                     url: "api/member.do",
                     data: dataString,
+                    dataType: 'json',
                     contentType: "application/json; charset=utf-8",
+                    
                     success: function (response) {
                         // 處理後端回傳的結果
-                        if (response.status === 200) {
+                        console.log("response=", response);
+                        console.log("status=", response.status);
+                        if (response.status == 200) {
                             // 註冊成功，執行相應的操作
                             alert(response.message);
+                            
+                         // 跳轉到會員中心頁面
+                            window.location.href = 'index.html';
                         } else {
                             // 其他狀態碼，可能是伺服器錯誤、email重複等
                             alert("註冊失敗。");

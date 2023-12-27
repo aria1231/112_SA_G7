@@ -21,7 +21,7 @@ import ncu.im3069.tools.JsonReader;
  * @version 1.0.0
  * @since 1.0.0
  */
-
+//@WebServlet("/api/member.do")
 public class MemberController extends HttpServlet {
     
     /** The Constant serialVersionUID. */
@@ -57,10 +57,11 @@ public class MemberController extends HttpServlet {
             	if (memh.verifyLogin(new Member(sign_in_email, sign_in_password))) {
             		// 登入驗證成功
             		JSONObject data = memh.getLoginID(sign_in_email);
+            		//int member_id = data.getInt("member_id");
             		
             		// 登入成功的處理
             		JSONObject resp = new JSONObject();
-            		resp.put("status", "200");
+            		resp.put("status", 200);
             		resp.put("success", true);
             		resp.put("message", "登入成功");
             		resp.put("response", data);
@@ -73,7 +74,7 @@ public class MemberController extends HttpServlet {
             		// 登入驗證失敗
             		// 登入失敗的處理
             		JSONObject resp = new JSONObject();
-            		resp.put("status", "401");
+            		resp.put("status", 401);
             		resp.put("success", false);
             		resp.put("message", "Email或密碼錯誤");
             		jsr.response(resp, response);
@@ -84,7 +85,7 @@ public class MemberController extends HttpServlet {
 //                    String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
 //                    resp.put("success", false);
                 	JSONObject resp = new JSONObject();
-            		resp.put("status", "400");
+            		resp.put("status", 400);
             		resp.put("success", false);
             		resp.put("message", "欄位不能有空值");
                     /** 透過JsonReader物件回傳到前端（以字串方式） */
@@ -92,6 +93,7 @@ public class MemberController extends HttpServlet {
                 }
                 
             }
+            System.out.println(sign_in_email);   
         }
         else if(InorUp.equals("1")){ //註冊
         	 sign_up_email = jso.getString("email");
@@ -106,13 +108,14 @@ public class MemberController extends HttpServlet {
                  
                  if(!memh.checkDuplicate(m)) {
                  	/** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
-                 	JSONObject data = memh.create(m);
+                 	memh.create(m);
                  
                  	/** 新建一個JSONObject用於將回傳之資料進行封裝 */
                  	JSONObject resp = new JSONObject();
-                 	resp.put("status", "200");
+                 	resp.put("status", 200);
+            		resp.put("success", true);
                  	resp.put("message", "成功! 註冊會員資料...");
-                 	resp.put("response", data);
+//                 	resp.put("response", data);
                  
                  	/** 透過JsonReader物件回傳到前端（以JSONObject方式） */
                  	jsr.response(resp, response);
@@ -124,76 +127,12 @@ public class MemberController extends HttpServlet {
                      jsr.response(resp, response);
                  }
              //}
-             /** 以字串組出JSON格式之資料 */
-//             else {
-//               String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
-//               /** 透過JsonReader物件回傳到前端（以字串方式） */
-//               jsr.response(resp, response);
-//             }
         }
         
        
- 
-        System.out.println(sign_in_email);
-        
-                
-        
-              
-//        if(!(sign_up_email.isEmpty() || sign_up_password.isEmpty() || sign_up_first_name.isEmpty() || sign_up_last_name.isEmpty() || sign_up_phone_number.isEmpty()))	{
-//            /** 建立一個新的會員物件 */
-//            Member m = new Member(sign_up_email, sign_up_password, sign_up_first_name, sign_up_last_name, sign_up_phone_number);
-//            
-//            if(! memh.checkDuplicate(m)) {
-//            	/** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
-//            	JSONObject data = memh.create(m);
-//            
-//            	/** 新建一個JSONObject用於將回傳之資料進行封裝 */
-//            	JSONObject resp = new JSONObject();
-//            	resp.put("status", "200");
-//            	resp.put("message", "成功! 註冊會員資料...");
-//            	resp.put("response", data);
-//            
-//            	/** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-//            	jsr.response(resp, response);
-//            }
-//            else {
-//                /** 以字串組出JSON格式之資料 */
-//                String resp = "{\"status\": \'400\', \"message\": \'新增帳號失敗，此E-Mail帳號重複！\', \'response\': \'\'}";
-//                /** 透過JsonReader物件回傳到前端（以字串方式） */
-//                jsr.response(resp, response);
-//            }
-//        }
-//        else if ((!sign_in_email.isEmpty()) && (!sign_in_password.isEmpty())) {
-//        	/** 透過MemberHelper物件的verifyLogin()檢查該會員電子郵件信箱是否有效 */
-//        	if (memh.verifyLogin(new Member(sign_in_email, sign_in_password))) {
-//        		// 登入驗證成功
-//        		// 登入成功的處理
-//        		JSONObject resp = new JSONObject();
-//        		resp.put("status", "200");
-//        		resp.put("success", true);
-//        		resp.put("message", "登入成功");
-//	        	jsr.response(resp, response);
-//	        	// 如果需要回傳會員資訊，也可以在這裡加上
-//	        	//resp.put("member_id", member_id); // 請替換為實際的會員資訊
-//        	}  
-//        	else if (!memh.verifyLogin(new Member(sign_in_email, sign_in_password))) {
-//        		// 登入驗證失敗
-//        		// 登入失敗的處理
-//        		JSONObject resp = new JSONObject();
-//        		resp.put("status", "401");
-//        		resp.put("success", false);
-//        		resp.put("message", "Email或密碼錯誤");
-//        		jsr.response(resp, response);
-//        	}
-//        }
-//        /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
-//        else if(sign_in_email.isEmpty() || sign_in_password.isEmpty()){ //登入、註冊判斷有無空值
-//            /** 以字串組出JSON格式之資料 */
-//            String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
-//            /** 透過JsonReader物件回傳到前端（以字串方式） */
-//            jsr.response(resp, response);
-//        }
-//        
+    
+               
+       //        
     }
 
     /**
@@ -218,7 +157,7 @@ public class MemberController extends HttpServlet {
         
         	/** 新建一個JSONObject用於將回傳之資料進行封裝 */
         	JSONObject resp = new JSONObject();
-        	resp.put("status", "200");
+        	resp.put("status", 200);
         	resp.put("message", "所有會員資料取得成功");
         	resp.put("response", query);
 
@@ -263,7 +202,7 @@ public class MemberController extends HttpServlet {
             
             /** 新建一個JSONObject用於將回傳之資料進行封裝 */
             JSONObject resp = new JSONObject();
-            resp.put("status", "200");
+            resp.put("status", 200);
             resp.put("message", "會員資料取得成功");
             resp.put("response", query);
     
@@ -295,7 +234,7 @@ public class MemberController extends HttpServlet {
         
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
-        resp.put("status", "200");
+        resp.put("status", 200);
         resp.put("message", "會員移除成功！");
         resp.put("response", query);
 
@@ -333,7 +272,7 @@ public class MemberController extends HttpServlet {
         
         /** 新建一個JSONObject用於將回傳之資料進行封裝 */
         JSONObject resp = new JSONObject();
-        resp.put("status", "200");
+        resp.put("status", 200);
         resp.put("message", "成功! 更新會員資料...");
         resp.put("response", data);
         

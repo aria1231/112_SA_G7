@@ -2,6 +2,7 @@ package ncu.im3069.demo.controller;
 
 import java.io.*;
 import javax.servlet.*;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import org.json.*;
 
@@ -22,6 +23,7 @@ import ncu.im3069.tools.JsonReader;
 * @since 1.0.0
 */
 
+@WebServlet("/api/manager.do")
 public class ManagerController extends HttpServlet {
     
     /** The Constant serialVersionUID. */
@@ -82,6 +84,7 @@ public class ManagerController extends HttpServlet {
         	/** 透過JsonReader物件回傳到前端（以字串方式） */
             jsr.response(resp, response);
         }
+        System.out.println(manager_email);
     }
     /**
      * 處理Http Method請求GET方法（取得資料）

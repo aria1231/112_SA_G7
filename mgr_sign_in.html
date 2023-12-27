@@ -131,14 +131,23 @@
             var email = document.getElementById("inputEmail").value;
             var password = document.getElementById("inputPassword").value;
 
+            var dataObject = {
+                    "email": email,
+                    "password": password
+                };
+            
+         		// 將 JSON 格式轉換成字串
+            	var dataString = JSON.stringify(dataObject);
+            
             // 使用 AJAX 發送登入請求
             $.ajax({
                 type: "POST",
                 url: "api/manager.do",
-                data: JSON.stringify({ email: email, password: password }),
+                data: dataString,
                 contentType: "application/json; charset=utf-8",
                 success: function (response) {
                     // 登入成功
+                    console.log("success=", response.success);
                     if (response.success) {
                         alert('登入成功！');
                         // 跳轉到管理員首頁

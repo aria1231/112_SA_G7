@@ -166,6 +166,7 @@ public class MemberHelper {
             /** 關閉連線並釋放所有資料庫相關之資源 **/
             DBMgr.close(rs, pres, conn);
         }
+        System.out.println(row);
         return (row == 0) ? false : true;
     }
     
@@ -215,8 +216,9 @@ public class MemberHelper {
                 
                 /** 將每一筆會員資料產生一名新Member物件 */
                 m = new Member(member_id);
-                /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
-                jso.put("member_id", m.getMemID());
+                /** 取出該名會員之資料並封裝至 JSONObject 內 */
+                int id = m.getMemberID();
+                jso.put("member_id", id);
             }
             
         } catch (SQLException e) {
@@ -462,7 +464,7 @@ public class MemberHelper {
      * @param m 一名會員之Member物件
      * @return the JSON object 回傳SQL指令執行之結果
      */
-    public JSONObject create(Member m) {
+    public void create(Member m) {
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */
@@ -518,12 +520,12 @@ public class MemberHelper {
         long duration = (end_time - start_time);
 
         /** 將SQL指令、花費時間與影響行數，封裝成JSONObject回傳 */
-        JSONObject response = new JSONObject();
-        response.put("sql", exexcute_sql);
-        response.put("time", duration);
-        response.put("row", row);
-
-        return response;
+//        JSONObject response = new JSONObject();
+//        response.put("sql", exexcute_sql);
+//        response.put("time", duration);
+//        response.put("row", row);
+//
+//        return response;
     }
     
     /**
