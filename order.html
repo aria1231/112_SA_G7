@@ -749,8 +749,8 @@
                 success: function (response) {
                     if(response.status == 200){
                     	let total_price = response.response.order_info.total_price;
-                    	//window.location.href = 'member_index.html';
                     	alert('訂單已完成！總金額為'+total_price);
+                    	window.location.href = 'member_index.html';
                     }
                 },
                 error: function () {
