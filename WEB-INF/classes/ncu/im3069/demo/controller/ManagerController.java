@@ -56,9 +56,10 @@ public class ManagerController extends HttpServlet {
         		// 登入驗證成功
         		// 登入成功的處理
         		JSONObject resp = new JSONObject();
-        		resp.put("status", "200");
+        		resp.put("status", 200);
         		resp.put("success", true);
         		resp.put("message", "登入成功");
+        		
         		jsr.response(resp, response);
         		// 如果需要回傳會員資訊，也可以在這裡加上
         		//resp.put("member_id", member_id); // 請替換為實際的會員資訊
@@ -67,7 +68,7 @@ public class ManagerController extends HttpServlet {
         		// 登入驗證失敗
         		// 登入失敗的處理
         		JSONObject resp = new JSONObject();
-        		resp.put("status", "401");
+        		resp.put("status", 401);
         		resp.put("success", false);
         		resp.put("message", "Email或密碼錯誤");
         		jsr.response(resp, response);

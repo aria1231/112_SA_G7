@@ -150,9 +150,9 @@
                 dataType: 'json',
                 timeout: 5000,
                 success: function (response) {
-                	console.log("response=",response.response.data.member_id);
+                	console.log("member_id=",response.response.data.member_id);
                 	// 登入成功
-                	console.log("success=", response.status);
+                	console.log("success=", response.success);
                     if (response.success) {
                     	
                         alert('登入成功！');
