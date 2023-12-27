@@ -155,7 +155,7 @@ public class OrderMealHelper {
             conn = DBMgr.getConnection();
             
             /** SQL指令 */
-            String sql = "DELETE FROM `final_pj`.`Order_Meal_Linking` WHERE `order_id` = ? LIMIT 1";
+            String sql = "DELETE FROM `final_pj`.`Order_Meal_Linking` WHERE `order_id` = ? ";
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);

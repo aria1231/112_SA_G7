@@ -150,11 +150,13 @@
         function deleteOrder(order_id) {
             // 確認刪除
             if (confirm('確定刪除此訂單？')) {
+            	var request = {'order_id': order_id };
+                var data_string = JSON.stringify(request);
                 // 使用 AJAX 向後端發送刪除請求
                 $.ajax({
                     type: "DELETE",
                     url: "api/order.do",
-                    data:{ order_id: order_id },
+                    data: data_string ,
                     crossDomain: true,
                     cache: false,
                     dataType: 'json',
