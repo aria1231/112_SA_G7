@@ -613,6 +613,21 @@
                 });
             });
         }
+		//////////////////////////////////////////////////////////////////////////////////////
+    	 // 取得所選時段的對應字串
+        function getSelectedTimeLabel() {
+            const selectedTime = parseInt(document.getElementById('time').value, 10);
+            switch (selectedTime) {
+                case 1:
+                    return '9:00 - 12:00';
+                case 2:
+                    return '12:00 - 15:00';
+                case 3:
+                    return '15:00 - 18:00';
+                default:
+                    return '';
+            }
+        }
 		
 		//////////////////////////////////////////////////////////////////////////////////////
 
@@ -661,20 +676,7 @@
                 }
             });
 
-            // 取得所選時段的對應字串
-            function getSelectedTimeLabel() {
-                const selectedTime = parseInt(document.getElementById('time').value, 10);
-                switch (selectedTime) {
-                    case 1:
-                        return '9:00 - 12:00';
-                    case 2:
-                        return '12:00 - 15:00';
-                    case 3:
-                        return '15:00 - 18:00';
-                    default:
-                        return '';
-                }
-            }
+            
 
             // 取得所選電影的名稱
             //function getSelectedMovieName() {
@@ -721,8 +723,43 @@
         //第五步的確認鍵，要加壓進資料庫的動作
         function confirmStep5() {
 			
+        	var data = {
+        			"member_id": memberId,
+        			"movie_id": selectedMovieId,
+        			"room_id": selectedRoomId,
+        			"order_date": document.getElementById('date').value,
+        			"time_of_day": getSelectedTimeLabel(),
+        			"meal": meal,
+        			"meal_serving": meal_serving,
+        			"people": document.getElementById('people').value
+        	}
+        	
+        	console.log(data);
+        	var data_string = JSON.stringify(data);
+        	console.log(data_string);
+        	
+        	$.ajax({
+                type: "POST",
+                url: "api/order.do",
+                data: data_string,
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success: function (response) {
+                    if(response.status == 200){
+                    	let total_price = response.response.order_info.total_price;
+                    	//window.location.href = 'member_index.html';
+                    	alert('訂單已完成！總金額為'+total_price);
+                    }
+                },
+                error: function () {
+                    alert("無法連線到伺服器！");
+                }
+              });
+        	
             // 已經是最後一步，完成整個流程
-            alert('訂單已完成！總金額為');
+            
         }
 
         // 顯示步驟

@@ -88,36 +88,48 @@ public class OrderController extends HttpServlet {
 	    /** 透過 JsonReader 類別將 Request 之 JSON 格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);
         JSONObject jso = jsr.getObject();
+        
 
 		/** 取出經解析到 JSONObject 之 Request 參數 */
-		String mem_id = jso.getString("member_id");										/**參數名要記得確認 */
-		int member_id = Integer.parseInt(mem_id);										/**這邊再把抓下來的String換成int*/
-		String mov_id = jso.getString("movie_id");  
-		int movie_id = Integer.parseInt(mov_id);		
-		String roo_id = jso.getString("room_id");
-		int room_id = Integer.parseInt(roo_id);
-		
+		int member_id = jso.getInt("member_id");										/**參數名要記得確認 */
+											
+		int movie_id = jso.getInt("movie_id");  
+				
+		int room_id = jso.getInt("room_id");
+		String roo_id = Integer.toString(room_id);
 																						
 		String date = jso.getString("order_date");																										
 		
 		String tod = jso.getString("time_of_day");
-		int time_of_day = Integer.parseInt(tod);
+		int time_of_day = 0;
+		if(tod.equals("9:00 - 12:00")) {
+			time_of_day = 900;
+		}else if(tod.equals("12:00 - 15:00")) {
+			time_of_day = 1200;
+		}else if(tod.equals("15:00 - 18:00")) {
+			time_of_day = 1500;
+		}
+		
 		
         JSONArray meal = jso.getJSONArray("meal");
         JSONArray meal_serving = jso.getJSONArray("meal_serving");
-				
-		
+        
+		String peo = jso.getString("people");
+		int people = Integer.parseInt(peo);
+		System.out.println("接people===========================");
+		System.out.println(people);
 		
         /** 建立一個新的訂單物件 */
-        Order od = new Order(member_id,movie_id,room_id,date,time_of_day);
+        Order od = new Order(member_id,movie_id,room_id,date,time_of_day,people);
 
         /** 將每一筆訂單餐點細項取出來 */
         for(int i=0 ; i < meal.length() ; i++) {
-            String meal_id = meal.getString(i);
+            int meal_id = meal.getInt(i);
+            String mea_id = Integer.toString(meal_id);
             int amount = meal_serving.getInt(i);
 
             /** 透過 MealHelper 物件之 getById()，取得餐點的資料並加進訂單物件裡 *//**把各項商品加進訂單的arrayList<orderMeal>，並且這裡有算每樣商品的subtotal*/
-            Meal m = meah.getById(meal_id);
+            Meal m = meah.getById(mea_id);
             od.addOrderMeal(m, amount);												
         }
 		

@@ -44,6 +44,7 @@ public class OrderHelper {
             String date = order.getOrderDate();
 			int total_price = order.getOrderTotalPrice();
             int time_of_day = order.getOrderTimeOfDay();
+            //int people = order.getOrderPeople();
 			Timestamp datetime = order.getOrderDatetime();
             
             /** 將參數回填至SQL指令當中 */
@@ -54,8 +55,10 @@ public class OrderHelper {
             pres.setString(4, date);
             pres.setInt(5, total_price);
             pres.setInt(6, time_of_day);
+            //pres.setInt(7, people);
 			pres.setTimestamp(7, datetime);
             pres.setInt(8, 0);
+           
             
             /** 執行新增之SQL指令並記錄影響之行數 */
             pres.executeUpdate();

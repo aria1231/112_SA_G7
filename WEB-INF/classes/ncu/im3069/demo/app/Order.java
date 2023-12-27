@@ -28,6 +28,9 @@ public class Order {
 	
 	/** order_time_of_day，預約的時段 */
     private int order_time_of_day;
+    
+    /** order_people，預約的人數 */
+    private int order_people;
 	
 	/** order_status，訂單狀態 */
     private int order_status;
@@ -53,12 +56,15 @@ public class Order {
      * @param date 預約哪一天
      * @param time_of_day 預約的時段
      */
-	public Order(int member_id,int movie_id,int room_id,String date,int time_of_day) {		
+	public Order(int member_id,int movie_id,int room_id,String date,int time_of_day,int people) {		
         this.member_id = member_id;
         this.movie_id = movie_id;
         this.room_id = room_id;
         this.order_date = date;
         this.order_time_of_day = time_of_day;
+        this.order_people = people;
+        System.out.println("建構式-------------------------------------------");
+        System.out.println(order_people);
 		this.order_datetime = Timestamp.valueOf(LocalDateTime.now());
     }
 
@@ -168,6 +174,15 @@ public class Order {
         return this.order_time_of_day;
     }
 	
+    /**
+     * 取得訂單預約哪個時段
+     *
+     * @return int 回傳訂單預約哪個時段
+     */
+    public int getOrderPeople() {
+        return this.order_people;
+    }
+    
     /**
      * 取得訂單創建時間
      *
