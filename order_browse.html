@@ -80,9 +80,8 @@
             </div>
         </div>
     </nav>
-
+	<div class="container mt-3 "><h2>訂單瀏覽</h2></div>
     <div class="container mt-5">
-        <h2>訂單瀏覽</h2>
         <div class="row g-4" id="orderCardsContainer">
             <!-- JavaScript 將會員訂單資料插入這裡 -->
         </div>
@@ -134,7 +133,8 @@
             let inner_html = '';
             inner_html += '<div class="card">';
             inner_html += '<div class="card-body">';
-            inner_html += '<h5 class="card-title">訂單日期: ' + data.order_info.date + '</h5>';
+            inner_html += '<h5 class="card-title">訂單編號: ' + data.order_info.order_id + '</h5>';
+            inner_html += '<p class="card-text">日期: ' + data.order_info.date + '</p>';
             inner_html += '<p class="card-text">狀態: ' + data.order_info.status + '</p>';
             inner_html += '<p class="card-text">總價: ' + data.order_info.total_price + '</p>';
             inner_html += `${data.order_info.status === '未完成' ?
