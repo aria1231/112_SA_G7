@@ -125,12 +125,18 @@
         </div>
     </div>
 
-    <script>
+     <script>
         // 登入函數
         function login() {
             var email = document.getElementById("inputEmail").value;
             var password = document.getElementById("inputPassword").value;
             var InorUp = "0";
+            
+         // 檢查所有欄位沒空值
+            if (!email || !password ) {
+                alert('請填寫所有必填欄位');
+                return;
+            }
             
             var dataObject = {
                     "email": email,
@@ -150,14 +156,14 @@
                 dataType: 'json',
                 timeout: 5000,
                 success: function (response) {
-                	console.log("member_id=",response.response.data.member_id);
-                	// 登入成功
-                	console.log("success=", response.success);
+                 //console.log("response=",response.response.data.member_id.member_id);
+                 // 登入成功
                     if (response.success) {
-                    	
+                     
                         alert('登入成功！');
                         // 儲存會員資訊到 localStorage
-                        localStorage.setItem('member_id',  JSON.stringify(response.response.data.member_id));
+                        //localStorage.setItem('member_id', response.memberId);
+                        //console.log(response.memberId)
                         
                         // 跳轉到會員中心頁面
                         window.location.href = 'member_index.html';
@@ -167,7 +173,7 @@
                     }
                 },
                 error: function () {
-                	console.error('無法連線到伺服器！');
+                 console.error('無法連線到伺服器！');
                 }
         });
 

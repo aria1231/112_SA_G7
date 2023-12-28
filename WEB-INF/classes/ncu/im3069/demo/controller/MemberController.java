@@ -30,6 +30,10 @@ public class MemberController extends HttpServlet {
     /** mh，MemberHelper之物件與Member相關之資料庫方法（Sigleton） */
     private MemberHelper memh = MemberHelper.getHelper();
     
+    public MemberController() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
     /**
      * 處理Http Method請求POST方法（新增資料）
      *
@@ -79,21 +83,22 @@ public class MemberController extends HttpServlet {
             		resp.put("message", "Email或密碼錯誤");
             		jsr.response(resp, response);
             	}
-            	/** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
-                else if(sign_in_email.isEmpty() || sign_in_password.isEmpty()){ //登入、註冊判斷有無空值
-                    /** 以字串組出JSON格式之資料 */
-//                    String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
-//                    resp.put("success", false);
-                	JSONObject resp = new JSONObject();
-            		resp.put("status", 400);
-            		resp.put("success", false);
-            		resp.put("message", "欄位不能有空值");
-                    /** 透過JsonReader物件回傳到前端（以字串方式） */
-                    jsr.response(resp, response);
-                }
+
+                System.out.println(sign_in_email);   
                 
             }
-            System.out.println(sign_in_email);   
+            /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
+            else if(sign_in_email.isEmpty() || sign_in_password.isEmpty()){ //登入、註冊判斷有無空值
+                /** 以字串組出JSON格式之資料 */
+//                String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
+//                resp.put("success", false);
+            	JSONObject resp = new JSONObject();
+        		resp.put("status", 400);
+        		resp.put("success", false);
+        		resp.put("message", "欄位不能有空值");
+                /** 透過JsonReader物件回傳到前端（以字串方式） */
+                jsr.response(resp, response);
+            }
         }
         else if(InorUp.equals("1")){ //註冊
         	 sign_up_email = jso.getString("email");
@@ -149,67 +154,33 @@ public class MemberController extends HttpServlet {
         JsonReader jsr = new JsonReader(request);
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
         String member_id = jsr.getParameter("member_id");
+        //System.out.println("local_member_id" + member_id);
         
+        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
+    	JSONObject resp = new JSONObject();
+      	 
+       	System.out.printf("member_id=", member_id);
         /** 判斷該字串是否存在，若存在代表要取回個別會員之資料，否則代表要取回全部資料庫內會員之資料 */
-        if (member_id.isEmpty()) {  
-        	/** 透過MemberHelper物件之getAll()方法取回所有會員之資料，回傳之資料為JSONObject物件 */
-        	JSONObject query = memh.getAll();
-        
-        	/** 新建一個JSONObject用於將回傳之資料進行封裝 */
-        	JSONObject resp = new JSONObject();
-        	resp.put("status", 200);
-        	resp.put("message", "所有會員資料取得成功");
-        	resp.put("response", query);
-
-        	/** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-        	jsr.response(resp, response);
-//        	// 判斷email和password是否存在
-//        	if (!member_email.isEmpty() && !member_password.isEmpty()) {
-//        		// 進行登入驗證，例如使用MemberHelper物件的方法進行登入驗證
-//        		 boolean loginSuccess = memh.verifyLogin(member_email, member_password);
-//        		
-//        		// 根據登入結果回傳不同的訊息
-//        	    JSONObject resp = new JSONObject();
-//        	    if (loginSuccess) {
-//       		        // 登入成功的處理
-//       		        resp.put("status", "200");
-//       		        resp.put("success", true);
-//       		        resp.put("message", "登入成功");
-//       		        // 如果需要回傳會員資訊，也可以在這裡加上
-//       		        //resp.put("member_id", member_id); // 請替換為實際的會員資訊
-//       		    } else {
-//        	        // 登入失敗的處理
-//        	        resp.put("status", "401");
-//       		        resp.put("success", false);
-//       		        resp.put("message", "Email或密碼錯誤");
-//       		    }
-//
-//       		    // 透過JsonReader物件回傳到前端
-//       		    jsr.response(resp, response);
-//        	}
-//        	else {
-//           	 // email或password為空的處理
-//               JSONObject resp = new JSONObject();
-//               resp.put("status", "400");
-//               resp.put("success", false);
-//               resp.put("message", "請提供有效的Email和密碼");
-//               jsr.response(resp, response);
-//            }
-        }
-        else {
-            /** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
+        if (!member_id.isEmpty()) {        	 
+//        	System.out.println(member_id);
+        	/** 透過MemberHelper物件的getByID()方法自資料庫取回該名會員之資料，回傳之資料為JSONObject物件 */
             JSONObject query = memh.getByID(member_id);
-            
-            /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-            JSONObject resp = new JSONObject();
+                        
             resp.put("status", 200);
             resp.put("message", "會員資料取得成功");
-            resp.put("response", query);
-    
-            /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-            jsr.response(resp, response);
+            resp.put("response", query);  
         }
-        
+        else {
+        	/** 透過MemberHelper物件之getAll()方法取回所有會員之資料，回傳之資料為JSONObject物件 */
+        	JSONObject query = memh.getAll();        
+        	
+        	resp.put("status", 200);
+        	resp.put("message", "所有會員資料取得成功");
+        	resp.put("response", query);          
+        }        
+        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
+        jsr.response(resp, response);
+        System.out.print(resp);
     }
 
     /**

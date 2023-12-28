@@ -143,18 +143,23 @@
         // 獲取 URL 參數中的 member_id
         const urlParams = new URLSearchParams(window.location.search);
         const member_id = urlParams.get('member_id');
+        
+
+        var request = {'member_id': member_id };
+        var data_string = JSON.stringify(request);
 
         // 使用 member_id 向後端發送 AJAX 請求
         $.ajax({
             type: "GET",
-            url: "/api/member.do",  // 請更換為實際的後端 API 端點
-            data: { member_id: member_id },
+            url: "api/member.do",  // 請更換為實際的後端 API 端點
+            data: data_string,
             success: function (response) {
+            	console.log(response);
                 // 後端返回的資訊中有名字、姓、電話和 email 屬性
-                $('#inputFirstName').val(response.first_name);
-                $('#inputLastName').val(response.last_name);
-                $('#inputPhoneNumber').val(response.phone_number);
-                $('#displayEmail').text(response.email);
+                $('#inputFirstName').val(text(response.response.data[0].first_name));
+                $('#inputLastName').val(text(response.response.data[0].last_name));
+                $('#inputPhoneNumber').val(text(response.response.data[0].phone_number));
+                $('#displayEmail').text(text(response.response.data[0].email));
             },
             error: function () {
                 console.error('無法獲取會員資訊！');

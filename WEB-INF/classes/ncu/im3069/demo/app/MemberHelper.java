@@ -131,6 +131,7 @@ public class MemberHelper {
             /** 取得所需之參數 */
             String email = m.getMemberEMAIL();
             String password = m.getMemberPASSWORD();
+
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -144,14 +145,19 @@ public class MemberHelper {
             
             /** 透過 while 迴圈移動pointer，取得每一筆回傳資料 */
             /** 正確來說資料庫只會有一筆該會員編號之資料，因此如果最後row=0則表示帳號或密碼錯 */
-            while(rs.next()) {                                
+            if(rs.next()) {                                
                 /** 將 ResultSet 之資料取出 */
                 String member_password = rs.getString("member_password");
+                
+                int id = rs.getInt("member_id");
+                System.out.println("member_id=" + id);
                 
                 //判斷該email之密碼是否正確
                 if(password.compareTo(member_password) == 0) { //輸入的密碼 == 資料庫中的密碼
                 	/** 每執行一次迴圈表示有一筆資料 */
                     row += 1;
+                    
+                    
                 }
             }
             
@@ -166,7 +172,7 @@ public class MemberHelper {
             /** 關閉連線並釋放所有資料庫相關之資源 **/
             DBMgr.close(rs, pres, conn);
         }
-        System.out.println(row);
+        System.out.println("row=" + row);
         return (row == 0) ? false : true;
     }
     
@@ -468,9 +474,9 @@ public class MemberHelper {
         /** 記錄實際執行之SQL指令 */
         String exexcute_sql = "";
         /** 紀錄程式開始執行時間 */
-        long start_time = System.nanoTime();
+        //long start_time = System.nanoTime();
         /** 紀錄SQL總行數 */
-        int row = 0;
+        //int row = 0;
         
         try {
             /** 取得資料庫之連線 */
@@ -497,7 +503,7 @@ public class MemberHelper {
             pres.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
             
             /** 執行新增之SQL指令並記錄影響之行數 */
-            row = pres.executeUpdate();
+            //row = pres.executeUpdate();
             
             /** 紀錄真實執行的SQL指令，並印出 **/
             exexcute_sql = pres.toString();
@@ -515,9 +521,9 @@ public class MemberHelper {
         }
 
         /** 紀錄程式結束執行時間 */
-        long end_time = System.nanoTime();
+        //long end_time = System.nanoTime();
         /** 紀錄程式執行時間 */
-        long duration = (end_time - start_time);
+        //long duration = (end_time - start_time);
 
         /** 將SQL指令、花費時間與影響行數，封裝成JSONObject回傳 */
 //        JSONObject response = new JSONObject();

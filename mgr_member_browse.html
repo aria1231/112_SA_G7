@@ -110,6 +110,7 @@
                 timeout: 5000,
                 success: function (response) {
                     if (response.status == 200) {
+                    	console.log(response);
                         // 將伺服器端回傳的會員資料逐一處理，並呼叫 addMember 函式生成 HTML 元素
                         var member_panel = '';
 
@@ -134,9 +135,9 @@
             let inner_html = '';
             inner_html += '<div class="card">';
             inner_html += '<div class="card-body">';
-            inner_html += '<h5 class="card-title">' + data.member_last_name + data.member_first_name + '</h5>';
-            inner_html += '<p class="card-text">Email: ' + data.member_email + '</p>';
-            inner_html += '<p class="card-text">Phone Number: ' + data.member_phone_number + '</p>';
+            inner_html += '<h5 class="card-title">' + data.last_name + data.first_name + '</h5>';
+            inner_html += '<p class="card-text">Email: ' + data.email + '</p>';
+            inner_html += '<p class="card-text">Phone Number: ' + data.phone_number + '</p>';
             inner_html += '<a href="mgr_member_edit.html?member_id=' + data.member_id + '" class="btn btn-primary">編輯</a>';
             inner_html += '<button class="btn btn-danger" onclick="deleteMember(' + data.member_id + ')">';
             inner_html += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">';
@@ -151,10 +152,12 @@
         function deleteMember(member_id) {
             // 在這裡使用 member_id執行刪除會員
             // 使用 AJAX 向伺服器端的刪除會員 API 發送 DELETE 請求
+                var request = {'member_id': member_id };
+                var data_string = JSON.stringify(request);
             $.ajax({
                 type: "DELETE",
                 url: "api/member.do", // 請更換為實際的後端 API 端點
-                data: { member_id: member_id },
+                data: data_string,
                 success: function (response) {
                     // 在刪除成功後，可以刷新會員列表或執行其他相應的操作
                     alert("會員刪除成功！");

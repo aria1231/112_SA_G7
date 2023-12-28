@@ -131,6 +131,12 @@
             var email = document.getElementById("inputEmail").value;
             var password = document.getElementById("inputPassword").value;
 
+         // 檢查所有欄位沒空值
+            if (!email || !password ) {
+                alert('請填寫所有必填欄位');
+                return;
+            }
+            
             var dataObject = {
                     "email": email,
                     "password": password
@@ -150,14 +156,15 @@
                     // 登入成功
                     console.log("response=", response);
                     console.log("success=", response.success);
+                    console.log("message=", response.message);
                     
                     if (response.success) {
-                        alert('登入成功！');
+                        alert(response.message);
                         // 跳轉到管理員首頁
                         window.location.href = 'manager_index.html';
                     } else {
                         // 登入失敗，顯示錯誤訊息
-                        alert('Email或密碼錯誤。');
+                        alert(response.message);
                     }
                 },
                 error: function () {

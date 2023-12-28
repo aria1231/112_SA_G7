@@ -130,20 +130,30 @@
     <script>
         // 頁面載入後執行
         $(document).ready(function () {
+        	var member_id = JSON.parse(localStorage.getItem('member_id'));
+        	
             // 使用 AJAX 請求獲取會員資訊
             $.ajax({
                 type: "GET",
-                url: "/api/member.do",
-                data: { member_id: localStorage.getItem('member_id') },
+                url: "api/member.do",
+                data: { member_id: member_id },
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                
                 success: function (response) {
+                	console.log("response=", response);
+                	console.log(member_id);
                     // 後端返回的資訊中有名字、姓、電話和email屬性
-                    $('#displayFirstName').text(response.first_name);
-                    $('#displayLastName').text(response.last_name);
-                    $('#displayPhoneNumber').text(response.phone_number);
-                    $('#displayEmail').text(response.email);
+                    $('#displayFirstName').text(response.response.data[0].first_name);
+                    $('#displayLastName').text(response.response.data[0].last_name);
+                    $('#displayPhoneNumber').text(response.response.data[0].phone_number);
+                    $('#displayEmail').text(response.response.data[0].email);
                 },
                 error: function () {
                     console.error('無法獲取會員資訊！');
+                    console.log(member_id);
                 }
             });
         });
