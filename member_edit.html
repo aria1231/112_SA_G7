@@ -142,7 +142,7 @@
     </div>
 
     <script>
-    var member_id = JSON.parse(localStorage.getItem('member_id'));
+    var member_id = JSON.parse(localStorage.getItem("member_id"));
  	// 在编辑页面加载时，从后端获取用户的密码
     var userPassword;
 
@@ -219,8 +219,8 @@
         }
     } else {
         // 如果密碼沒有更改，使用原始密碼
-        userPassword = $('#hiddenPassword').val();
-        console.log(userPassword)
+        newPassword = userPassword;
+        console.log("old=new:", userPassword)
     }
 
 
