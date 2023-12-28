@@ -10,18 +10,8 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <style>
         .step-container {
-            display: flex;
             justify-content: space-around;
             margin-top: 20px;
-        }
-
-        .step {
-            flex: 1;
-            text-align: center;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: #f0f0f0;
         }
 
         .hidden {
@@ -48,14 +38,13 @@
             /* 其他樣式，視您的設計需求而定 */
         }
         .card {
-            width: 25rem;
-            height: 25rem;
+            width: 15rem;
+            height: 20rem;
             /* 固定卡片高度，根据需要调整 */
             border-radius: 30px;
             /* 圓角 */
-            margin: 20px;
+            margin: 10px;
             /* 间距 */
-            margin: 30px 30px;
             /* 上方和下方间距 */
             overflow: hidden;
             /* 防止圓角溢出 */
@@ -98,6 +87,23 @@
             flex-wrap: wrap;
             /* 將 flex-wrap 設為 wrap，讓元素換行 */
         }
+        .room-btn.selected {
+		    background-color: gray;  /* 或其他你想要的背景色 */
+		}
+        h1 {
+            font-size: 2em; /* 調整字體大小，根據需要調整數值 */
+            font-weight: bold; /* 加粗字體 */
+            text-align: center; /* 文字置中 */
+        }
+        body {
+            text-align: center; /* 將文本置中 */
+        }
+        .movie-card {
+		    cursor: pointer;
+		}
+		.selected-movie-card {
+		    background-color: gray; 
+		}
     </style>
     <script src="statics/js/jquery-3.4.1.min.js"></script>
 </head>
@@ -107,27 +113,27 @@
     <div style="text-align: center;">
         <div class="text-muted mb-4 fw-bold"
             style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
-            <p id="step1">Step 1. 填寫預約資訊</p>
+            <p>Step 1. 填寫預約資訊</p>
         </div>
 
         <div class="text-muted mb-4 fw-bold"
             style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
-            <p id="2">Step 2. 選擇包廂與餐點</p>
+            <p>Step 2. 選擇包廂與餐點</p>
         </div>
 
         <div class="text-muted mb-4 fw-bold"
             style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
-            <p id="3">Step 3. 選擇電影</p>
+            <p>Step 3. 選擇電影</p>
         </div>
 
         <div class="text-muted mb-4 fw-bold"
             style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
-            <p id="4">Step 4. 確認訂單資訊</p>
+            <p>Step 4. 確認訂單資訊</p>
         </div>
 
         <div class="text-muted mb-4 fw-bold"
             style="font-size: 1.2rem; margin-top: 1.5rem; display: inline-block; margin-right: 20px;">
-            <p id="5">Step 5. 付款</p>
+            <p>Step 5. 付款</p>
         </div>
         <button onclick="cancelReservation()">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle"
@@ -141,36 +147,41 @@
     </div>
 
     <div class="container mt-5">
-        <!-- Step 1: 填寫預約資訊 -->
-        <div id="step1" class="step-container">
-            <select id="people" class="form-select">
-                <!-- 人數選項 -->
-                <option value="1">1 人</option>
-                <option value="2">2 人</option>
-                <option value="3">3 人</option>
-                <option value="4">4 人</option>
-                <option value="5">5 人</option>
-                <option value="6">6 人</option>
-            </select>
-
-            <select id="date" class="form-select"></select>
-
-            <select id="time" class="form-select">
-                <!-- 時段選項 -->
-                <option value="1">9:00 - 12:00</option>
-                <option value="2">12:00 - 15:00</option>
-                <option value="3">15:00 - 18:00</option>
-            </select>
-
-            <button id="confirm1" onclick="confirmStep1()" class="btn btn-primary">確認</button>
-
-        </div>
+        <!-- 步驟 1: 填寫預約資訊 -->
+		<div id="step1" class="step-container">
+		    <div style="display: inline-block; width: 30%;">
+		        <select id="people" class="form-select">
+		            <!-- 人數選項 -->
+		            <option value="1">1 人</option>
+		            <option value="2">2 人</option>
+		            <option value="3">3 人</option>
+		            <option value="4">4 人</option>
+		            <option value="5">5 人</option>
+		            <option value="6">6 人</option>
+		        </select>
+		    </div>
+		
+		    <div style="display: inline-block; width: 30%;">
+		        <select id="date" class="form-select"></select>
+		    </div>
+		
+		    <div style="display: inline-block; width: 30%;">
+		        <select id="time" class="form-select">
+		            <!-- 時段選項 -->
+		            <option value="1">9:00 - 12:00</option>
+		            <option value="2">12:00 - 15:00</option>
+		            <option value="3">15:00 - 18:00</option>
+		        </select>
+		    </div>
+		
+		    <button id="confirm1" onclick="confirmStep1()" class="btn btn-primary">確認</button>
+		</div>
 
 
 
         <!-- Step 2: 選擇包廂與餐點 -->
         <div id="step2" class="step-container hidden">
-            <p>請選擇包廂</p>
+            <h1>請選擇包廂</h1>
             <!-- 選包廂 -->
             <div class="container">
                 <div class="row justify-content-center" id="room_panel">
@@ -178,7 +189,7 @@
                 </div>
             </div>
 
-            <p>請選擇餐點</p>
+            <h1>請選擇餐點</h1>
             <!-- 選餐點 -->
 
             <div class="container">
@@ -187,7 +198,7 @@
                 </div>
             </div>
 
-            <button onclick="confirmStep2()" class="btn btn-primary">確認</button>
+            <button onclick="confirmStep2()" class="btn btn-primary" style="display: block; margin: 30px auto; padding: 15px 30px; font-size: 18px;">確認</button>
         </div>
 
         <!-- Step 3: 選擇電影 -->
@@ -208,14 +219,14 @@
                 </div>
             </div>
 
-            <button onclick="confirmStep3()" class="btn btn-primary">確認</button>
+            <button onclick="confirmStep3()" class="btn btn-primary" style="display: block; margin: 30px auto; padding: 15px 30px; font-size: 18px;">確認</button>
         </div>
 
         <!-- Step 4: 確認訂單資訊 -->
         <div id="step4" class="step-container hidden">
             <!-- 顯示訂單資訊 -->
             <div id="orderInfo"></div>
-            <button onclick="confirmStep4()" class="btn btn-primary">確認</button>
+            <button onclick="confirmStep4()" class="btn btn-primary" >確認</button>
         </div>
 
         <!-- Step 5: 付款 -->
@@ -244,7 +255,7 @@
                 <p>銀行：XXXX</p>
                 <p>帳號：XXXX-XXXX-XXXX</p>
             </div>
-            <button onclick="confirmStep5()" class="btn btn-primary">確認付款</button>
+            <button onclick="confirmStep5()" class="btn btn-primary" >確認付款</button>
         </div>
     </div>
 
@@ -319,8 +330,21 @@
 			console.log(selectedRoomId);
 		}
         
-        function setRoom(id,name){
-        	selectedRoomId = id;
+		function setRoom(id, name) {
+			// 阻止錨點元素的默認行為
+		    event.preventDefault();
+            // 取消之前選擇的按鈕的背景色
+            var previousSelectedButton = document.querySelector('.room-btn.selected');
+            if (previousSelectedButton) {
+                previousSelectedButton.classList.remove('selected');
+            }
+
+            // 設置新選擇的按鈕的背景色
+            var button = document.getElementById(id);
+            button.classList.add('selected');
+
+            // 其他 setRoom 的邏輯...
+            selectedRoomId = id;
         	console.log(selectedRoomId);
         	selectedRoomName = name;
             console.log(name);
@@ -377,11 +401,11 @@
             function addRoom(data) {
                 let inner_html = '';
                 inner_html += '<div class="col">';
-                inner_html += '<div class="card room-card">';
+                inner_html += '<div class="card room-card ' + (data.room_id === selectedRoomId ? 'selected' : '') + '">';
                 inner_html += '<img src="statics/img/room/' + data.room_image + '" class="card-img-top" alt="Room poster for ' + data.room_name + '">';
                 inner_html += '<div class="card-body">';
                 inner_html += '<h4 class="card-title">' + data.room_name + '</h4>';
-                inner_html += '<a href="#" class="btn btn-primary" id="' + data.room_id + '" onclick="setRoom(' + data.room_id + ', \'' + data.room_name + '\')">選擇</a>';
+                inner_html += '<a href="javascript:void(0);" class="btn btn-primary room-btn" id="' + data.room_id + '" onclick="setRoom(' + data.room_id + ', \'' + data.room_name + '\')">選擇</a>';
                 inner_html += '</div></div></div>';
                 return inner_html;
             }
@@ -506,7 +530,8 @@
         function addMovie(data) {
             let inner_html = '';
             inner_html += '<div class="col">';
-            inner_html += '<div class="card movie-card" onclick="setMovie(' + data.movie_id + ', \'' + data.movie_name + '\')">';
+            //inner_html += '<div class="card movie-card" onclick="setMovie(' + data.movie_id + ', \'' + data.movie_name + '\')">';
+            inner_html += '<div class="card movie-card" data-movie-id="' + data.movie_id + '" onclick="setMovie(' + data.movie_id + ', \'' + data.movie_name + '\')">';
             inner_html += '<div class="card-body">';
             inner_html += '<h4 class="card-title">' + data.movie_name + '</h4>';
             inner_html += '<img src="statics/img/movie/' + data.movie_image + '" class="card-img-top" alt="Room poster for ' + data.movie_name + '">';
@@ -514,12 +539,33 @@
             return inner_html;
         }
         
-        function setMovie(id,name){
-        	selectedMovieId = id;
+        function setMovie(id, name) {
+            // 清除先前選擇的樣式
+            clearSelectedMovieStyle();
+
+            // 設置新選擇的電影
+            selectedMovieId = id;
         	console.log(selectedMovieId);
         	selectedMovieName = name;
             console.log(name);
+
+            // 在選擇的卡片上添加特殊樣式
+            let card = document.querySelector('[data-movie-id="' + id + '"]');
+            if (card) {
+                card.classList.add('selected-movie-card');
+            }
+
+            console.log(selectedMovieId);
+            console.log(name);
         }
+
+        function clearSelectedMovieStyle() {
+            let selectedCard = document.querySelector('.selected-movie-card');
+            if (selectedCard) {
+                selectedCard.classList.remove('selected-movie-card');
+            }
+        }
+
         
         
         

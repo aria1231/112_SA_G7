@@ -196,23 +196,32 @@
         console.log("New Password:", newPassword);
         // 如果用戶想要更改密碼，執行密碼的合規性檢查
 		if (newPassword !== '') {
-			// 密碼檢查（至少8個字符，包含英文大小寫和數字）
-	        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-		    if (!passwordRegex.test(newPassword)) {
-		        // 密碼檢查失敗
-		        $('#passwordConfirmHelpInline').text("密碼至少8個字符，包含英文大小寫和數字。").css('color', 'red');
-		        return;
-		    } else {
-		        // 清空錯誤訊息
-		        $('#passwordConfirmHelpInline').text("");
-		    }
-		    // 如果密碼檢查通過，更新密碼
-		    userPassword = newPassword;
-		} else {
-		    // 如果密碼沒有更改，使用原始密碼
-		    userPassword = $('#hiddenPassword').val();
-		    console.log(userPassword)
-		}
+        // 密碼檢查（至少8個字符，包含英文大小寫和數字）
+        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        // 密碼檢查通過
+        if (passwordRegex.test(newPassword)) {
+            // 清空錯誤訊息
+            $('#passwordConfirmHelpInline').text("");
+
+            // 檢查新密碼是否與確認密碼相符
+            if (newPassword !== confirmPassword) {
+                // 密碼不相符，顯示錯誤消息
+                $('#passwordConfirmHelpInline').text("新密碼和確認密碼不相符。").css('color', 'red');
+                return;
+            }
+
+            // 如果密碼檢查通過，更新密碼
+            userPassword = newPassword;
+        } else {
+            // 密碼檢查失敗
+            $('#passwordConfirmHelpInline').text("密碼至少8個字符，包含英文大小寫和數字。").css('color', 'red');
+            return;
+        }
+    } else {
+        // 如果密碼沒有更改，使用原始密碼
+        userPassword = $('#hiddenPassword').val();
+        console.log(userPassword)
+    }
 
 
 
