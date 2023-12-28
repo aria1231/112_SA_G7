@@ -477,7 +477,7 @@ public class MemberHelper {
         /** 紀錄程式開始執行時間 */
         //long start_time = System.nanoTime();
         /** 紀錄SQL總行數 */
-        //int row = 0;
+        int row = 0;
         
         try {
             /** 取得資料庫之連線 */
@@ -504,7 +504,7 @@ public class MemberHelper {
             pres.setTimestamp(7, Timestamp.valueOf(LocalDateTime.now()));
             
             /** 執行新增之SQL指令並記錄影響之行數 */
-            //row = pres.executeUpdate();
+            row = pres.executeUpdate();
             
             /** 紀錄真實執行的SQL指令，並印出 **/
             exexcute_sql = pres.toString();
