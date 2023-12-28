@@ -162,6 +162,7 @@
                     // 在刪除成功後，可以刷新會員列表或執行其他相應的操作
                     alert("會員刪除成功！");
                     // 刷新會員列表的例子
+                    $("#member_panel").empty();
                     getAllMember();
                 },
                 error: function () {
