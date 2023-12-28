@@ -211,8 +211,9 @@
     		    userPassword = newPassword;
     		} else {
     		    // 如果密碼沒有更改，使用原始密碼
-    		    userPassword = $('#hiddenPassword').val();
-    		    console.log(userPassword)
+        		//userPassword = $('#hiddenPassword').val();
+        			newPassword = userPassword;
+        			console.log("old=new:", userPassword)
     		}
 
 
