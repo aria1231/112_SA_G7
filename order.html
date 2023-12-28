@@ -162,7 +162,7 @@
                 <option value="3">15:00 - 18:00</option>
             </select>
 
-            <button onclick="confirmStep1()" class="btn btn-primary">確認</button>
+            <button id="confirm1" onclick="confirmStep1()" class="btn btn-primary">確認</button>
 
         </div>
 
@@ -362,7 +362,14 @@
                 alert('請選擇完整的預約資訊');
                 return;
             }
-
+			
+            // 獲取按鈕元素
+            var button = document.getElementById("confirm1");
+            // 禁用按鈕
+            button.disabled = true;
+            // 修改按鈕文字
+            button.innerHTML = "已選擇";
+            
             showStep(2);
 
             // 使用 AJAX 的 GET 方法傳送資料給後端
@@ -586,7 +593,7 @@
                 const quantity = parseInt(element.value, 10);
 
                 // 如果數量大於 0，將餐點添加到 selectedMeals 中
-                if (!isNaN(quantity) && quantity >= 0) {
+                if (!isNaN(quantity) && quantity > 0) {
                 	addMealToOrder(mealId,quantity);
                 	console.log(meal);
                 	console.log(meal_serving);
@@ -629,6 +636,14 @@
             }
         }
 		
+		function mealAndServing(){
+			var mas = [];
+			for(var i=0;i<meal.length;i++){
+				mas[i]=[meal[i]+"號餐"+meal_serving[i]+"份"];
+			}
+			return mas;
+		}
+		
 		//////////////////////////////////////////////////////////////////////////////////////
 
         // 第三步的確認鍵
@@ -656,16 +671,16 @@
                     if (response.status == 200) {
                         // 取得會員名字
                         const memberName = response.response.data.member_last_name;
-						//<p>總金額：${calculateTotalAmount()}元</p>
+						//<p>會員名字：${memberName}</p>//<p>餐點：${meal}</p><p>份數：${meal_serving}</p>
                         // 顯示訂單資訊
                         const orderInfoElement = document.getElementById('orderInfo');
                         orderInfoElement.innerHTML = `
-                    <p>會員名字：${memberName}</p>
+                    
                     <p>人數：${document.getElementById('people').value}</p>
                     <p>日期：${document.getElementById('date').value}</p>
                     <p>時段：${getSelectedTimeLabel()}</p>
                     <p>電影：${selectedMovieName}</p>
-                    <p>餐點：${meal}</p><p>份數：${meal_serving}</p>
+                    <p>餐點：${mealAndServing()}<p>
                     <p>包廂：${selectedRoomName}</p>
                     
                 `;
@@ -707,11 +722,11 @@
             //}
 
             // 計算總金額，還要改
-            function calculateTotalAmount() {
-                const roomPrice = 100;  // 假設包廂價格為100元
-                const mealsPrice = selectedMeals.reduce((total, meal) => total + (meal.quantity * meal.price), 0);
-                return roomPrice + mealsPrice;
-            }
+            //function calculateTotalAmount() {
+                //const roomPrice = 100;  // 假設包廂價格為100元
+                //const mealsPrice = selectedMeals.reduce((total, meal) => total + (meal.quantity * meal.price), 0);
+                //return roomPrice + mealsPrice;
+            //}
         }
 
         //第四步的確認鍵
