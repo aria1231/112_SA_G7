@@ -222,6 +222,7 @@ public class Member {
         jso.put("last_name", getMemberLASTNAME());
         jso.put("email", getMemberEMAIL());
         jso.put("phone_number", getMemberPHONENUMBER());
+        jso.put("password", getMemberPASSWORD());
         
         return jso;
     }

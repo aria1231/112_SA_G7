@@ -381,9 +381,10 @@ public class MemberHelper {
                 String member_last_name = rs.getString("member_last_name");
                 String member_email = rs.getString("member_email");
                 String member_phone_number = rs.getString("member_phone_number");
+                String member_password = rs.getString("member_password");
                 
                 /** 將每一筆會員資料產生一名新Member物件 */
-                m = new Member(member_id, member_email, member_first_name, member_last_name, member_phone_number);
+                m = new Member(member_id, member_email, member_password, member_first_name, member_last_name, member_phone_number);
                 /** 取出該名會員之資料並封裝至 JSONsonArray 內 */
                 jsa.put(m.getOneData());
             }

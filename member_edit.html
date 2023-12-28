@@ -94,22 +94,19 @@
                 <div class="col">
                     <!-- 名字更改欄位 -->
                     <label for="inputFirstName" class="form-label">名字:</label>
-                    <input type="text" id="inputFirstName" class="form-control" aria-describedby="firstNameHelpInline"
-                        placeholder="">
+                    <input type="text" id="inputFirstName" class="form-control" name="inputFirstName" required>
                 </div>
                 <div class="col">
                     <!-- 姓更改欄位 -->
                     <label for="inputLastName" class="form-label">姓:</label>
-                    <input type="text" id="inputLastName" class="form-control" aria-describedby="lastNameHelpInline"
-                        placeholder="">
+                    <input type="text" id="inputLastName" class="form-control" name="inputLastName" required>
                 </div>
             </div>
 
             <!-- 電話更改欄位 -->
             <div class="mb-3">
                 <label for="inputPhoneNumber" class="form-label">電話:</label>
-                <input type="tel" id="inputPhoneNumber" class="form-control" aria-describedby="PhoneNumberHelpInline"
-                    placeholder="">
+                <input type="text" id="inputPhoneNumber" class="form-control" name="inputPhoneNumber" required>
             </div>
 
             <!-- email展示 -->
@@ -119,19 +116,22 @@
             </div>
 
             <!-- 密碼更改欄位 -->
-            <div class="mb-3">
-                <label for="inputPassword" class="form-label">密碼:</label>
-                <input type="password" id="inputPassword" class="form-control" aria-describedby="passwordHelpInline"
-                    placeholder="">
-            </div>
+			<div class="mb-3">
+			    <label for="inputPassword" class="form-label">密碼:</label>
+			    <input type="password" id="inputPassword" class="form-control" name="inputPassword" required>
+			    <!-- 添加一个隐藏的输入框用于存储实际的密码 -->
+			    <input type="hidden" id="hiddenPassword" name="hiddenPassword" value="">
+			</div>
 
             <!-- 密碼確認框框 -->
-            <div class="mb-3">
-                <label for="inputPasswordConfirm" class="form-label">密碼確認:</label>
-                <input type="password" id="inputPasswordConfirm" class="form-control"
-                    aria-describedby="passwordConfirmHelpInline" placeholder="">
-                <span id="passwordConfirmHelpInline" class="form-text"></span>
-            </div>
+			<div class="mb-3">
+			    <label for="inputPasswordConfirm" class="form-label">密碼確認:</label>
+			    <input type="password" id="inputPasswordConfirm" class="form-control"
+			        aria-describedby="passwordConfirmHelpInline" placeholder="">
+			    <span id="passwordConfirmHelpInline" class="form-text"></span>
+			    <!-- 添加一个隐藏的输入框用于存储实际的密码 -->
+			    <input type="hidden" id="hiddenPasswordConfirm" name="hiddenPasswordConfirm" value="">
+			</div>
 
             <!-- 提交按钮 -->
             <div class="mb-3">
@@ -142,88 +142,132 @@
     </div>
 
     <script>
-        // 獲取 URL 參數中的 member_id
-        const urlParams = new URLSearchParams(window.location.search);
-        const member_id = urlParams.get('member_id');
+    var member_id = JSON.parse(localStorage.getItem('member_id'));
+ 	// 在编辑页面加载时，从后端获取用户的密码
+    var userPassword;
+
+    $(document).ready(function () {
 
         // 使用 member_id 向後端發送 AJAX 請求
         $.ajax({
             type: "GET",
-            url: "/api/member.do",  // 請更換為實際的後端 API 端點
+            url: "api/member.do",  // 請更換為實際的後端 API 端點
             data: { member_id: member_id },
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
             success: function (response) {
+                console.log(response)
                 // 後端返回的資訊中有名字、姓、電話和 email 屬性
-                $('#inputFirstName').val(response.first_name);
-                $('#inputLastName').val(response.last_name);
-                $('#inputPhoneNumber').val(response.phone_number);
-                $('#displayEmail').text(response.email);
+                document.getElementById('inputFirstName').value = response.response.data[0].first_name;
+                document.getElementById('inputLastName').value = response.response.data[0].last_name;
+                document.getElementById('inputPhoneNumber').value = response.response.data[0].phone_number;
+                document.getElementById('displayEmail').innerHTML = response.response.data[0].email;
+                // 在编辑页面加载时，从后端获取用户的密码
+                userPassword = response.response.data[0].password;
+                console.log(userPassword)
+
+
+                // 將密碼填充到隱藏的輸入框中
+                $('#hiddenPassword').val(userPassword);
+                // 设置密码输入框的 placeholder 为密码占位符
+                $('#inputPassword').attr('placeholder', '********');
+
+                $('#hiddenPasswordConfirm').val(userPassword);
+                $('#inputPasswordConfirm').attr('placeholder', '********');
             },
             error: function () {
                 console.error('無法獲取會員資訊！');
             }
         });
+    });
 
-        // 驗證表單的函數
-        function validateForm() {
-            var firstName = $('#inputFirstName').val();
-            var lastName = $('#inputLastName').val();
-            var phoneNumber = $('#inputPhoneNumber').val();
-            var email = $('#displayEmail').text(); // 因為 email 欄位是展示用的，所以直接使用展示的值
-            var password = $('#inputPassword').val();
-            var confirmPassword = $('#inputPasswordConfirm').val();
 
-            // 密碼檢查（至少8個字符，包含英文大小寫和數字）
-            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+ // 驗證表單的函數
+    function validateForm() {
+        var firstName = $('#inputFirstName').val();
+        var lastName = $('#inputLastName').val();
+        var phoneNumber = $('#inputPhoneNumber').val();
+        var email = $('#displayEmail').text();
+        var newPassword = $('#inputPassword').val();
+        var confirmPassword = $('#inputPasswordConfirm').val();
+        
+        console.log("New Password:", newPassword);
+        // 如果用戶想要更改密碼，執行密碼的合規性檢查
+		if (newPassword !== '') {
+			// 密碼檢查（至少8個字符，包含英文大小寫和數字）
+	        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+		    if (!passwordRegex.test(newPassword)) {
+		        // 密碼檢查失敗
+		        $('#passwordConfirmHelpInline').text("密碼至少8個字符，包含英文大小寫和數字。").css('color', 'red');
+		        return;
+		    } else {
+		        // 清空錯誤訊息
+		        $('#passwordConfirmHelpInline').text("");
+		    }
+		    // 如果密碼檢查通過，更新密碼
+		    userPassword = newPassword;
+		} else {
+		    // 如果密碼沒有更改，使用原始密碼
+		    userPassword = $('#hiddenPassword').val();
+		    console.log(userPassword)
+		}
 
-            if (firstName === "" || lastName === "" || phoneNumber === "" || password === "" || confirmPassword === "") {
-                // 顯示提醒
-                alert("請填寫所有必填欄位。");
-            } else if (!passwordRegex.test(password)) {
-                // 密碼檢查失敗
-                $('#passwordConfirmHelpInline').text("密碼至少8個字符，包含英文大小寫和數字。").css('color', 'red');
-            } else if (password !== confirmPassword) {
-                // 密碼不一致
-                $('#passwordConfirmHelpInline').text("密碼不一致。").css('color', 'red');
-            } else {
-                // 所有檢查通過，執行更新資料後的操作，連接到後端 API
 
-                // 將資料組成 JSON 格式
-                var dataObject = {
-                    "member_id": member_id,
-                    "firstName": firstName,
-                    "lastName": lastName,
-                    "phoneNumber": phoneNumber,
-                    "email": email,
-                    "password": password
-                };
 
-                // 將 JSON 格式轉換成字串
-                var dataString = JSON.stringify(dataObject);
-
-                // 發出 PUT 的 AJAX 請求
-                $.ajax({
-                    type: "PUT",
-                    url: "/api/member.do",
-                    data: dataString,
-                    contentType: "application/json; charset=utf-8",
-                    success: function (response) {
-                        // 處理後端回傳的結果
-                        if (response.status === 200) {
-                            // 更新成功，執行相應的操作
-                            alert(response.message);
-                            // 重定向到 member_info.html
-                            window.location.href = 'member_info.html?member_id=' + member_id;
-                        } else {
-                            // 其他狀態碼，可能是伺服器錯誤
-                            alert("更新失敗。");
-                        }
-                    },
-                    error: function () {
-                        alert("無法連線到伺服器！");
-                    }
-                });
-            }
+        // 驗證其他表單字段
+        if (firstName === "" || lastName === "" || phoneNumber === "") {
+            // 顯示提醒
+            alert("請填寫所有必填欄位。");
+            return;
         }
+
+        // 其他表單合法性檢查...
+
+        // 所有檢查通過，執行更新資料後的操作，連接到後端 API
+        var dataObject = {
+            "member_id": member_id,
+            "member_first_name": firstName,
+            "member_last_name": lastName,
+            "member_phone_number": phoneNumber,
+            "member_email": email,
+            "member_password": userPassword
+        };
+
+        // 將 JSON 格式轉換成字串
+        var dataString = JSON.stringify(dataObject);
+        console.log(dataString)
+
+        // 發出 PUT 的 AJAX 請求
+        $.ajax({
+            type: "PUT",
+            url: "api/member.do",
+            data: dataString,
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+            	console.log(response.status)
+                // 處理後端回傳的結果
+                if (response.status === 200) {
+                    // 更新成功，執行相應的操作
+                    alert(response.message);
+                    // 重定向到 member_info.html
+                    window.location.href = 'member_info.html?member_id=' + member_id;
+                } else {
+                    // 其他狀態碼，可能是伺服器錯誤
+                    alert("更新失敗。");
+                }
+            },
+            error: function () {
+                alert("無法連線到伺服器！");
+            }
+        });
+    }
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"

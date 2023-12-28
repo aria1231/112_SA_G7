@@ -121,13 +121,23 @@
 
             <!-- 編輯按鈕，點擊跳轉到編輯頁面 -->
             <div class="mb-3">
-                <a href="member_edit.html?member_id=" + localStorage.getItem('member_id') class="btn btn-primary">編輯</a>
+            	<button class="btn btn-primary" onclick="editMember()">編輯</button>
             </div>
         </div>
         <!-- Card 結束 -->
     </div>
 
     <script>
+    
+ 	// 編輯按鈕的點擊事件
+    function editMember() {
+        // 建立 member_edit.html 的 URL，並將 member_id 作為參數傳遞
+        var url = `member_edit.html?member_id=${localStorage.getItem('member_id')}`;
+
+        // 使用 JavaScript 跳轉頁面
+        window.location.href = url;
+    }
+ 	
         // 頁面載入後執行
         $(document).ready(function () {
         	var member_id = JSON.parse(localStorage.getItem('member_id'));
@@ -150,6 +160,7 @@
                     $('#displayLastName').text(response.response.data[0].last_name);
                     $('#displayPhoneNumber').text(response.response.data[0].phone_number);
                     $('#displayEmail').text(response.response.data[0].email);
+                    
                 },
                 error: function () {
                     console.error('無法獲取會員資訊！');
