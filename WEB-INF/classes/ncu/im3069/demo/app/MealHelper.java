@@ -248,7 +248,7 @@ public class MealHelper {
             conn = DBMgr.getConnection();
             /** SQL指令 */
 			
-            String sql = "Update `final_pj`.`meal` SET `meal_name` = ? ,`meal_price` = ? , `meal_description` = ? , `meal_image` = ? `meal_update_time` = ? WHERE `meal_id` = ?";
+            String sql = "Update `final_pj`.`meal` SET `meal_name` = ? ,`meal_price` = ? , `meal_description` = ? , `meal_image` = ?, `meal_update_time` = ? WHERE `meal_id` = ?";
 			
 			/** 取得所需之參數 */
 			int meal_id = m.getMealID();

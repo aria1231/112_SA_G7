@@ -337,7 +337,7 @@ public class RoomHelper {
             conn = DBMgr.getConnection();
             /** SQL指令 */
 			
-            String sql = "Update `final_pj`.`room` SET `room_name` = ? ,`room_price` = ? , `room_description` = ? , `room_image` = ? `room_update_time` = ? WHERE `room_id` = ?";
+            String sql = "Update `final_pj`.`room` SET `room_name` = ? ,`room_price` = ? , `room_description` = ? , `room_image` = ? ,`room_update_time` = ? , `room_limited` = ? WHERE `room_id` = ?";
 			
 			/** 取得所需之參數 */
 			int room_id = r.getRoomID();
@@ -345,6 +345,7 @@ public class RoomHelper {
             int room_price = r.getRoomPRICE();
             String room_description = r.getRoomDESCRIPTION();
 			String room_image = r.getRoomIMAGE();
+			int room_limited = r.getRoomID();
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
@@ -353,7 +354,8 @@ public class RoomHelper {
             pres.setString(3, room_description);
             pres.setString(4, room_image);
             pres.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
-            pres.setInt(6, room_id);
+            pres.setInt(6, room_limited);
+            pres.setInt(7, room_id);
             /** 執行更新之SQL指令並記錄影響之行數 */
             row = pres.executeUpdate();
 

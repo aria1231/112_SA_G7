@@ -85,7 +85,7 @@ public class MovieController extends HttpServlet {
         String movie_image = filePart.getSubmittedFileName();
         
         // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
-        String uploadDirectory = "C:\\Users\\yuan\\Desktop\\去你的SA\\v4\\112_SA_G7/statics/img/movie/";
+        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\movie";
         String fileName = getSubmittedFileName(filePart);
         String savePath = uploadDirectory + fileName;
 
@@ -175,33 +175,65 @@ public class MovieController extends HttpServlet {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void doPut(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
-        /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
-        JsonReader jsr = new JsonReader(request);
-        JSONObject jso = jsr.getObject();
         
-        /** 取出經解析到JSONObject之Request參數 */
-        int movie_id = jso.getInt("movie_id");
-        String movie_name = jso.getString("movie_name");
-        int movie_time = jso.getInt("movie_time");
-        String movie_description = jso.getString("movie_description");
-		String movie_image = jso.getString("movie_image");
-        int movie_type = jso.getInt("movie_type");
+        response.setCharacterEncoding("UTF-8");
+	    // 設置回應的內容類型為JSON，並使用UTF-8編碼
+	    response.setContentType("application/json;charset=UTF-8");
+	    request.setCharacterEncoding("UTF-8");
+        
+        String movieidString = request.getParameter("movieId");
+        int movie_id = Integer.parseInt(movieidString);
+        String movie_name = request.getParameter("movieName");
+        String movieTimeString = request.getParameter("duration");
+        int movie_time = Integer.parseInt(movieTimeString);
+        String movie_description = request.getParameter("description");
+        String movieTypeString = request.getParameter("category");
+        int movie_type = Integer.parseInt(movieTypeString);
+        String successMessage = "更新失敗！";
+        
+      //從 HTTP 請求中取得名稱為 "movie_image" 的部分（Part），用於處理上傳的檔案。
+        Part filePart = request.getPart("image");
+        //返回客戶端上傳的檔案的原始文件名稱。這裡將該檔案名稱存儲在 meal_image 字串變數中
+        String movie_image = filePart.getSubmittedFileName();
+        
+        // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
+        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\movie";
+        String fileName = getSubmittedFileName(filePart);
+        String savePath = uploadDirectory + fileName;
+
+        // 將檔案保存到伺服器指定的路徑
+        filePart.write(savePath);
 
         /** 透過傳入之參數，新建一個以這些參數之電影Movie物件 */
         Movie m = new Movie(movie_id, movie_name, movie_time, movie_description, movie_image, movie_type);
         
         /** 透過MovieHelper物件的updateMovie()方法至資料庫更新該電影資料，回傳之資料為JSONObject物件 */
-        //JSONObject data = m.updateMovie();
         JSONObject data = movh.updateMovie(m);
-		
-        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-        JSONObject resp = new JSONObject();
-        resp.put("status", "200");
-        resp.put("message", "成功! 更新會員資料...");
-        resp.put("response", data);
         
-        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-        jsr.response(resp, response);
+        Object affect_row = data.get("row");
+        int row=0 ;
+        int status=500;
+        
+        if(affect_row!= null) {
+        	row = (int)affect_row;
+        	if (row!=0) {
+        		successMessage = "更新成功";
+        		status=200;
+        	}
+        }
+        
+        // 獲取PrintWriter對象，用於將JSON數據寫入OutputStream
+        PrintWriter out = response.getWriter();
+
+        // 構建成功的JSON回應
+        String jsonResponse = "{\"status\":  \"" + status + "\", \"message\": \"" + successMessage + "\"}";
+
+        // 寫入JSON數據到OutputStream
+        out.print(jsonResponse);
+
+        // 關閉PrintWriter
+        out.flush();
+        out.close();
     }
 
 }

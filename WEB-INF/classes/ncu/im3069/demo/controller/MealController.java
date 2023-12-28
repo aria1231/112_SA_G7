@@ -83,7 +83,7 @@ public class MealController extends HttpServlet {
         String meal_image = filePart.getSubmittedFileName();
         
         // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
-        String uploadDirectory = "C:\\Users\\yuan\\Desktop\\去你的SA\\v4\\112_SA_G7/statics/img/meal/";
+        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\meal/";
         String fileName = getSubmittedFileName(filePart);
         String savePath = uploadDirectory + fileName;
 
@@ -161,16 +161,34 @@ public class MealController extends HttpServlet {
      * @throws IOException Signals that an I/O exception has occurred.
      */
     public void doPut(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
-        /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
-        JsonReader jsr = new JsonReader(request);
-        JSONObject jso = jsr.getObject();
+       
+    	response.setCharacterEncoding("UTF-8");
+	    // 設置回應的內容類型為JSON，並使用UTF-8編碼
+	    response.setContentType("application/json;charset=UTF-8");
+	    request.setCharacterEncoding("UTF-8");
+	    
+	    /** 取出經解析到之Request參數 */
+	    
+	    String mealidString = request.getParameter("mealId");
+	    int meal_id = Integer.parseInt(mealidString);
+        String meal_name = request.getParameter("mealName");
+        String mealPriceString = request.getParameter("mealPrice");
+        int meal_price = Integer.parseInt(mealPriceString);
+        String meal_description = request.getParameter("mealDescription");
+        String successMessage = "更新失敗！";
+       
+        //從 HTTP 請求中取得名稱為 "meal_image" 的部分（Part），用於處理上傳的檔案。
+        Part filePart = request.getPart("mealImage");
+        //返回客戶端上傳的檔案的原始文件名稱。這裡將該檔案名稱存儲在 meal_image 字串變數中
+        String meal_image = filePart.getSubmittedFileName();
         
-        /** 取出經解析到JSONObject之Request參數 */
-        int meal_id = jso.getInt("meal_id");
-        String meal_name = jso.getString("meal_name");
-        int meal_price = jso.getInt("meal_price");
-        String meal_description = jso.getString("meal_description");
-		String meal_image = jso.getString("meal_image");
+        // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
+        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\meal/";
+        String fileName = getSubmittedFileName(filePart);
+        String savePath = uploadDirectory + fileName;
+
+        // 將檔案保存到伺服器指定的路徑
+        filePart.write(savePath);
 
         /** 透過傳入之參數，新建一個以這些參數之餐點Meal物件 */
         Meal m = new Meal(meal_id, meal_name, meal_price, meal_description, meal_image);
@@ -179,14 +197,30 @@ public class MealController extends HttpServlet {
         //JSONObject data = m.updateMeal();
         JSONObject data = meah.updateMeal(m);
         
-        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-        JSONObject resp = new JSONObject();
-        resp.put("status", "200");
-        resp.put("message", "成功! 更新會員資料...");
-        resp.put("response", data);
+        Object affect_row = data.get("row");
+        int row=0 ;
+        int status=500;
         
-        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-        jsr.response(resp, response);
+        if(affect_row!= null) {
+        	row = (int)affect_row;
+        	if (row!=0) {
+        		successMessage = "添加成功";
+        		status=200;
+        	}
+        }
+        
+        // 獲取PrintWriter對象，用於將JSON數據寫入OutputStream
+        PrintWriter out = response.getWriter();
+
+        // 構建成功的JSON回應
+        String jsonResponse = "{\"status\":  \"" + status + "\", \"message\": \"" + successMessage + "\"}";
+
+        // 寫入JSON數據到OutputStream
+        out.print(jsonResponse);
+
+        // 關閉PrintWriter
+        out.flush();
+        out.close();
     }
 
 }

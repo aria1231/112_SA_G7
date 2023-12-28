@@ -327,7 +327,7 @@ public class MovieHelper {
             conn = DBMgr.getConnection();
             /** SQL指令 */
 			
-            String sql = "Update `final_pj`.`movie` SET `movie_name` = ? ,`movie_time` = ? , `movie_description` = ? , `movie_image` = ? `movie_update_time` = ?  `movie_type` = ? WHERE `moive_id` = ?";
+            String sql = "Update `final_pj`.`movie` SET `movie_name` = ? ,`movie_time` = ? , `movie_description` = ? , `movie_image` = ?, `movie_update_time` = ?,  `movie_type` = ? WHERE `moive_id` = ?";
 			
 			/** 取得所需之參數 */
 			int movie_id = m.getMovieID();

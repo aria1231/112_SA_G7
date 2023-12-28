@@ -129,7 +129,7 @@ public class RoomController extends HttpServlet {
         String room_image = filePart.getSubmittedFileName();
         
         // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
-        String uploadDirectory = "C:\\Users\\yuan\\Desktop\\去你的SA\\v4\\112_SA_G7/statics/img/room/";
+        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\room/";
         String fileName = getSubmittedFileName(filePart);
         String savePath = uploadDirectory + fileName;
 
@@ -208,31 +208,61 @@ public class RoomController extends HttpServlet {
      */
     public void doPut(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
         /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
-        JsonReader jsr = new JsonReader(request);
-        JSONObject jso = jsr.getObject();
+    	
+    	String roomidString = request.getParameter("roomId");
+    	int room_id = Integer.parseInt(roomidString);
+    	String room_name = request.getParameter("roomName");
+        String roomPriceString = request.getParameter("roomPrice");
+        int room_price = Integer.parseInt(roomPriceString);
+        String roomlimitString = request.getParameter("roomLimit");
+        int room_limited = Integer.parseInt(roomlimitString);
+        String room_description = request.getParameter("roomDescription");
+        System.out.println(room_name);
+        String successMessage = "更新失敗！";
         
-        /** 取出經解析到JSONObject之Request參數 */
-        int room_id = jso.getInt("room_id");
-        String room_name = jso.getString("room_name");
-        int room_price = jso.getInt("room_price");
-        String room_description = jso.getString("room_description");
-		String room_image = jso.getString("room_image");
-        int room_limited = jso.getInt("room_limited");
+        //從 HTTP 請求中取得名稱為 "room_image" 的部分（Part），用於處理上傳的檔案。
+        Part filePart = request.getPart("roomImage");
+        //返回客戶端上傳的檔案的原始文件名稱。這裡將該檔案名稱存儲在 room_image 字串變數中
+        String room_image = filePart.getSubmittedFileName();
+        
+        // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
+        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\room/";
+        String fileName = getSubmittedFileName(filePart);
+        String savePath = uploadDirectory + fileName;
+
+        // 將檔案保存到伺服器指定的路徑
+        filePart.write(savePath);
 
         /** 透過傳入之參數，新建一個以這些參數之包廂Room物件 */
         Room r = new Room(room_id, room_name, room_price, room_description, room_image, room_limited);
         
         /** 透過RoomHelper物件的updateRoom()方法至資料庫更新該包廂資料，回傳之資料為JSONObject物件 */
         JSONObject data = rooh.updateRoom(r);
-        
-        /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-        JSONObject resp = new JSONObject();
-        resp.put("status", "200");
-        resp.put("message", "成功! 更新包廂資料...");
-        resp.put("response", data);
-        
-        /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-        jsr.response(resp, response);
+            
+            Object affect_row = data.get("row");
+            int row=0 ;
+            int status=500;
+            
+            if(affect_row!= null) {
+            	row = (int)affect_row;
+            	if (row!=0) {
+            		successMessage = "更新成功";
+            		status=200;
+            	}
+            }
+            
+            // 獲取PrintWriter對象，用於將JSON數據寫入OutputStream
+            PrintWriter out = response.getWriter();
+
+            // 構建成功的JSON回應
+            String jsonResponse = "{\"status\":  \"" + status + "\", \"message\": \"" + successMessage + "\"}";
+
+            // 寫入JSON數據到OutputStream
+            out.print(jsonResponse);
+
+            // 關閉PrintWriter
+            out.flush();
+            out.close();
     }
 
 }
