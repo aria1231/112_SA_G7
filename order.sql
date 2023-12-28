@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2023-12-25 09:53:16
+-- 產生時間： 2023-12-28 12:59:04
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -36,8 +36,7 @@ CREATE TABLE `order` (
   `order_total_price` int(50) NOT NULL DEFAULT 0,
   `order_time_of_day` int(11) NOT NULL,
   `order_datetime` datetime(6) NOT NULL,
-  `order_status` int(11) NOT NULL DEFAULT 0,
-  `order_numberofpeople` int(11) NOT NULL DEFAULT 0
+  `order_status` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -58,7 +57,7 @@ ALTER TABLE `order`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `order`
 --
 ALTER TABLE `order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
