@@ -38,7 +38,7 @@ public class RoomController extends HttpServlet {
     }
 
 
-	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		/** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
         JsonReader jsr = new JsonReader(request);
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
@@ -90,17 +90,6 @@ public class RoomController extends HttpServlet {
         
         System.out.println("get");
 	}
-	
-    private String getFileName(Part part) {
-        String contentDisposition = part.getHeader("content-disposition");
-        String[] tokens = contentDisposition.split(";");
-        for (String token : tokens) {
-            if (token.trim().startsWith("filename")) {
-                return token.substring(token.indexOf('=') + 1).trim().replace("\"", "");
-            }
-        }
-        return "unknown";
-    }
     
     private String getSubmittedFileName(Part part) {
         String contentDisposition = part.getHeader("content-disposition");
@@ -114,16 +103,17 @@ public class RoomController extends HttpServlet {
     }
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		response.setCharacterEncoding("UTF-8");
-
 	    // 設置回應的內容類型為JSON，並使用UTF-8編碼
 	    response.setContentType("application/json;charset=UTF-8");
+	    request.setCharacterEncoding("UTF-8");
        		
-        Enumeration<String> a = request.getParameterNames();
-        System.out.println(a);
-        System.out.println(Collections.list(a).size());
+        //Enumeration<String> a = request.getParameterNames();
+        //System.out.println(a);
+        //System.out.println(Collections.list(a).size());
         
-        /** 取出經解析到JSONObject之Request參數 */
+        /** 取出經解析到之Request參數 */
         String room_name = request.getParameter("room_name");
         String roomPriceString = request.getParameter("room_price");
         int room_price = Integer.parseInt(roomPriceString);

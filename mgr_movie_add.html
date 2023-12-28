@@ -190,6 +190,7 @@
     <script>
         // 確認添加按鈕事件
         function confirmAdd() {
+        	event.preventDefault();
             // 讀取輸入值
             const movieName = document.getElementById('movieName').value;
             const duration = parseInt(document.getElementById('duration').value, 10);  // 轉換為整數
@@ -206,11 +207,11 @@
 
             // 使用 FormData 來處理上傳的檔案
             const formData = new FormData();
-            formData.append('movieName', movieName);
-            formData.append('duration', duration);
-            formData.append('description', description);
-            formData.append('category', category);
-            formData.append('image', image);
+            formData.append('movie_name', movieName);
+            formData.append('movie_time', duration);
+            formData.append('movie_description', description);
+            formData.append('movie_type', category);
+            formData.append('movie_image', image);
 
             // 使用 AJAX 向後端發送 POST 請求
             $.ajax({
@@ -220,14 +221,23 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    // 處理後端回傳的資料，這裡可以根據需要進行操作
-                    alert('電影添加成功！');
-                    // 可以根據需求進行頁面跳轉等操作
-                    window.location.href = 'mgr_movie_browse.html';
+                	console.log(response)
+                	console.log('AJAX Success:', response);  // 檢查是否進入這個函數
+                	// 處理後端回傳的資料，這裡可以根據需要進行操作
+                	if (response.status == 200){
+                		alert(response.message);
+                    	// 跳轉至mgr_movie_browse.html
+                    	window.location.href = 'mgr_movie_browse.html';
+                	}
+                	else{
+                		alert('電影添加失敗！');
+                		window.location.href = 'mgr_movie_add.html';
+                	}
                 },
                 error: function (error) {
                     // 處理錯誤，這裡可以根據需要進行操作
-                    alert('電影添加失敗！');
+                    console.log('AJAX Error:', xhr, status, error);
+                    alert('伺服器連接失敗！');
                 }
             });
         }

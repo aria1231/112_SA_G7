@@ -6,6 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FinalProject_group7</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
@@ -71,7 +75,7 @@
             /* 使用黑色文字顏色 */
         }
     </style>
-    <script src="statics/js/jquery-3.4.1.min.js"></script>
+    <!-- <script src="statics/js/jquery-3.4.1.min.js"></script> -->
 </head>
 
 <body>
@@ -185,32 +189,43 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // 從 URL 中獲取 movie_id 參數
-            const urlParams = new URLSearchParams(window.location.search);
-            const movieId = urlParams.get('movie_id');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get movie_id parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const movieId = urlParams.get('movie_id');
 
-            // 將 movie_id 存入 hidden input
-            document.getElementById('movieId').value = movieId;
+        // Set movie_id in the hidden input
+        document.getElementById('movieId').value = movieId;
 
-            // 使用 movieId 從後端獲取電影資訊並填充表單
-            $.ajax({
-                type: 'GET',
-                url: `api/movie.do`,
-                data: { movie_id: movieId },
-                success: function (response) {
-                    // 將後端返回的電影資訊填充到表單中
-                    document.getElementById('movieName').value = response.movie_name;  // 對應資料庫的 movie_name
-                    document.getElementById('duration').value = response.movie_time;  // 對應資料庫的 movie_time
-                    document.getElementById('description').value = response.movie_description;  // 對應資料庫的 movie_description
-                    document.getElementById('category').value = response.movie_type;  // 對應資料庫的 movie_type
+        // Fetch movie information from the backend using movieId and populate the form
+        $.ajax({
+            type: 'GET',
+            url: `api/movie.do`,
+            data: { movie_id: movieId },
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+                console.log(response); // 將整個回應記錄到控制台
 
-                },
-                error: function (error) {
-                    console.error('Failed to fetch movie information:', error);
+                if (response.response && response.response.data && response.response.data.length > 0)  {
+                    // 使用從後端返回的電影信息填充表單
+                    document.getElementById('movieName').value = response.response.data[0].movie_name;
+                    document.getElementById('duration').value = response.response.data[0].movie_time;
+                    document.getElementById('description').value = response.response.data[0].movie_description;
+                    document.getElementById('category').value = response.response.data[0].movie_type;
+                } else {
+                    // 顯示錯誤訊息
+                    alert('未找到相關電影資訊');
                 }
-            });
+            },
+            error: function (error) {
+                console.error('Failed to fetch movie information:', error);
+            }
         });
+    });
+
 
         // 確認修改按鈕的點擊事件
         function confirmEdit() {

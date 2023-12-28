@@ -217,8 +217,8 @@
                 processData: false,
                 success: function (response) {
                 	// 處理後端回傳的資料，這裡可以根據需要進行操作
-                	alert(response.message);
                 	if (response.status == 200){
+                		alert(response.message);
                     	// 跳轉至mgr_room_browse.html
                     	window.location.href = 'mgr_room_browse.html';
                 	}

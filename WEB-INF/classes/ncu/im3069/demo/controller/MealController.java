@@ -1,6 +1,9 @@
 package ncu.im3069.demo.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -12,6 +15,8 @@ import ncu.im3069.demo.app.MealHelper;
 import ncu.im3069.tools.JsonReader;
 
 @WebServlet("/api/meal.do")
+@MultipartConfig
+
 public class MealController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -47,42 +52,76 @@ public class MealController extends HttpServlet {
 
         jsr.response(resp, response);
 	}
+	
+	 private String getSubmittedFileName(Part part) {
+	        String contentDisposition = part.getHeader("content-disposition");
+	        String[] items = contentDisposition.split(";");
+	        for (String item : items) {
+	            if (item.trim().startsWith("filename")) {
+	                return item.substring(item.indexOf("=") + 2, item.length() - 1);
+	            }
+	        }
+	        return "";
+	    }
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
-        JsonReader jsr = new JsonReader(request);
-        JSONObject jso = jsr.getObject();
+		response.setCharacterEncoding("UTF-8");
+	    // 設置回應的內容類型為JSON，並使用UTF-8編碼
+	    response.setContentType("application/json;charset=UTF-8");
+	    request.setCharacterEncoding("UTF-8");
+	    
+	    /** 取出經解析到之Request參數 */
+        String meal_name = request.getParameter("meal_name");
+        String mealPriceString = request.getParameter("meal_price");
+        int meal_price = Integer.parseInt(mealPriceString);
+        String meal_description = request.getParameter("meal_description");
+        String successMessage = "添加失敗！";
+       
+        //從 HTTP 請求中取得名稱為 "meal_image" 的部分（Part），用於處理上傳的檔案。
+        Part filePart = request.getPart("meal_image");
+        //返回客戶端上傳的檔案的原始文件名稱。這裡將該檔案名稱存儲在 meal_image 字串變數中
+        String meal_image = filePart.getSubmittedFileName();
         
-        /** 取出經解析到JSONObject之Request參數 */
-        String meal_name = jso.getString("meal_name");
-        int meal_price = jso.getInt("meal_price");
-        String meal_description = jso.getString("meal_description");
-		String meal_image = jso.getString("meal_image");
+        // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
+        String uploadDirectory = "C:\\Users\\yuan\\Desktop\\去你的SA\\v4\\112_SA_G7/statics/img/meal/";
+        String fileName = getSubmittedFileName(filePart);
+        String savePath = uploadDirectory + fileName;
+
+        // 將檔案保存到伺服器指定的路徑
+        filePart.write(savePath);
+
         
         /** 建立一個新的餐點物件 */
         Meal m = new Meal(meal_name, meal_price, meal_description, meal_image);
         
-        /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
-        if(meal_name.isEmpty() || meal_price == 0 || meal_description.isEmpty() || meal_image.isEmpty()) {
-            /** 以字串組出JSON格式之資料 */
-            String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
-            /** 透過JsonReader物件回傳到前端（以字串方式） */
-            jsr.response(resp, response);
-        }
-        else {
             /** 透過MealHelper物件的createMeal()方法新建一個餐點至資料庫 */
             JSONObject data = meah.createMeal(m);
             
-            /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-            JSONObject resp = new JSONObject();
-            resp.put("status", "200");
-            resp.put("message", "成功! 註冊會員資料...");
-            resp.put("response", data);
+            Object affect_row = data.get("row");
+            int row=0 ;
+            int status=500;
             
-            /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-            jsr.response(resp, response);
+            if(affect_row!= null) {
+            	row = (int)affect_row;
+            	if (row!=0) {
+            		successMessage = "添加成功";
+            		status=200;
+            	}
+            }
+            
+            // 獲取PrintWriter對象，用於將JSON數據寫入OutputStream
+            PrintWriter out = response.getWriter();
+
+            // 構建成功的JSON回應
+            String jsonResponse = "{\"status\":  \"" + status + "\", \"message\": \"" + successMessage + "\"}";
+
+            // 寫入JSON數據到OutputStream
+            out.print(jsonResponse);
+
+            // 關閉PrintWriter
+            out.flush();
+            out.close();
         }
-	}
 	
 	/**
      * 處理Http Method請求DELETE方法（刪除）

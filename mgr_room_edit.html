@@ -82,6 +82,7 @@
             /* 使用黑色文字顏色 */
         }
     </style>
+    <script src="statics/js/jquery-3.4.1.min.js"></script>
 </head>
 
 <body>
@@ -156,6 +157,12 @@
                     <label for="roomPrice" class="form-label">價格</label>
                     <input type="text" class="form-control" id="roomPrice" name="roomPrice" required>
                 </div>
+                
+                <!-- 包廂價格 -->
+                <div class="mb-3">
+                    <label for="roomLimit" class="form-label">人數上限</label>
+                    <input type="text" class="form-control" id="roomLimit" name="roomLimit" required>
+                </div>
             </div>
 
             <div class="row mb-3">
@@ -196,11 +203,17 @@
                 type: 'GET',
                 url: `api/room.do`,
                 data: { room_id: roomId },
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
                 success: function (response) {
+                	console.log(response)
                     // 將後端返回的包廂資訊填充到表單中
-                    document.getElementById('roomName').value = response.room_name;
-                    document.getElementById('roomPrice').value = response.room_price;
-                    document.getElementById('roomDescription').value = response.room_description;
+                    document.getElementById('roomName').value = response.response.data[0].room_name;
+                    document.getElementById('roomPrice').value = response.response.data[0].room_price;
+                    document.getElementById('roomLimit').value = response.response.data[0].room_limited;
+                    document.getElementById('roomDescription').value = response.response.data[0].room_description;
                 },
                 error: function (error) {
                     console.error('Failed to fetch room information:', error);

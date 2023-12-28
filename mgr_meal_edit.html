@@ -160,11 +160,15 @@
                 type: 'GET',
                 url: `api/meal.do`,
                 data: { meal_id: mealId },
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
                 success: function (response) {
                     // 將後端返回的餐點資訊填充到表單中
-                    document.getElementById('mealName').value = response.meal_name;
-                    document.getElementById('mealPrice').value = response.meal_price;
-                    document.getElementById('mealDescription').value = response.meal_description;
+                    document.getElementById('mealName').value = response.response.data[0].meal_name;
+                    document.getElementById('mealPrice').value = response.response.data[0].meal_price;
+                    document.getElementById('mealDescription').value = response.response.data[0].meal_description;
                 },
                 error: function (error) {
                     console.error('Failed to fetch meal information:', error);

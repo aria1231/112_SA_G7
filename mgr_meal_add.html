@@ -188,10 +188,13 @@
 
             // 使用 FormData 來處理上傳的檔案
             const formData = new FormData();
-            formData.append('mealName', mealName);
-            formData.append('mealPrice', mealPrice);
-            formData.append('mealDescription', mealDescription);
-            formData.append('mealImage', mealImage);
+            formData.append('meal_name', mealName);
+            formData.append('meal_price', mealPrice);
+            formData.append('meal_description', mealDescription);
+            formData.append('meal_image', mealImage);
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+            }
 
             // 使用 AJAX 向後端發送 POST 請求
             $.ajax({
@@ -201,16 +204,26 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    // 處理後端回傳的資料，這裡可以根據需要進行操作
-                    alert('餐點添加成功！');
-                    // 跳轉至mgr_meal_browse.html
-                    window.location.href = 'mgr_meal_browse.html';
+                	console.log(response)
+                	// 處理後端回傳的資料，這裡可以根據需要進行操作
+                	if (response.status == 200){
+                		alert(response.message);
+                    	// 跳轉至mgr_meal_browse.html
+                    	window.location.href = 'mgr_meal_browse.html';
+                	}
+                	else{
+                		alert('餐點添加失敗！');
+                		window.location.href = 'mgr_meal_add.html';
+                	}
                 },
                 error: function (error) {
                     // 處理錯誤，這裡可以根據需要進行操作
-                    alert('餐點添加失敗！');
+                    alert('伺服器連接失敗！');
                 }
             });
+         // 防止表單默認提交
+            return false;
+            
         }
 
     </script>
