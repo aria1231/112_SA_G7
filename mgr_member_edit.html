@@ -144,22 +144,41 @@
         const urlParams = new URLSearchParams(window.location.search);
         const member_id = urlParams.get('member_id');
         
+        console.log("member_id=", member_id)
 
-        var request = {'member_id': member_id };
-        var data_string = JSON.stringify(request);
+        //var request = {'member_id': member_id };
+        //var data_string = JSON.stringify(request);
+        var userPassword;
 
         // 使用 member_id 向後端發送 AJAX 請求
         $.ajax({
             type: "GET",
             url: "api/member.do",  // 請更換為實際的後端 API 端點
-            data: data_string,
+            data: { member_id: member_id},
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
             success: function (response) {
+            	console.log("member_id=", member_id)
             	console.log(response);
                 // 後端返回的資訊中有名字、姓、電話和 email 屬性
-                $('#inputFirstName').val(text(response.response.data[0].first_name));
-                $('#inputLastName').val(text(response.response.data[0].last_name));
-                $('#inputPhoneNumber').val(text(response.response.data[0].phone_number));
-                $('#displayEmail').text(text(response.response.data[0].email));
+                $('#inputFirstName').val(response.response.data[0].first_name);
+                $('#inputLastName').val(response.response.data[0].last_name);
+                $('#inputPhoneNumber').val(response.response.data[0].phone_number);
+                $('#displayEmail').text(response.response.data[0].email);
+             	// 在编辑页面加载时，从后端获取用户的密码
+                userPassword = response.response.data[0].password;
+                console.log(userPassword)
+
+
+                // 將密碼填充到隱藏的輸入框中
+                $('#hiddenPassword').val(userPassword);
+                // 设置密码输入框的 placeholder 为密码占位符
+                $('#inputPassword').attr('placeholder', '********');
+
+                $('#hiddenPasswordConfirm').val(userPassword);
+                $('#inputPasswordConfirm').attr('placeholder', '********');
             },
             error: function () {
                 console.error('無法獲取會員資訊！');
@@ -172,44 +191,69 @@
             var lastName = $('#inputLastName').val();
             var phoneNumber = $('#inputPhoneNumber').val();
             var email = $('#displayEmail').text(); // 因為 email 欄位是展示用的，所以直接使用展示的值
-            var password = $('#inputPassword').val();
+            var newPassword = $('#inputPassword').val();
             var confirmPassword = $('#inputPasswordConfirm').val();
 
-            // 密碼檢查（至少8個字符，包含英文大小寫和數字）
-            var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            console.log("New Password:", newPassword);
+            // 如果用戶想要更改密碼，執行密碼的合規性檢查
+    		if (newPassword !== '') {
+    			// 密碼檢查（至少8個字符，包含英文大小寫和數字）
+    	        var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    		    if (!passwordRegex.test(newPassword)) {
+    		        // 密碼檢查失敗
+    		        $('#passwordConfirmHelpInline').text("密碼至少8個字符，包含英文大小寫和數字。").css('color', 'red');
+    		        return;
+    		    } else {
+    		        // 清空錯誤訊息
+    		        $('#passwordConfirmHelpInline').text("");
+    		    }
+    		    // 如果密碼檢查通過，更新密碼
+    		    userPassword = newPassword;
+    		} else {
+    		    // 如果密碼沒有更改，使用原始密碼
+    		    userPassword = $('#hiddenPassword').val();
+    		    console.log(userPassword)
+    		}
 
-            if (firstName === "" || lastName === "" || phoneNumber === "" || password === "" || confirmPassword === "") {
+
+
+            // 驗證其他表單字段
+            if (firstName === "" || lastName === "" || phoneNumber === "") {
                 // 顯示提醒
                 alert("請填寫所有必填欄位。");
-            } else if (!passwordRegex.test(password)) {
-                // 密碼檢查失敗
-                $('#passwordConfirmHelpInline').text("密碼至少8個字符，包含英文大小寫和數字。").css('color', 'red');
-            } else if (password !== confirmPassword) {
-                // 密碼不一致
-                $('#passwordConfirmHelpInline').text("密碼不一致。").css('color', 'red');
-            } else {
-                // 所有檢查通過，執行更新資料後的操作，連接到後端 API
+                return;
+            }
 
-                // 將資料組成 JSON 格式
+            // 其他表單合法性檢查...
+            // 所有檢查通過，執行更新資料後的操作，連接到後端 API
+
+            // 將資料組成 JSON 格式
                 var dataObject = {
                     "member_id": member_id,
-                    "firstName": firstName,
-                    "lastName": lastName,
-                    "phoneNumber": phoneNumber,
-                    "email": email,
-                    "password": password
+                    "member_first_name": firstName,
+                    "member_last_name": lastName,
+                    "member_phone_number": phoneNumber,
+                    "member_email": email,
+                    "member_password": userPassword
                 };
 
+                
                 // 將 JSON 格式轉換成字串
                 var dataString = JSON.stringify(dataObject);
+                console.log(dataString)
 
                 // 發出 PUT 的 AJAX 請求
                 $.ajax({
                     type: "PUT",
-                    url: "/api/member.do",
+                    url: "api/member.do",
                     data: dataString,
+                    crossDomain: true,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
                     contentType: "application/json; charset=utf-8",
                     success: function (response) {
+                    	console.log(response)
                         // 處理後端回傳的結果
                         if (response.status === 200) {
                             // 更新成功，執行相應的操作
@@ -224,8 +268,7 @@
                     error: function () {
                         alert("無法連線到伺服器！");
                     }
-                });
-            }
+                });            
         }
     </script>
 

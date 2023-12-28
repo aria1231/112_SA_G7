@@ -57,7 +57,6 @@ public class Member {
         this.member_first_name = member_first_name;
         this.member_last_name = member_last_name;
         this.member_phone_number = member_phone_number;
-        updateMember();
     }
 
     /**
@@ -90,13 +89,13 @@ public class Member {
      * @param member_last_name 會員姓
      * @param member_phone_number 會員電話號碼
      */
-    public Member(int member_id, String member_email, String member_first_name, String member_last_name, String member_phone_number) {
-        this.member_id = member_id;
-        this.member_email = member_email;
-        this.member_first_name = member_first_name;
-        this.member_last_name = member_last_name;
-        this.member_phone_number = member_phone_number;
-    }
+//    public Member(int member_id, String member_email, String member_first_name, String member_last_name, String member_phone_number) {
+//        this.member_id = member_id;
+//        this.member_email = member_email;
+//        this.member_first_name = member_first_name;
+//        this.member_last_name = member_last_name;
+//        this.member_phone_number = member_phone_number;
+//    }
     
     public Member(int member_id) {
     	this.member_id = member_id;

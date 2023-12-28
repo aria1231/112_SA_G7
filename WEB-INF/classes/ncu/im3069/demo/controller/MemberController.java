@@ -111,7 +111,13 @@ public class MemberController extends HttpServlet {
                  /** 建立一個新的會員物件 */
                  Member m = new Member(sign_up_email, sign_up_password, sign_up_first_name, sign_up_last_name, sign_up_phone_number);
                  
-                 if(!memh.checkDuplicate(m)) {
+                 if(memh.checkDuplicate(m)){
+                     /** 以字串組出JSON格式之資料 */
+                     String resp = "{\"status\": \'400\', \"message\": \'新增帳號失敗，此E-Mail帳號重複！\', \'response\': \'\'}";
+                     /** 透過JsonReader物件回傳到前端（以字串方式） */
+                     jsr.response(resp, response);
+                 }
+                 else {
                  	/** 透過MemberHelper物件的create()方法新建一個會員至資料庫 */
                  	memh.create(m);
                  
@@ -125,12 +131,7 @@ public class MemberController extends HttpServlet {
                  	/** 透過JsonReader物件回傳到前端（以JSONObject方式） */
                  	jsr.response(resp, response);
                  }
-                 else if(memh.checkDuplicate(m)){
-                     /** 以字串組出JSON格式之資料 */
-                     String resp = "{\"status\": \'400\', \"message\": \'新增帳號失敗，此E-Mail帳號重複！\', \'response\': \'\'}";
-                     /** 透過JsonReader物件回傳到前端（以字串方式） */
-                     jsr.response(resp, response);
-                 }
+                 
              //}
         }
         
