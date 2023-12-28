@@ -258,6 +258,7 @@
     	let memberId = getMemberIdFromClient();
     	let selectedMovieName = null;
     	let selectedRoomName = null;
+    	let selectPay = false;
 
   		function getMemberIdFromClient() {
 			let id = JSON.parse(localStorage.getItem("member_id"));
@@ -309,30 +310,7 @@
 
         
         
-        //function selectRoom(roomId) {
-            // 取消先前選擇的卡片的背景顏色
-            //if (selectedRoomId !== null) {
-                //document.getElementById('room_' + selectedRoomId).classList.remove('selected');
-            //}
-
-            // 更新當前選擇的 room_id
-            //selectedRoomId = roomId;
-
-            // 添加新選擇卡片的背景顏色
-            //document.getElementById('room_' + roomId).classList.add('selected');
-        //}
         
-        //function getMealDataFromClient() {
-    		//let meal = JSON.parse(localStorage.getItem("meal"));
-    		//meal = !meal ? new Array() : meal;
-    		//return meal;
-   		//}
-        
-        //function getMealServingDataFromClient() {
-    		//let meal_serving = JSON.parse(localStorage.getItem("meal_serving"));
-    		//meal_serving = !meal_serving ? new Array() : meal_serving;
-    		//return meal_serving;
-   		//}
         
         /////////////////////////////////////////////////////////////////////////////////////
         
@@ -543,24 +521,7 @@
             console.log(name);
         }
         
-        //function selectMovie(movieId) {
-            // 取消先前選擇的卡片的背景顏色
-            //if (selectedMovieId !== null) {
-                //document.getElementById('movie_' + selectedMovieId).classList.remove('selected');
-            //}
-
-            // 更新當前選擇的 movie_id
-            //MovieId = movieId;
-
-            // 添加新選擇卡片的背景顏色
-            //document.getElementById('movie_' + movieId).classList.add('selected');
-            //console.log(movieId);
-        //}
         
-        //function setMovieId(id){
-			//selectedMovieId = id;
-			//console.log(selectedMovieId);
-		//}
         
 		//////////////////////////////////////////////////////////////////////////////////////
         
@@ -693,50 +654,24 @@
 
             
 
-            // 取得所選電影的名稱
-            //function getSelectedMovieName() {
-                //const selectedMovieCard = document.querySelector('.movie-card.selected');
-                //if (selectedMovieCard) {
-                    //return selectedMovieCard.querySelector('.card-title').textContent;
-                //}
-                //return '';
-            //}
-
-            // 取得所選餐點的名稱和數量
-            //function getSelectedMeals() {
-                //let mealsInfo = '';
-                //selectedMeals.forEach(meal => {
-                    //mealsInfo += `${meal.mealId} x ${meal.quantity}, `;
-                //});
-                // 移除最後的逗號和空格
-                //return mealsInfo.slice(0, -2);
-            //}
-
-            // 取得所選包廂的名稱
-            //function getSelectedRoomName() {
-                //const selectedRoomCard = document.querySelector('.room-card.selected');
-                //if (selectedRoomCard) {
-                    //return selectedRoomCard.querySelector('.card-title').textContent;
-                //}
-                //return '';
-            //}
-
-            // 計算總金額，還要改
-            //function calculateTotalAmount() {
-                //const roomPrice = 100;  // 假設包廂價格為100元
-                //const mealsPrice = selectedMeals.reduce((total, meal) => total + (meal.quantity * meal.price), 0);
-                //return roomPrice + mealsPrice;
-            //}
+            
         }
 
         //第四步的確認鍵
         function confirmStep4() {
+        	
+        	
             // 顯示第五步
             showStep(5);
         }
 
         //第五步的確認鍵，要加壓進資料庫的動作
         function confirmStep5() {
+        	// 確認是否已選擇電影
+            if (selectPay === false) {
+                alert('請選擇付款方式');
+                return;
+            }
 			
         	var data = {
         			"member_id": memberId,
@@ -745,8 +680,7 @@
         			"order_date": document.getElementById('date').value,
         			"time_of_day": getSelectedTimeLabel(),
         			"meal": meal,
-        			"meal_serving": meal_serving,
-        			"people": document.getElementById('people').value
+        			"meal_serving": meal_serving
         	}
         	
         	console.log(data);
@@ -791,12 +725,14 @@
 
         // 顯示信用卡輸入欄位
         function showCreditInfo() {
+        	selectPay = true;
             document.getElementById('creditInfo').classList.remove('hidden');
             document.getElementById('bankInfo').classList.add('hidden');
         }
 
         // 顯示銀行轉帳資訊
         function showBankInfo() {
+        	selectPay = true;
             document.getElementById('creditInfo').classList.add('hidden');
             document.getElementById('bankInfo').classList.remove('hidden');
         }

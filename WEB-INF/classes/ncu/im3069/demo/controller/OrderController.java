@@ -114,13 +114,9 @@ public class OrderController extends HttpServlet {
         JSONArray meal = jso.getJSONArray("meal");
         JSONArray meal_serving = jso.getJSONArray("meal_serving");
         
-		String peo = jso.getString("people");
-		int people = Integer.parseInt(peo);
-		System.out.println("接people===========================");
-		System.out.println(people);
 		
         /** 建立一個新的訂單物件 */
-        Order od = new Order(member_id,movie_id,room_id,date,time_of_day,people);
+        Order od = new Order(member_id,movie_id,room_id,date,time_of_day);
 
         /** 將每一筆訂單餐點細項取出來 */
         for(int i=0 ; i < meal.length() ; i++) {
