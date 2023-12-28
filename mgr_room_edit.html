@@ -140,7 +140,7 @@
     </nav>
 
     <div class="container mt-1">
-        <form method="put" enctype="multipart/form-data">
+        <form action="#" method="post" enctype="multipart/form-data">
 
             <!-- Hidden input儲存room_id -->
             <input type="hidden" id="roomId" name="roomId">
@@ -183,7 +183,7 @@
             </div>
 
             <!-- 確認編輯按鈕 -->
-            <button class="btn btn-primary" onclick="confirmEdit()">確認修改</button>
+            <button type="button" class="btn btn-primary" onclick="confirmEdit(event)">確認修改</button>
         </form>
     </div>
 
@@ -208,7 +208,6 @@
                 dataType: 'json',
                 timeout: 5000,
                 success: function (response) {
-                	console.log(response)
                     // 將後端返回的包廂資訊填充到表單中
                     document.getElementById('roomName').value = response.response.data[0].room_name;
                     document.getElementById('roomPrice').value = response.response.data[0].room_price;
@@ -221,13 +220,13 @@
             });
         });
         // 確認修改按鈕的點擊事件
-        function confirmEdit() {
+        function confirmEdit(event) {
+        	event.preventDefault();
             // 獲取用戶輸入的值
             const editedroomId = document.getElementById('roomId').value;
             const editedroomName = document.getElementById('roomName').value;
             const editedroomPrice = document.getElementById('roomPrice').value;
             const editedroomDescription = document.getElementById('roomDescription').value;
-            const editedroomLimit = document.getElementById('roomLimit').value;
             const imageInput = document.getElementById('roomImage');
 
             // 檢查是否有欄位為空值
@@ -244,22 +243,31 @@
             formData.append('roomName', editedroomName);
             formData.append('roomPrice', editedroomPrice);
             formData.append('roomDescription', editedroomDescription);
-            formData.append('roomLimit', editedroomLimit);
             formData.append('roomImage', image);
-
+			
+            
             // 使用 AJAX 向後端發送更新資料的請求
             $.ajax({
+      
                 type: 'PUT',  // 使用 PUT 方法
-                url: 'api/room.do',
+                url: '/NCU_MIS_SA/api/room.do',
                 data: formData,
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
                 contentType: false,  // 必須設置為 false
                 processData: false,  // 必須設置為 false
                 success: function (response) {
-                    alert('包廂資訊已成功更新！');
-                    // 重定向回 mgr_room_info.html
-                    var url = 'mgr_room_info.html?room_id=' + editedroomId;
-                    // 使用 JavaScript 跳轉頁面
+                		alert('包廂資訊已成功更新！');
+                	
+                	console.log(editedroomId);
+                	//console.log("response :", response);
+                    
+                 	// 建立 mgr_room_edit.html 的 URL，並將 room_id 作為參數傳遞
+                    var url = `mgr_room_info.html?room_id=${editedroomId}`;
+
                     window.location.href = url;
+                    
                 },
                 error: function (error) {
                     console.error('包廂資訊更新失敗：', error);
@@ -267,6 +275,7 @@
                 }
             });
         }
+        
 
     </script>
 
