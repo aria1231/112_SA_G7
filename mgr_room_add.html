@@ -70,7 +70,10 @@
             /* 使用黑色文字顏色 */
         }
     </style>
-    <script src="statics/js/jquery-3.4.1.min.js"></script>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -131,7 +134,7 @@
         親愛的管理員您好，您可以在此新稱包廂，請您確保每一欄都已填寫。</p>
 
     <div class="container mt-1">
-        <form method="post" enctype="multipart/form-data">
+        <form method="post" enctype="multipart/form-data" onsubmit="return confirmAdd(event)">
             <div class="row mb-3">
                 <!-- 包廂名字 -->
                 <div class="mb-3">
@@ -143,6 +146,12 @@
                 <div class="mb-3">
                     <label for="roomPrice" class="form-label">價格</label>
                     <input type="text" class="form-control" id="roomPrice" name="roomPrice" required>
+                </div>
+                
+                <!-- 包廂限制人數 -->
+                <div class="mb-3">
+                    <label for="roomLimit" class="form-label">人數上限</label>
+                    <input type="text" class="form-control" id="roomLimit" name="roomLimit" required>
                 </div>
             </div>
 
@@ -164,33 +173,40 @@
             </div>
 
             <!-- 確認添加按鈕 -->
-            <button type="submit" class="btn btn-primary" onclick="confirmAdd()">確認添加</button>
+            <button type="submit" class="btn btn-primary" >確認添加</button>
         </form>
     </div>
 
     <script>
 
         // 確認添加按鈕事件
-        function confirmAdd() {
+        function confirmAdd(event) {
+        	event.preventDefault();
             // 讀取輸入值
             const roomName = document.getElementById('roomName').value;
             const roomPrice = parseInt(document.getElementById('roomPrice').value);  // 轉換為整數
+            const roomLimit = parseInt(document.getElementById('roomLimit').value);  // 轉換為整數
             const roomDescription = document.getElementById('roomDescription').value;
             const roomImageInput = document.getElementById('roomImage');
             const roomImage = roomImageInput.files[0];  // 取得上傳的檔案
+            console.log(roomName)
 
             // 檢查所有欄位沒空值
-            if (!roomName || isNaN(roomPrice) || !roomDescription || !roomImage) {
+            if (!roomName || isNaN(roomPrice) || isNaN(roomLimit) || !roomDescription || !roomImage) {
                 alert('請填寫所有必填欄位');
                 return;
             }
 
             // 使用 FormData 來處理上傳的檔案
             const formData = new FormData();
-            formData.append('roomName', roomName);
-            formData.append('roomPrice', roomPrice);
-            formData.append('roomDescription', roomDescription);
-            formData.append('roomImage', roomImage);
+            formData.append('room_name', roomName);
+            formData.append('room_price', roomPrice);
+            formData.append('room_limited', roomLimit);
+            formData.append('room_description', roomDescription);
+            formData.append('room_image', roomImage);
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+            }
 
             // 使用 AJAX 向後端發送 POST 請求
             $.ajax({
@@ -200,14 +216,19 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    // 處理後端回傳的資料，這裡可以根據需要進行操作
-                    alert('包廂添加成功！');
-                    // 跳轉至mgr_room_browse.html
-                    window.location.href = 'mgr_room_browse.html';
+                	// 處理後端回傳的資料，這裡可以根據需要進行操作
+                	alert(response.message);
+                	if (response.status == 200){
+                    	// 跳轉至mgr_room_browse.html
+                    	window.location.href = 'mgr_room_browse.html';
+                	}
+                	else{
+                		window.location.href = 'mgr_room_add.html';
+                	}
                 },
                 error: function (error) {
                     // 處理錯誤，這裡可以根據需要進行操作
-                    alert('包廂添加失敗！');
+                    alert('伺服器連接失敗！');
                 }
             });
         }

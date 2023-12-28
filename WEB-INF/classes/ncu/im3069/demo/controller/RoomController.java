@@ -1,17 +1,32 @@
 package ncu.im3069.demo.controller;
 
+import java.io.File;
 import java.io.IOException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import org.json.*;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.lang.invoke.VarHandle;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Enumeration;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import org.json.JSONObject;
+
+import ncu.im3069.demo.app.MealHelper;
 import ncu.im3069.demo.app.Room;
 import ncu.im3069.demo.app.RoomHelper;
 //import ncu.im3069.demo.app.ProductHelper;
 import ncu.im3069.tools.JsonReader;
 
 @WebServlet("/api/room.do")
+@MultipartConfig
 public class RoomController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -48,43 +63,96 @@ public class RoomController extends HttpServlet {
 
         jsr.response(resp, response);
         System.out.print(resp);
+        
+        System.out.println("get");
 	}
-
+	
+    private String getFileName(Part part) {
+        String contentDisposition = part.getHeader("content-disposition");
+        String[] tokens = contentDisposition.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return "unknown";
+    }
+    
+    private String getSubmittedFileName(Part part) {
+        String contentDisposition = part.getHeader("content-disposition");
+        String[] items = contentDisposition.split(";");
+        for (String item : items) {
+            if (item.trim().startsWith("filename")) {
+                return item.substring(item.indexOf("=") + 2, item.length() - 1);
+            }
+        }
+        return "";
+    }
+	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		/** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
-        JsonReader jsr = new JsonReader(request);
-        JSONObject jso = jsr.getObject();
+		response.setCharacterEncoding("UTF-8");
+
+	    // 設置回應的內容類型為JSON，並使用UTF-8編碼
+	    response.setContentType("application/json;charset=UTF-8");
+       		
+        Enumeration<String> a = request.getParameterNames();
+        System.out.println(a);
+        System.out.println(Collections.list(a).size());
         
         /** 取出經解析到JSONObject之Request參數 */
-        String room_name = jso.getString("room_name");
-        int room_price = jso.getInt("room_price");
-        String room_description = jso.getString("room_description");
-		String room_image = jso.getString("room_image");
-        int room_limited = jso.getInt("room_limited");
+        String room_name = request.getParameter("room_name");
+        String roomPriceString = request.getParameter("room_price");
+        int room_price = Integer.parseInt(roomPriceString);
+        String roomLimitString = request.getParameter("room_limited");
+        int room_limited = Integer.parseInt(roomLimitString);
+        String room_description = request.getParameter("room_description");
+        System.out.println(room_name);
+        String successMessage = "添加失敗！";
+        
+        //從 HTTP 請求中取得名稱為 "room_image" 的部分（Part），用於處理上傳的檔案。
+        Part filePart = request.getPart("room_image");
+        //返回客戶端上傳的檔案的原始文件名稱。這裡將該檔案名稱存儲在 room_image 字串變數中
+        String room_image = filePart.getSubmittedFileName();
+        
+        // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
+        String uploadDirectory = "C:\\Users\\yuan\\Desktop\\去你的SA\\v4\\112_SA_G7/statics/img/room/";
+        String fileName = getSubmittedFileName(filePart);
+        String savePath = uploadDirectory + fileName;
+
+        // 將檔案保存到伺服器指定的路徑
+        filePart.write(savePath);
         
         /** 建立一個新的包廂物件 */
         Room r = new Room(room_name, room_price, room_description, room_image, room_limited);
-        
-        /** 後端檢查是否有欄位為空值，若有則回傳錯誤訊息 */
-        if(room_name.isEmpty() || room_price == 0 || room_description.isEmpty() || room_image.isEmpty()) {
-            /** 以字串組出JSON格式之資料 */
-            String resp = "{\"status\": \'400\', \"message\": \'欄位不能有空值\', \'response\': \'\'}";
-            /** 透過JsonReader物件回傳到前端（以字串方式） */
-            jsr.response(resp, response);
-        }
-        else {
-            /** 透過RoomHelper物件的createRoom()方法新建一個包廂至資料庫 */
+                
+            /** 透過MealHelper物件的createRoom()方法新建一個餐點至資料庫 */
             JSONObject data = rooh.createRoom(r);
             
-            /** 新建一個JSONObject用於將回傳之資料進行封裝 */
-            JSONObject resp = new JSONObject();
-            resp.put("status", "200");
-            resp.put("message", "成功! 新增包廂資料...");
-            resp.put("response", data);
+            Object affect_row = data.get("row");
+            int row=0 ;
+            int status=500;
             
-            /** 透過JsonReader物件回傳到前端（以JSONObject方式） */
-            jsr.response(resp, response);
-        }
+            if(affect_row!= null) {
+            	row = (int)affect_row;
+            	if (row!=0) {
+            		successMessage = "添加成功";
+            		status=200;
+            	}
+            }
+            
+            // 獲取PrintWriter對象，用於將JSON數據寫入OutputStream
+            PrintWriter out = response.getWriter();
+
+            // 構建成功的JSON回應
+            String jsonResponse = "{\"status\":  \"" + status + "\", \"message\": \"" + successMessage + "\"}";
+
+            // 寫入JSON數據到OutputStream
+            out.print(jsonResponse);
+
+            // 關閉PrintWriter
+            out.flush();
+            out.close();
+        
 	}
 	
 	/**
