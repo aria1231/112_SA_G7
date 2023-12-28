@@ -187,7 +187,8 @@ public class RoomHelper {
       return response;
   }
   
-    public JSONObject getAvalibileRoom(int ppl_limit, String order_date, int order_time_of_day){
+    @SuppressWarnings("null")
+	public JSONObject getAvalibileRoom(String ppl_limit, String order_date, String order_time_of_day){
 	  /** 新建一個 Room 物件之 r 變數，用於紀錄每一位查詢回之包廂資料 */
       Room r = null;
       /** 用於儲存所有檢索回之商品，以JSONArray方式儲存 */
@@ -206,24 +207,16 @@ public class RoomHelper {
           conn = DBMgr.getConnection();
           /** SQL指令 */
 		  
-          String sql = "SELECT * FROM `final_pj`.`room` WHERE `room_size` > ?  AND `order_date` != ?  AND `order_time_of_day` != ?";
-          Date watchdate = null;
-          
-       // 使用SimpleDateFormat解析日期字符串為Date對象
-       	  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-          try {
-       			watchdate = dateFormat.parse(order_date);
-     	  } catch (ParseException e) {
-       			e.printStackTrace();
-       	  }
-       			
+          //從訂單資料庫選取同日同時段已被選走的房間編號
+          String sql = "SELECT * FROM `room` WHERE `room_id` NOT IN (SELECT `room_id` FROM `order` WHERE `order_date` = ? AND `order_time_of_day` = ?) AND `room_limited` >= ?";
+     	
           /** 將參數回填至SQL指令當中，若無則不用只需要執行 prepareStatement */
           pres = conn.prepareStatement(sql);
-          pres.setInt(1, ppl_limit);
-		  pres.setDate(2,new java.sql.Date(watchdate.getTime()));
-          pres.setInt(3, order_time_of_day);
+		  pres.setString(1, order_date);
+          pres.setString(2, order_time_of_day);
+          pres.setString(3, ppl_limit);
           /** 執行查詢之SQL指令並記錄其回傳之資料 */
-          rs = pres.executeQuery();
+          rs= pres.executeQuery();
 
           /** 紀錄真實執行的SQL指令，並印出 **/
           exexcute_sql = pres.toString();
@@ -244,7 +237,7 @@ public class RoomHelper {
               
               
               /** 將每一筆包廂資料產生一名新Room物件 */
-              r = new Room(room_id, room_name, room_price, room_image, room_description, room_limited);
+              r = new Room(room_id, room_name, room_price, room_description, room_image, room_limited);
               /** 取出該項包廂之資料並封裝至 JSONsonArray 內 */
               jsa.put(r.getRoomData());
           }
@@ -407,7 +400,7 @@ public class RoomHelper {
             conn = DBMgr.getConnection();
             /** SQL指令 */
 			
-            String sql = "INSERT INTO `final_pj`.`room`(`room_name`, `room_price`, `room_description`, `room_image`, `room_update_time`)"
+            String sql = "INSERT INTO `final_pj`.`room`(`room_name`, `room_price`, `room_description`, `room_image`, `room_update_time`, `room_limited`)"
                     + " VALUES(?, ?, ?, ?, ?)";
             
             /** 取得所需之參數 */
@@ -415,6 +408,7 @@ public class RoomHelper {
             int room_price = r.getRoomPRICE();
 			String room_description = r.getRoomDESCRIPTION();
 			String room_image = r.getRoomIMAGE();
+			int room_limit = r.getRoomLIMITED();
 			
 			
             /** 將參數回填至SQL指令當中 */
@@ -424,6 +418,7 @@ public class RoomHelper {
             pres.setString(3, room_description);
             pres.setString(4, room_image);
             pres.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+            pres.setInt(6, room_limit);
             
             /** 執行新增之SQL指令並記錄影響之行數 */
             row = pres.executeUpdate();

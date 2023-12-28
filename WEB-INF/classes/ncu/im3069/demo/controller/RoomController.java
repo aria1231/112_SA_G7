@@ -43,11 +43,35 @@ public class RoomController extends HttpServlet {
         JsonReader jsr = new JsonReader(request);
         /** 若直接透過前端AJAX之data以key=value之字串方式進行傳遞參數，可以直接由此方法取回資料 */
         String id_list = jsr.getParameter("room_id");
-        System.out.print(id_list.isEmpty());
+
+        //System.out.print("------request------");
+        //System.out.print(request);
+        
+        String selectedPeople = request.getParameter("people");
+        String selectedDate = request.getParameter("date");
+        String Time = request.getParameter("time");
+        String selectedTime = "0";
+        
+        System.out.print("\n------ppl, date, time------");
+        //System.out.printf("\nppl:", selectedPeople.isEmpty());
+        //System.out.printf("\ndate:",selectedDate.isEmpty());
+        //System.out.printf("\ntime:",selectedTime.isEmpty());
 
         JSONObject resp = new JSONObject();
         /** 判斷該字串是否存在，若存在代表要取回查詢之資料，否則代表要取回全部資料庫內包廂之資料 */
-        if (!id_list.isEmpty()) {
+        if (selectedPeople!= null && selectedDate!= null && selectedTime!= null ) {
+        	if(Time.equals("1")) {
+            	selectedTime = "900";
+            }else if(Time.equals("2")) {
+            	selectedTime = "1200";
+            }else if(Time.equals("3")) {
+            	selectedTime = "1500";
+            }
+        	JSONObject query = rooh.getAvalibileRoom(selectedPeople,selectedDate,selectedTime);
+            resp.put("status", "200");
+            resp.put("message", "資料取得成功");
+            resp.put("response", query);
+          }else if (!id_list.isEmpty()) {
           JSONObject query = rooh.getByIdList(id_list);
           resp.put("status", "200");
           resp.put("message", "資料取得成功");
