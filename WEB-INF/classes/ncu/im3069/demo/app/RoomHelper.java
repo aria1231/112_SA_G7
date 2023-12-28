@@ -345,7 +345,7 @@ public class RoomHelper {
             int room_price = r.getRoomPRICE();
             String room_description = r.getRoomDESCRIPTION();
 			String room_image = r.getRoomIMAGE();
-			int room_limited = r.getRoomID();
+			int room_limited = r.getRoomLIMITED();
             
             /** 將參數回填至SQL指令當中 */
             pres = conn.prepareStatement(sql);
