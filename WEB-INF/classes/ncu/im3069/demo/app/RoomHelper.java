@@ -403,7 +403,7 @@ public class RoomHelper {
             /** SQL指令 */
 			
             String sql = "INSERT INTO `final_pj`.`room`(`room_name`, `room_price`, `room_description`, `room_image`, `room_update_time`, `room_limited`)"
-                    + " VALUES(?, ?, ?, ?, ?)";
+                    + " VALUES(?, ?, ?, ?, ?, ?)";
             
             /** 取得所需之參數 */
             String room_name = r.getRoomNAME();

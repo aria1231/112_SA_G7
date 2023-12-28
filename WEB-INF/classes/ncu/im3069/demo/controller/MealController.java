@@ -83,7 +83,7 @@ public class MealController extends HttpServlet {
         String meal_image = filePart.getSubmittedFileName();
         
         // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
-        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\meal/";
+        String uploadDirectory = "C:\\Users\\pooh5\\OneDrive\\桌面\\期末2\\112_SA_G7\\statics\\img\\meal/";
         String fileName = getSubmittedFileName(filePart);
         String savePath = uploadDirectory + fileName;
 
@@ -183,7 +183,7 @@ public class MealController extends HttpServlet {
         String meal_image = filePart.getSubmittedFileName();
         
         // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
-        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\meal/";
+        String uploadDirectory = "C:\\Users\\pooh5\\OneDrive\\桌面\\期末2\\112_SA_G7\\statics\\img\\meal/";
         String fileName = getSubmittedFileName(filePart);
         String savePath = uploadDirectory + fileName;
 

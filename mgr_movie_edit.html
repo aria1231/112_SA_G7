@@ -262,12 +262,11 @@
                 contentType: false, // 必須設置為 false
                 processData: false, // 必須設置為 false
                 success: function (response) {
+                	console.log("jj")
                     // 更新成功後的處理，可以根據需要進行操作
                     alert('電影資訊已成功更新！');
                     // 重定向回 mgr_movie_info.html
-                    var url = 'mgr_movie_info.html?movie_id=' + editedMovieId;
-                    // 使用 JavaScript 跳轉頁面
-                    window.location.href = url;
+                    window.location.href = 'mgr_movie_info.html?movie_id=' + editedMovieId;
                 },
                 error: function (error) {
                     console.error('電影資訊更新失敗：', error);

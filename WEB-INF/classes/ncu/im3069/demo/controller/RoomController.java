@@ -129,7 +129,7 @@ public class RoomController extends HttpServlet {
         String room_image = filePart.getSubmittedFileName();
         
         // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
-        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\room/";
+        String uploadDirectory = "C:\\Users\\pooh5\\OneDrive\\桌面\\期末2\\112_SA_G7\\statics\\img\\room/";
         String fileName = getSubmittedFileName(filePart);
         String savePath = uploadDirectory + fileName;
 
@@ -208,7 +208,11 @@ public class RoomController extends HttpServlet {
      */
     public void doPut(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException {
         /** 透過JsonReader類別將Request之JSON格式資料解析並取回 */
-    	
+    	response.setCharacterEncoding("UTF-8");
+	    // 設置回應的內容類型為JSON，並使用UTF-8編碼
+	    response.setContentType("application/json;charset=UTF-8");
+	    request.setCharacterEncoding("UTF-8");
+       		
     	String roomidString = request.getParameter("roomId");
     	int room_id = Integer.parseInt(roomidString);
     	String room_name = request.getParameter("roomName");
@@ -216,8 +220,9 @@ public class RoomController extends HttpServlet {
         int room_price = Integer.parseInt(roomPriceString);
         String roomlimitString = request.getParameter("roomLimit");
         int room_limited = Integer.parseInt(roomlimitString);
+        //int room_limited = rooh.getById(roomidString).getRoomLIMITED();
         String room_description = request.getParameter("roomDescription");
-        System.out.println(room_name);
+        System.out.printf("room_name:", room_name);
         String successMessage = "更新失敗！";
         
         //從 HTTP 請求中取得名稱為 "room_image" 的部分（Part），用於處理上傳的檔案。
@@ -226,7 +231,7 @@ public class RoomController extends HttpServlet {
         String room_image = filePart.getSubmittedFileName();
         
         // 處理檔案的相應路徑，這裡假設你希望將檔案存儲在指定目錄下
-        String uploadDirectory = "C:\\Users\\88693\\Desktop\\大學作業、報告\\大三上SA\\112_SA_G7\\statics\\img\\room/";
+        String uploadDirectory = "C:\\Users\\pooh5\\OneDrive\\桌面\\期末2\\112_SA_G7\\statics\\img\\room/";
         String fileName = getSubmittedFileName(filePart);
         String savePath = uploadDirectory + fileName;
 
